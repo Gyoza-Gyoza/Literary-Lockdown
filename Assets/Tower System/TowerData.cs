@@ -7,9 +7,9 @@ public struct TowerData
     public string Name{ get { return name; } }
     public Stats Stats{ get { return stats; } }
 
-    public TowerData(string name, int health, int damage, float range, float attackSpeed)
+    public TowerData(string name, int damage, float range, float attackSpeed)
     {
         this.name = name;
-        stats = new Stats(health, damage, range, attackSpeed);
+        stats = new Stats(damage, range, attackSpeed);
     }
 }

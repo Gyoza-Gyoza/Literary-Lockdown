@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -5,39 +6,61 @@ using UnityEngine;
 public class LoadingManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI loadingText; 
-    private List<object> loadingList = new();
-    private List<object> completedList = new();
+    private List<string> loadingList = new();
+    private List<string> completedList = new();
 
+    private delegate void FinishedLoading();
+    private event FinishedLoading OnFinishedLoading;
     public static LoadingManager instance;
+
+    private bool loadingRegistrationCompleted = false;
 
     private void Awake()
     {
-        if (instance == null) instance = this;
-        else Destroy(this);
+        Bootstrap.SingletonInitialization += () =>
+        {
+            if (instance == null) instance = this;
+            else Destroy(this);
+        };
+        Bootstrap.StopLoadRegistrations += () => loadingRegistrationCompleted = true;
     }
 
-    public void StartLoading(object objectToLoad)
+    /// <summary>
+    /// IMPORTANT: Call this before Start()
+    /// </summary>
+    /// <param name="objectToLoadName"></param>
+    /// <param name="onFinishedLoading"></param>
+    public void StartLoading(string objectToLoadName, Action onFinishedLoading = null)
     {
-        loadingList.Add(objectToLoad);
-        UpdateText();
+        Bootstrap.AcceptLoadRegistrations += () =>
+        {
+            loadingList.Add(objectToLoadName);
+            if (onFinishedLoading != null) OnFinishedLoading += new FinishedLoading(onFinishedLoading);
+            UpdateText();
+        };
     }
-    public void FinishLoading(object objectToLoad)
+    public void FinishLoading(string objectToLoadName)
     {
-        loadingList.Remove(objectToLoad);
-        completedList.Add(objectToLoad);
+        loadingList.Remove(objectToLoadName);
+        completedList.Add(objectToLoadName);
         UpdateText();
+        if (loadingRegistrationCompleted && loadingList.Count == 0)
+        {
+            OnFinishedLoading?.Invoke();
+            OnFinishedLoading = null;
+        }
     }
     private void UpdateText()
     {
         loadingText.text = "";
 
-        foreach (object obj in loadingList)
+        foreach (string name in loadingList)
         {
-            loadingText.text += obj.GetType().Name + " is loading\n";
+            loadingText.text += name + " is loading\n";
         }
-        foreach (object obj in completedList)
+        foreach (string name in completedList)
         {
-            loadingText.text += obj.GetType().Name + " completed loading\n";
+            loadingText.text += name + " completed loading\n";
         }
     }
 }
