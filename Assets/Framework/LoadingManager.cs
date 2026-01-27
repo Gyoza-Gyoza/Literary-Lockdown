@@ -17,7 +17,7 @@ public class LoadingManager : MonoBehaviour
 
     private void Awake()
     {
-        Bootstrap.SingletonInitialization += () =>
+        Bootstrap.SingletonInitializations += () =>
         {
             if (instance == null) instance = this;
             else Destroy(this);

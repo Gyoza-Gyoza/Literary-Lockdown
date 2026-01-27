@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 public class Player : NetworkBehaviour
 {
     private NetworkVariable<Vector3> m_Position = new NetworkVariable<Vector3>();
-
+    public NetworkVariable<Color> playerColor = new();
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
@@ -25,6 +25,13 @@ public class Player : NetworkBehaviour
         var randomPosition = GetRandomPositionOnPlane();
         transform.position = randomPosition;
         m_Position.Value = randomPosition;
+    }
+    [Rpc(SendTo.Server)]
+    private void SetPlayerColorRpc(RpcParams rpcParams = default)
+    {
+        var randomColor = new Color(Random.value, Random.value, Random.value);
+        playerColor.Value = randomColor;
+        GetComponent<Renderer>().material.color = randomColor;
     }
 
     static Vector3 GetRandomPositionOnPlane()

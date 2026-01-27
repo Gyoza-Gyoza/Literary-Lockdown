@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.AddressableAssets;
 
 public class Database : MonoBehaviour
 {
@@ -22,12 +23,16 @@ public class Database : MonoBehaviour
 
     private void Awake()
     {
-        Bootstrap.SingletonInitialization += () =>
+        Bootstrap.SingletonInitializations += () =>
         {
             if (instance == null) instance = this;
             else Destroy(this);
         };
         Bootstrap.AcceptLoadRegistrations += CreateDatabases;
+        Bootstrap.PostDatabaseInitializations += () =>
+        {
+
+        };
     }
     private void Update()
     {

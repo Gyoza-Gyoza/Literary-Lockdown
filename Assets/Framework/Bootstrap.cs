@@ -5,17 +5,19 @@ using UnityEngine;
 // This is to ensure that all subscriptions are done before invocation
 public class Bootstrap : MonoBehaviour
 {
-    public delegate void Tasks(); 
+    public delegate void Tasks();
 
-    public static event Tasks 
-        SingletonInitialization, // Enter all singleton initializations here
+    public static event Tasks
+        SingletonInitializations, // Enter all singleton initializations here
         AcceptLoadRegistrations, // Enter all things that need loading here
-        StopLoadRegistrations; // This stops all load registrations to begin checking for load completion
+        StopLoadRegistrations,  // This stops all load registrations to begin checking for load completion
+        PostDatabaseInitializations;
 
     private void Start()
     {
-        SingletonInitialization?.Invoke();
+        SingletonInitializations?.Invoke();
         AcceptLoadRegistrations?.Invoke();
         StopLoadRegistrations?.Invoke();
+        PostDatabaseInitializations?.Invoke();
     }
 }
