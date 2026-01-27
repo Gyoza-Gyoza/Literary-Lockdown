@@ -1,10 +1,21 @@
 using UnityEngine;
 using System.Collections.Generic;
-public abstract class Tower 
+using Unity.Netcode;
+public abstract class Tower : NetworkBehaviour
 {
-    private string name;
     private Stats baseStats;
     private List<Stats> bonusStats = new();
+
+    public Sprite defaultSprite;
+
+    [Header("Synced Variables")]
+    private NetworkVariable<Stats> m_baseStats = new NetworkVariable<Stats>();
+    //private NetworkVariable<string> m_characterSprite = new NetworkVariable<string>();
+    private NetworkVariable<Vector3> m_Position = new NetworkVariable<Vector3>();
+
+    [Header("Components")]
+    private SpriteRenderer m_Renderer;
+
     public Stats BaseStats => baseStats;
     public Stats BonusStats
     {
@@ -15,13 +26,31 @@ public abstract class Tower
             return totalBonus;
         }
     }
-    public Stats TotalStats
+    public Stats TotalStats => BaseStats + BonusStats;
+    private void Awake()
     {
-        get
+        m_Renderer = GetComponent<SpriteRenderer>();
+        m_Renderer.sprite = defaultSprite;
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        if (IsOwner)
         {
-            Stats finalStats = baseStats;
-            foreach (Stats stats in bonusStats) baseStats += stats;
-            return finalStats;
+            //Do default action here
         }
+    }
+
+    [Rpc(SendTo.Server)]
+    private void SetSpriteRpc(RpcParams rpcParams = default)
+    {
+
+    }
+
+    private void Update()
+    {
+        transform.position = m_Position.Value;
+
+
     }
 }
