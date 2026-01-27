@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-
-public abstract class Tower
+public abstract class Tower 
 {
     private string name;
     private Stats baseStats;
