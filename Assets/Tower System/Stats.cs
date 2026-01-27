@@ -1,5 +1,7 @@
+using Unity.Netcode;
 using UnityEngine;
 
+[System.Serializable]
 public struct Stats
 {
     private int damage;
@@ -7,6 +9,8 @@ public struct Stats
     public int Damage { get { return damage; } }
     public float Range { get { return range; } }
     public float AttackSpeed { get { return attackSpeed; } }
+
+    public string spriteID { get { return spriteID; } }
 
     public Stats(int damage = 0, float range = 0f, float attackSpeed = 0f)
     {
