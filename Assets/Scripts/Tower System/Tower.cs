@@ -4,10 +4,10 @@ using Unity.Netcode;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 using System.Globalization;
 using UnityEngine.UIElements;
+using Unity.Collections;
 
 public abstract class Tower : NetworkBehaviour
 {
-    private string name;
     private Stats baseStats;
     private List<Stats> bonusStats = new();
 
@@ -15,7 +15,7 @@ public abstract class Tower : NetworkBehaviour
 
     [Header("Synced Variables")]
     private NetworkVariable<Stats> m_baseStats = new NetworkVariable<Stats>();
-    private NetworkVariable<string> m_characterSprite = new NetworkVariable<string>();
+    //private NetworkVariable<string> m_characterSprite = new NetworkVariable<string>();
     private NetworkVariable<Vector3> m_Position = new NetworkVariable<Vector3>();
 
     [Header("Components")]

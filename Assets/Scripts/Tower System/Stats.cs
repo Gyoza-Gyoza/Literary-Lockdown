@@ -1,27 +1,28 @@
 using Unity.Netcode;
 using UnityEngine;
 
-[System.Serializable]
-public struct Stats
+public struct Stats : INetworkSerializable
 {
-    private int damage;
-    private float range, attackSpeed;
-    public int Damage { get { return damage; } }
-    public float Range { get { return range; } }
-    public float AttackSpeed { get { return attackSpeed; } }
-
-    public string spriteID { get { return spriteID; } }
-
+    public int Damage;
+    public float Range;
+    public float AttackSpeed;
     public Stats(int damage = 0, float range = 0f, float attackSpeed = 0f)
     {
-        this.damage = damage;
-        this.range = range;
-        this.attackSpeed = attackSpeed;
+        Damage = damage;
+        Range = range;
+        AttackSpeed = attackSpeed;
     }
     public static Stats operator +(Stats a, Stats b)
     {
-        return new Stats(a.damage += b.damage,
-        a.range += b.range,
-        a.attackSpeed += b.attackSpeed);
+        return new Stats(a.Damage + b.Damage,
+        a.Range + b.Range,
+        a.AttackSpeed + b.AttackSpeed);
+    }
+
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref Damage);
+        serializer.SerializeValue(ref Range);
+        serializer.SerializeValue(ref AttackSpeed);
     }
 }
