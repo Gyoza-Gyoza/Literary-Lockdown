@@ -1,6 +1,11 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Unity.Netcode;
+using static UnityEngine.RuleTile.TilingRuleOutput;
+using System.Globalization;
+using UnityEngine.UIElements;
+using Unity.Collections;
+
 public abstract class Tower : NetworkBehaviour
 {
     private Stats baseStats;
@@ -26,7 +31,16 @@ public abstract class Tower : NetworkBehaviour
             return totalBonus;
         }
     }
-    public Stats TotalStats => BaseStats + BonusStats;
+    public Stats TotalStats
+    {
+        get
+        {
+            Stats finalStats = baseStats;
+            foreach (Stats stats in bonusStats) baseStats += stats;
+            return finalStats;
+        }
+    }
+
     private void Awake()
     {
         m_Renderer = GetComponent<SpriteRenderer>();
