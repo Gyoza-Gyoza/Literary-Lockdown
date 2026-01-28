@@ -15,7 +15,8 @@ public abstract class Tower : NetworkBehaviour
 
     [Header("Synced Variables")]
     private NetworkVariable<Stats> m_baseStats = new NetworkVariable<Stats>();
-    protected NetworkVariable<Vector3> m_Position = new NetworkVariable<Vector3>();
+    [SerializeField]
+    protected NetworkVariable<Vector3> m_Position = new NetworkVariable<Vector3>(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     [Header("Components")]
     protected SpriteRenderer m_Renderer;

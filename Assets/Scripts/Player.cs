@@ -9,7 +9,7 @@ public class Player : Tower
 
     [Header("Network Variables")]
     public int m_characterSpriteIndex = 0;
-    private NetworkVariable<int> characterSpriteIndex = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    private NetworkVariable<int> characterSpriteIndex = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     private Vector3 localPosition;
 
@@ -26,38 +26,48 @@ public class Player : Tower
     public override void OnNetworkSpawn()
     {
         characterSpriteIndex.OnValueChanged += OnSpriteChanged;
+        m_Position.OnValueChanged += OnPositionChangedRpc;
 
         if (IsOwner)
         {
             UIManager.Instance.CharacterSelect_UI.SetActive(true);
         }
 
-        // Apply immediately for late joiners
-        if (characterSpriteIndex.Value != -1)
-            OnSpriteChanged(-1, characterSpriteIndex.Value);
+        OnSpriteChanged(-1, characterSpriteIndex.Value);
+
+        // Late join safety
+        OnPositionChangedRpc(Vector3.zero, m_Position.Value);
     }
 
-    [Rpc(SendTo.Server)]
-    public void SetSpriteRpc(RpcParams rpcParams = default)
+    [Rpc(SendTo.Owner)]
+    public void SetSpriteRpc(int value, RpcParams rpcParams = default)
     {
-        characterSpriteIndex.Value = m_characterSpriteIndex;
+        characterSpriteIndex.Value = value;
+        m_characterSpriteIndex = characterSpriteIndex.Value;
+        m_Renderer.sprite = characterSpriteList[m_characterSpriteIndex];
 
-        if (IsOwner)
-        {
-            // Enable Character movement for placement
-            isMoving = true;
-        }
+        StartMovement();
     }
 
-    [Rpc(SendTo.Server)]
-    public void UpdateCharacterPositionRpc(RpcParams rpcParams = default)
+    public void StartMovement()
     {
-        m_Position.Value = localPosition;
-        transform.position = localPosition;
+        Debug.Log($"StartMovement | Local={NetworkManager.Singleton.LocalClientId} " +
+              $"Owner={OwnerClientId} IsOwner={IsOwner}");
+
+        if (!IsOwner) return;
+        isMoving = true;
+    }
+
+    public void UpdateCharacterPositionRpc(Vector3 targetPosition)
+    {
+        m_Position.Value = targetPosition;
+        transform.position = m_Position.Value;
     }
 
     private void ToggleCharacterMovement()
     {
+        if (!IsOwner) return;
+
         if (isMoving == true)
         {
             isMoving = false;
@@ -66,26 +76,21 @@ public class Player : Tower
 
     public void CharacterMovementState()
     {
-        switch(isMoving)
+        if (!IsOwner && !isMoving)
         {
-            case false:
-                // No movement
-                transform.position = m_Position.Value;
-                break;
-
-            case true:
-                // Follow character based on movement of cursor
-                Vector3 mousePostion = Input.mousePosition;
-
-                Vector3 cursorPos = Camera.main.ScreenToWorldPoint(new Vector3(mousePostion.x, mousePostion.y, 10f));
-                cursorPos.z = 0;
-
-                localPosition = cursorPos;
-
-                // Update the server
-                UpdateCharacterPositionRpc();
-                break;
+            transform.position = m_Position.Value;
         }
+
+        if (!isMoving)
+            return;
+
+        Vector3 mousePos = Input.mousePosition;
+        mousePos.z = 10f;
+
+        Vector3 cursorPos = Camera.main.ScreenToWorldPoint(mousePos);
+        cursorPos.z = 0;
+
+        UpdateCharacterPositionRpc(cursorPos);
     }
 
     protected override void Update()
@@ -95,13 +100,18 @@ public class Player : Tower
             // Disable character movement if active
             ToggleCharacterMovement();
         }
-
-
         CharacterMovementState();
     }
 
     protected void OnSpriteChanged(int oldValue, int newValue)
     {
-        m_Renderer.sprite = characterSpriteList[newValue];
+        m_characterSpriteIndex = newValue;
+        m_Renderer.sprite = characterSpriteList[m_characterSpriteIndex];
+    }
+
+    [Rpc(SendTo.Server)]
+    protected void OnPositionChangedRpc(Vector3 oldValue,  Vector3 newValue)
+    {
+        transform.position = newValue;
     }
 }

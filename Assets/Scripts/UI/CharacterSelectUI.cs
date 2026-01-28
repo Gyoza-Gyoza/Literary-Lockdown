@@ -18,9 +18,7 @@ public class CharacterSelectUI : MonoBehaviour
 
         var playerObject = m_networkManager.SpawnManager.GetLocalPlayerObject();
         m_localPlayer = playerObject.GetComponent<Player>();
-
-        m_localPlayer.m_characterSpriteIndex = id;
-        m_localPlayer.SetSpriteRpc();
+        m_localPlayer.SetSpriteRpc(id);
 
         // Close menu
         gameObject.SetActive(false);
