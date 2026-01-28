@@ -15,11 +15,11 @@ public abstract class Tower : NetworkBehaviour
 
     [Header("Synced Variables")]
     private NetworkVariable<Stats> m_baseStats = new NetworkVariable<Stats>();
-    //private NetworkVariable<string> m_characterSprite = new NetworkVariable<string>();
-    private NetworkVariable<Vector3> m_Position = new NetworkVariable<Vector3>();
+    [SerializeField]
+    protected NetworkVariable<Vector3> m_Position = new NetworkVariable<Vector3>(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     [Header("Components")]
-    private SpriteRenderer m_Renderer;
+    protected SpriteRenderer m_Renderer;
 
     public Stats BaseStats => baseStats;
     public Stats BonusStats
@@ -41,30 +41,14 @@ public abstract class Tower : NetworkBehaviour
         }
     }
 
-    private void Awake()
+    protected virtual void Awake()
     {
         m_Renderer = GetComponent<SpriteRenderer>();
         m_Renderer.sprite = defaultSprite;
     }
 
-    public override void OnNetworkSpawn()
-    {
-        if (IsOwner)
-        {
-            //Do default action here
-        }
-    }
-
-    [Rpc(SendTo.Server)]
-    private void SetSpriteRpc(RpcParams rpcParams = default)
-    {
-
-    }
-
-    private void Update()
+    protected virtual void Update()
     {
         transform.position = m_Position.Value;
-
-
     }
 }
