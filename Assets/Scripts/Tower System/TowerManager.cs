@@ -1,5 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using System;
+using Unity.Netcode;
 
 public class TowerManager : MonoBehaviour
 {
@@ -7,14 +10,15 @@ public class TowerManager : MonoBehaviour
     [SerializeField] private int maxTowers; 
     private List<Tower> towerList = new();
 
-    private void Start()
+    private void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.P)) CreateTower("Hansel");
     }
     public GameObject CreateTower(string name)
     {
         GameObject result = Instantiate(towerTemplate);
-        Tower tower = result.GetComponent<Tower>();
+        Tower tower = result.AddComponent(Type.GetType(name)) as Tower;
+
         TowerData towerData = new(); 
         if (Database.instance.database.TryGetValue("Towers", out List<object> towerObjects))
         {
@@ -30,8 +34,10 @@ public class TowerManager : MonoBehaviour
         }
 
         //Add initialization logic here
-        
+        //tower.InitializeObject(towerData.Sprite, towerData.Stats);
+        towerList.Add(tower);
 
+        result.GetComponent<NetworkObject>().Spawn();
         return result;
     }
 }
