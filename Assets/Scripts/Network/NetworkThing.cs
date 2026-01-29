@@ -53,13 +53,13 @@ public class NetworkThing : MonoBehaviour
             {
                 foreach (ulong uid in m_NetworkManager.ConnectedClientsIds)
                 {
-                    m_NetworkManager.SpawnManager.GetPlayerNetworkObject(uid).GetComponent<Player>();
+                    m_NetworkManager.SpawnManager.GetPlayerNetworkObject(uid).GetComponent<Tower>();
                 }
             }
             else
             {
                 var playerObject = m_NetworkManager.SpawnManager.GetLocalPlayerObject();
-                var player = playerObject.GetComponent<Player>();
+                var player = playerObject.GetComponent<Tower>();
             }
         }
     }

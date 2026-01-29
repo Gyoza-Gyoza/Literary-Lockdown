@@ -4,10 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.AddressableAssets;
-using System.Linq;
-using Unity.Netcode;
 
-public class Database : NetworkBehaviour
+public class Database : MonoBehaviour
 {
     [System.Serializable]
     private class DatabaseLink
@@ -25,35 +23,32 @@ public class Database : NetworkBehaviour
 
     private void Awake()
     {
-        if (IsServer)
+        Bootstrap.SingletonInitializations += () =>
         {
-            Bootstrap.SingletonInitializations += () =>
-            {
-                if (instance == null) instance = this;
-                else Destroy(this);
-            };
-            Bootstrap.AcceptLoadRegistrations += CreateDatabases;
-            Bootstrap.PostDatabaseInitializations += () =>
-            {
+            if (instance == null) instance = this;
+            else Destroy(this);
+        };
+        Bootstrap.AcceptLoadRegistrations += CreateDatabases;
+        Bootstrap.PostDatabaseInitializations += () =>
+        {
 
-            };
-        }
+        };
     }
     private void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.P))
-        //{
-        //    string input = "Tower data count is" + database["Towers"].Count + "\n";
-        //    foreach (TowerData item in database["Towers"])
-        //    {
-        //        input += $"Name: {item.Name}, Damage: {item.Stats.Damage}, Range: {item.Stats.Range}, Fire Rate: {item.Stats.AttackSpeed}\n";
-        //    }
-        //    Debug.Log(input);
-        //}
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            string input = "Tower data count is" + database["Towers"].Count + "\n";
+            foreach (TowerData item in database["Towers"])
+            {
+                input += $"Name: {item.Name}, Damage: {item.Stats.Damage}, Range: {item.Stats.Range}, Fire Rate: {item.Stats.AttackSpeed}\n";
+            }
+            Debug.Log(input);
+        }
     }
     private void CreateDatabases()
     {
-        if (database != null) database.Clear();
+        if (database != null) database.Clear(); 
 
         foreach (DatabaseLink links in databaseLinks)
         {
@@ -74,10 +69,10 @@ public class Database : NetworkBehaviour
                         case "Towers":
                             string[] values = data[i].Split(',');
                             database[links.databaseName].Add(
-                                new TowerData(values[0].Trim(),
+                                new TowerData(values[0], 
                                 values[1] == "" ? values[0] : values[1],
-                                int.Parse(values[2]),
-                                float.Parse(values[3]),
+                                int.Parse(values[2]), 
+                                float.Parse(values[3]), 
                                 float.Parse(values[4])));
                             break;
 

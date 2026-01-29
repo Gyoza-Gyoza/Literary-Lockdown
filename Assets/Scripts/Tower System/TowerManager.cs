@@ -1,10 +1,9 @@
-using UnityEngine;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using System;
+using System.Collections.Generic;
 using Unity.Netcode;
+using UnityEngine;
 
-public class TowerManager : MonoBehaviour
+public class TowerManager : NetworkBehaviour
 {
     [SerializeField] private GameObject towerTemplate;
     [SerializeField] private int maxTowers; 
@@ -12,32 +11,52 @@ public class TowerManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P)) CreateTower("Hansel");
+        if (Input.GetKeyDown(KeyCode.P)) CreateTowerRPC("Hansel");
     }
-    public GameObject CreateTower(string name)
+    [Rpc(SendTo.Server)]
+    public void CreateTowerRPC(string name)
     {
-        GameObject result = Instantiate(towerTemplate);
-        Tower tower = result.AddComponent(Type.GetType(name)) as Tower;
-
-        TowerData towerData = new(); 
-        if (Database.instance.database.TryGetValue("Towers", out List<object> towerObjects))
+        if (IsServer)
         {
-            foreach (object obj in towerObjects)
+            GameObject result = Instantiate(towerTemplate);
+            result.AddComponent(GetTowerType(name));
+
+            TowerData towerData = new();
+            if (Database.instance.database.TryGetValue("Towers", out List<object> towerObjects))
             {
-                TowerData data = (TowerData)obj;
-                if (data.Name == name)
+                foreach (object obj in towerObjects)
                 {
-                    towerData = data;
-                    break;
+                    TowerData data = (TowerData)obj;
+                    if (data.Name == name)
+                    {
+                        towerData = data;
+                        break;
+                    }
                 }
             }
+
+            //Add initialization logic here
+            //tower.InitializeObject(towerData.Sprite, towerData.Stats);
+            towerList.Add(result.GetComponent<Tower>());
+
+            result.GetComponent<NetworkObject>().Spawn();
         }
-
-        //Add initialization logic here
-        //tower.InitializeObject(towerData.Sprite, towerData.Stats);
-        towerList.Add(tower);
-
-        result.GetComponent<NetworkObject>().Spawn();
-        return result;
     }
+    private Type GetTowerType(string name)
+    {
+        switch (name)
+        {
+            case "Hansel":
+                return typeof(Hansel);
+            case "Gretel":
+                return typeof(Gretel);
+            default:
+                throw new ArgumentException($"Tower type '{name}' not recognized.");
+        }
+    }
+}
+public enum TowerType
+{
+    Hansel,
+    Gretel
 }

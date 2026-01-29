@@ -5,10 +5,9 @@ public struct TowerData
     private string name;
     private Stats stats;
     private Sprite sprite;
-    public string Name{ get { return name; } }
-    public Stats Stats{ get { return stats; } }
-    public Sprite Sprite{ get { return sprite; } }
-
+    public string Name { get { return name; } }
+    public Stats Stats { get { return stats; } }
+    public Sprite Sprite { get { return sprite; } }
     /// <summary>
     /// 
     /// </summary>
