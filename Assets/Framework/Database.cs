@@ -68,7 +68,12 @@ public class Database : MonoBehaviour
                     {
                         case "Towers":
                             string[] values = data[i].Split(',');
-                            database[links.databaseName].Add(new TowerData(values[0], int.Parse(values[1]), float.Parse(values[2]), float.Parse(values[3])));
+                            database[links.databaseName].Add(
+                                new TowerData(values[0], 
+                                values[1] == "" ? values[0] : values[1],
+                                int.Parse(values[2]), 
+                                float.Parse(values[3]), 
+                                float.Parse(values[4])));
                             break;
 
                         default:
