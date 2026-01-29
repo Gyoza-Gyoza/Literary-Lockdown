@@ -64,9 +64,22 @@ public class Player : Tower
         transform.position = m_Position.Value;
     }
 
-    private void ToggleCharacterMovement()
+    [Rpc(SendTo.Owner)]
+    private void ToggleCharacterMovementRpc(RpcParams rpcParams = default)
     {
         if (!IsOwner) return;
+
+        // Check raycast for overlapping characters
+        Collider2D[] hitAll = Physics2D.OverlapPointAll(transform.position);
+
+        foreach(Collider2D hit in hitAll )
+        {
+            if (hit.gameObject != gameObject) 
+            {
+                Debug.Log($"Overlapping with object: {hit.gameObject.name}");
+                return;
+            }
+        }
 
         if (isMoving == true)
         {
@@ -98,7 +111,7 @@ public class Player : Tower
         if (Input.GetMouseButtonDown(0))
         {
             // Disable character movement if active
-            ToggleCharacterMovement();
+            ToggleCharacterMovementRpc();
         }
         CharacterMovementState();
     }
