@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - CharacterSelect
+  - NetworkManager
   layers:
   - Default
   - TransparentFX
