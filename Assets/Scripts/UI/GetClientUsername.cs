@@ -8,14 +8,19 @@ public class GetClientUsername : MonoBehaviour
 
     public string clientID;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void GetUsername()
     {
         // Get and set username for the player
         if (clientID != "")
         {
             TMP_username.text = GameObject.Find($"Player_{clientID}").GetComponent<PlayerClientController>().m_PlayerName;
         }
+    }
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        
     }
 
     // Update is called once per frame

@@ -25,6 +25,7 @@ public class PlayerClientController : NetworkBehaviour
     {
         playerName.OnValueChanged += OnPlayerNameChanged;
 
+
         if (IsOwner)
         {
             ChangeGameObjectNameRpc($"Player_{NetworkManager.Singleton.LocalClientId.ToString()}");
@@ -34,21 +35,9 @@ public class PlayerClientController : NetworkBehaviour
         }
     }
 
-    public void Awake()
+    public string GetUsername()
     {
-    }
-
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        return playerName.Value.ToString();
     }
 
     public void OnPlayerNameChanged(FixedString512Bytes previousValue, FixedString512Bytes newValue)

@@ -14,32 +14,24 @@ public class PlayerList : MonoBehaviour
 
     public void Awake()
     {
-        m_NetworkManager.OnConnectionEvent += PlayerConnection;
+        m_NetworkManager.OnConnectionEvent += OnConnectionEvent;
     }
 
-    private void PlayerConnection(NetworkManager manager, ConnectionEventData data)
+    private void OnConnectionEvent(NetworkManager network, ConnectionEventData data)
     {
-        switch (data.EventType)
+        //Brute Force method
+        m_PlayerList.Clear();
+
+        foreach (NetworkClient client in m_NetworkManager.ConnectedClientsList)
         {
-            case (ConnectionEvent.ClientConnected):
-                Debug.Log($"Player Connected | ClientId={data.ClientId} ConnectionEvent={data.EventType}");
+            if (!m_PlayerList.ContainsKey(client.ClientId.ToString()))
+            {
+                GameObject playerListItem = Instantiate(playerListPrefab, transform);
+                playerListItem.GetComponent<GetClientUsername>().clientID = $"{client.ClientId}";
+                m_PlayerList.Add(client.ClientId.ToString(), playerListItem);
 
-                // Add the new player to the list
-                GameObject newPlayer = Instantiate(playerListPrefab, transform);
-                newPlayer.GetComponent<GetClientUsername>().clientID = data.ClientId.ToString();
-                m_PlayerList.Add(data.ClientId.ToString(), newPlayer);
-                break;
-
-            case (ConnectionEvent.ClientDisconnected):
-                Debug.Log($"Player Disconnected | ClientId={data.ClientId} ConnectionEvent={data.EventType}");
-                
-                // Remove the player from the list
-                if (m_PlayerList.TryGetValue(data.ClientId.ToString(), out GameObject player))
-                {
-                    Destroy(player);
-                    m_PlayerList.Remove(data.ClientId.ToString());
-                }
-                break;
+                playerListItem.GetComponent<GetClientUsername>().GetUsername();
+            }
         }
     }
 
