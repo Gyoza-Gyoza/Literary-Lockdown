@@ -17,7 +17,7 @@ public class PlayerClientController : NetworkBehaviour
     public int maxTowers;
     public NetworkVariable<int> currentTowers = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
-    public List<GameObject> towerPrefabList;
+    public List<NetworkObject> towerPrefabList;
 
     [Header("UI")]
     public GameObject towerSpawningUI;
@@ -66,11 +66,8 @@ public class PlayerClientController : NetworkBehaviour
     [Rpc(SendTo.Server)]
     public void SpawnTowerRpc(int towerIndex)
     {
-        GameObject towerToSpawn = Instantiate(towerPrefabList[towerIndex]);
-
-        // Spawn the tower across the network
-        towerToSpawn.GetComponent<NetworkObject>().Spawn();
-        towerToSpawn.GetComponent<NetworkObject>().ChangeOwnership(playerID);
+        //GameObject towerToSpawn = Instantiate(towerPrefabList[towerIndex]);
+        NetworkObject towerToSpawn = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(towerPrefabList[towerIndex], playerID);
 
         // Edit tower Stats
         towerToSpawn.name = $"{towerToSpawn.name.Replace("(Clone)", "")}_{m_PlayerName}";
