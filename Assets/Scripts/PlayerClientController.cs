@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -9,7 +10,8 @@ public class PlayerClientController : NetworkBehaviour
 {
     [Header("Player Stats")]
     private NetworkVariable<FixedString512Bytes> playerName = new NetworkVariable<FixedString512Bytes>("Player Connected", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-
+    [SerializeField]
+    private ulong playerID;
     public string m_PlayerName;
 
     [Header("Tower Stats")]
@@ -39,6 +41,8 @@ public class PlayerClientController : NetworkBehaviour
             PlayerMetadata playerMetadata = SaveLoadManager.LoadData();
             playerName.Value = playerMetadata.playerName;
 
+            playerID = NetworkManager.Singleton.LocalClientId;
+
             // Enable TowerSpawning UI
             towerSpawningUI.SetActive(true);
         }
@@ -60,15 +64,19 @@ public class PlayerClientController : NetworkBehaviour
         SpawnTowerRpc(towerIndex);
     }
 
-    [Rpc(SendTo.Server)]
+    [Rpc(SendTo.Everyone)]
     public void SpawnTowerRpc(int towerIndex)
     {
         GameObject towerToSpawn = Instantiate(towerPrefabList[towerIndex]);
 
+        // Spawn the tower across the network
+        towerToSpawn.GetComponent<NetworkObject>().Spawn();
+        towerToSpawn.GetComponent<NetworkObject>().ChangeOwnership(playerID);
+
         // Edit tower Stats
         towerToSpawn.name = $"{towerToSpawn.name.Replace("(Clone)", "")}_{m_PlayerName}";
-        towerToSpawn.GetComponent<NetworkObject>().Spawn();
-    }    
+        towerToSpawn.GetComponentInChildren<TextMeshPro>().text = m_PlayerName;
+    }
     #endregion
 
 

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Globalization;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -43,6 +44,12 @@ public class Tower : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         m_Position.OnValueChanged += OnPositionChangedRpc;
+
+        if (OwnerClientId == NetworkManager.Singleton.LocalClientId)
+        {
+            // Set text color to green for the local player's tower
+            GetComponentInChildren<TextMeshPro>().color = Color.green;
+        }
 
         // Late join safety
         OnPositionChangedRpc(Vector3.zero, m_Position.Value);
