@@ -5,20 +5,12 @@ using UnityEngine;
 using UnityEngine.UIElements;
 public class Tower : NetworkBehaviour
 {
-    public List<Sprite> characterSpriteList;
-
-    [Header("Network Variables")]
-    public int m_characterSpriteIndex = 0;
-    private NetworkVariable<int> characterSpriteIndex = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-
     private Vector3 localPosition;
 
     [SerializeField]
     private bool isMoving;
     private Stats baseStats;
     private List<Stats> bonusStats = new();
-
-    public Sprite defaultSprite;
 
     [Header("Synced Variables")]
     private NetworkVariable<Stats> m_baseStats = new NetworkVariable<Stats>();
@@ -47,32 +39,13 @@ public class Tower : NetworkBehaviour
             return finalStats;
         }
     }
-    protected void Awake()
-    {
-        m_Renderer = GetComponent<SpriteRenderer>();
-        m_Renderer.sprite = defaultSprite;
-        isMoving = false;
-    }
 
     public override void OnNetworkSpawn()
     {
-        characterSpriteIndex.OnValueChanged += OnSpriteChanged;
         m_Position.OnValueChanged += OnPositionChangedRpc;
-
-        OnSpriteChanged(-1, characterSpriteIndex.Value);
 
         // Late join safety
         OnPositionChangedRpc(Vector3.zero, m_Position.Value);
-    }
-
-    [Rpc(SendTo.Owner)]
-    public void SetSpriteRpc(int value, RpcParams rpcParams = default)
-    {
-        characterSpriteIndex.Value = value;
-        m_characterSpriteIndex = characterSpriteIndex.Value;
-        m_Renderer.sprite = characterSpriteList[m_characterSpriteIndex];
-
-        StartMovement();
     }
 
     public void StartMovement()
@@ -141,12 +114,6 @@ public class Tower : NetworkBehaviour
         }
         CharacterMovementState();
         transform.position = m_Position.Value;
-    }
-
-    protected void OnSpriteChanged(int oldValue, int newValue)
-    {
-        m_characterSpriteIndex = newValue;
-        m_Renderer.sprite = characterSpriteList[m_characterSpriteIndex];
     }
 
     [Rpc(SendTo.Server)]
