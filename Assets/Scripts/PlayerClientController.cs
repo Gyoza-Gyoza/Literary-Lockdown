@@ -15,10 +15,15 @@ public class PlayerClientController : NetworkBehaviour
     public int maxTowers;
     public NetworkVariable<int> currentTowers = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
-    [Rpc(SendTo.Everyone)]
-    public void ChangeGameObjectNameRpc(string newGOName)
+    public NetworkObject towerPrefab;
+
+    [Header("UI")]
+    public GameObject towerSpawningUI;
+
+    public void Awake()
     {
-        gameObject.name = newGOName;
+        // Get the UI GameObject reference
+        towerSpawningUI = UIManager.Instance.TowerSpawner;
     }
 
     public override void OnNetworkSpawn()
@@ -32,12 +37,21 @@ public class PlayerClientController : NetworkBehaviour
 
             PlayerMetadata playerMetadata = SaveLoadManager.LoadData();
             playerName.Value = playerMetadata.playerName;
+
+            // Enable TowerSpawning UI
+            towerSpawningUI.SetActive(true);
         }
     }
 
     public string GetUsername()
     {
         return playerName.Value.ToString();
+    }
+
+    [Rpc(SendTo.Server)]
+    public void ChangeGameObjectNameRpc(string newGOName)
+    {
+        gameObject.name = newGOName;
     }
 
     public void OnPlayerNameChanged(FixedString512Bytes previousValue, FixedString512Bytes newValue)

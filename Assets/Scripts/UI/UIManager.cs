@@ -4,7 +4,7 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
-    public GameObject CharacterSelect_UI;
+    public GameObject TowerSpawner;
 
     public void Awake()
     {
