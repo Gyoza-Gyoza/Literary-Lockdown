@@ -59,11 +59,6 @@ public class Tower : NetworkBehaviour
         characterSpriteIndex.OnValueChanged += OnSpriteChanged;
         m_Position.OnValueChanged += OnPositionChangedRpc;
 
-        if (IsOwner)
-        {
-            UIManager.Instance.CharacterSelect_UI.SetActive(true);
-        }
-
         OnSpriteChanged(-1, characterSpriteIndex.Value);
 
         // Late join safety
