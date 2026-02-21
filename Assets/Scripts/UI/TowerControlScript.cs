@@ -24,7 +24,7 @@ public class TowerControlScript : MonoBehaviour
         if (m_UIManager.seletedTower != null)
         {
             m_UIManager.TowerControlPanel.SetActive(false);
-            NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerClientController>().DestoryTowerRpc(m_UIManager.seletedTower);
+            NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerClientController>().DestroyTowerRpc(m_UIManager.seletedTower);
         }
     }
 }

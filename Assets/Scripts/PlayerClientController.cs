@@ -75,7 +75,7 @@ public class PlayerClientController : NetworkBehaviour
     }
 
 
-    public void DestoryTowerRpc(GameObject gameObject)
+    public void DestroyTowerRpc(GameObject gameObject)
     {
         if (gameObject.GetComponent<NetworkObject>().IsOwner)
         {
