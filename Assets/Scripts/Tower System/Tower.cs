@@ -55,7 +55,8 @@ public class Tower : NetworkBehaviour
         OnPositionChangedRpc(Vector3.zero, m_Position.Value);
     }
 
-    public void StartMovement()
+    [Rpc(SendTo.Server)]
+    public void StartMovementRpc()
     {
         Debug.Log($"StartMovement | Local={NetworkManager.Singleton.LocalClientId} " +
               $"Owner={OwnerClientId} IsOwner={IsOwner}");
@@ -119,8 +120,16 @@ public class Tower : NetworkBehaviour
             // Disable character movement if active
             ToggleCharacterMovementRpc();
         }
+
         CharacterMovementState();
         transform.position = m_Position.Value;
+    }
+
+    protected void OnMouseDown()
+    {
+        // Activate UI element
+        UIManager.Instance.TowerControlPanel.SetActive(true);
+        UIManager.Instance.seletedTower = gameObject;
     }
 
     [Rpc(SendTo.Server)]

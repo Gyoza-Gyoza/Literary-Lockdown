@@ -4,7 +4,6 @@ using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class PlayerClientController : NetworkBehaviour
 {
@@ -64,7 +63,7 @@ public class PlayerClientController : NetworkBehaviour
         SpawnTowerRpc(towerIndex);
     }
 
-    [Rpc(SendTo.Everyone)]
+    [Rpc(SendTo.Server)]
     public void SpawnTowerRpc(int towerIndex)
     {
         GameObject towerToSpawn = Instantiate(towerPrefabList[towerIndex]);
@@ -76,6 +75,16 @@ public class PlayerClientController : NetworkBehaviour
         // Edit tower Stats
         towerToSpawn.name = $"{towerToSpawn.name.Replace("(Clone)", "")}_{m_PlayerName}";
         towerToSpawn.GetComponentInChildren<TextMeshPro>().text = m_PlayerName;
+    }
+
+
+    public void DestoryTowerRpc(GameObject gameObject)
+    {
+        if (gameObject.GetComponent<NetworkObject>().IsOwner)
+        {
+            gameObject.GetComponent<NetworkObject>().Despawn();
+            currentTowers.Value -= 1;
+        }
     }
     #endregion
 
