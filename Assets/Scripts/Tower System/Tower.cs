@@ -1,16 +1,12 @@
 using System.Collections.Generic;
 using System.Globalization;
+using TMPro;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UIElements;
 public class Tower : NetworkBehaviour
 {
-    public List<Sprite> characterSpriteList;
-
-    [Header("Network Variables")]
-    public int m_characterSpriteIndex = 0;
-    private NetworkVariable<int> characterSpriteIndex = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-
     private Vector3 localPosition;
 
     [SerializeField]
@@ -18,12 +14,13 @@ public class Tower : NetworkBehaviour
     private Stats baseStats;
     private List<Stats> bonusStats = new();
 
-    public Sprite defaultSprite;
-
     [Header("Synced Variables")]
+    private NetworkVariable<FixedString512Bytes> m_GameObjectName = new NetworkVariable<FixedString512Bytes>("Default Tower Name", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private NetworkVariable<Stats> m_baseStats = new NetworkVariable<Stats>();
     [SerializeField]
     protected NetworkVariable<Vector3> m_Position = new NetworkVariable<Vector3>(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    [SerializeField]
+    public NetworkVariable<FixedString512Bytes> m_TowerName = new NetworkVariable<FixedString512Bytes>("Default Tower Name", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     [Header("Components")]
     protected SpriteRenderer m_Renderer;
@@ -47,40 +44,31 @@ public class Tower : NetworkBehaviour
             return finalStats;
         }
     }
-    protected void Awake()
-    {
-        m_Renderer = GetComponent<SpriteRenderer>();
-        m_Renderer.sprite = defaultSprite;
-        isMoving = false;
-    }
 
     public override void OnNetworkSpawn()
     {
-        characterSpriteIndex.OnValueChanged += OnSpriteChanged;
+        m_GameObjectName.OnValueChanged += OnGameObjectNameChangeRpc;
         m_Position.OnValueChanged += OnPositionChangedRpc;
+        m_TowerName.OnValueChanged += OnTowerNameChangedRpc;
 
-        if (IsOwner)
+
+        if (OwnerClientId == NetworkManager.Singleton.LocalClientId)
         {
-            UIManager.Instance.CharacterSelect_UI.SetActive(true);
+            // Set text color to green for the local player's tower
+            GetComponentInChildren<TextMeshPro>().color = Color.green;
         }
 
-        OnSpriteChanged(-1, characterSpriteIndex.Value);
+        m_TowerName.Value = GameObject.Find($"Player_{OwnerClientId}").GetComponent<PlayerClientController>().playerName.Value.ToString();
+
 
         // Late join safety
+        OnGameObjectNameChangeRpc(new FixedString512Bytes(""), gameObject.name.Replace("(Clone)", $"_{OwnerClientId}"));
         OnPositionChangedRpc(Vector3.zero, m_Position.Value);
+        OnTowerNameChangedRpc(new FixedString512Bytes(""), GameObject.Find($"Player_{OwnerClientId}").GetComponent<PlayerClientController>().playerName.Value.ToString());
     }
 
-    [Rpc(SendTo.Owner)]
-    public void SetSpriteRpc(int value, RpcParams rpcParams = default)
-    {
-        characterSpriteIndex.Value = value;
-        m_characterSpriteIndex = characterSpriteIndex.Value;
-        m_Renderer.sprite = characterSpriteList[m_characterSpriteIndex];
 
-        StartMovement();
-    }
-
-    public void StartMovement()
+    public void StartMovementRpc()
     {
         Debug.Log($"StartMovement | Local={NetworkManager.Singleton.LocalClientId} " +
               $"Owner={OwnerClientId} IsOwner={IsOwner}");
@@ -144,19 +132,41 @@ public class Tower : NetworkBehaviour
             // Disable character movement if active
             ToggleCharacterMovementRpc();
         }
+
         CharacterMovementState();
         transform.position = m_Position.Value;
     }
 
-    protected void OnSpriteChanged(int oldValue, int newValue)
+    protected void OnMouseDown()
     {
-        m_characterSpriteIndex = newValue;
-        m_Renderer.sprite = characterSpriteList[m_characterSpriteIndex];
+        if (IsOwner)
+        {
+            // Activate UI element
+            UIManager.Instance.TowerControlPanel.SetActive(true);
+            UIManager.Instance.seletedTower = gameObject;
+        }
+        else
+        {
+            UIManager.Instance.TowerControlPanel.SetActive(false);
+            UIManager.Instance.seletedTower = null;
+        }
     }
 
     [Rpc(SendTo.Server)]
     protected void OnPositionChangedRpc(Vector3 oldValue,  Vector3 newValue)
     {
         transform.position = newValue;
+    }
+
+    [Rpc(SendTo.Everyone)]
+    protected void OnTowerNameChangedRpc(FixedString512Bytes oldValue, FixedString512Bytes newValue)
+    {
+        GetComponentInChildren<TextMeshPro>().text = newValue.ToString();
+    }
+
+    [Rpc(SendTo.Everyone)]
+    protected void OnGameObjectNameChangeRpc(FixedString512Bytes oldValue, FixedString512Bytes newValue)
+    {
+        gameObject.name = newValue.ToString();
     }
 }

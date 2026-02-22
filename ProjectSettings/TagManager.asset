@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 3
   tags:
   - CharacterSelect
+  - NetworkManager
+  - TowerSpawner
   layers:
   - Default
   - TransparentFX

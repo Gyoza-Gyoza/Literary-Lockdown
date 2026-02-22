@@ -12,15 +12,8 @@ public class CharacterSelectUI : MonoBehaviour
         
     }
 
-    public void SelectCharacter(int id)
+    public void TrySpawnTower(int towerIndex)
     {
-        m_networkManager = FindFirstObjectByType<NetworkManager>();
-
-        var playerObject = m_networkManager.SpawnManager.GetLocalPlayerObject();
-        m_localPlayer = playerObject.GetComponent<Tower>();
-        m_localPlayer.SetSpriteRpc(id);
-
-        // Close menu
-        gameObject.SetActive(false);
+        NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerClientController>().TrySpawnTower(towerIndex);
     }
 }

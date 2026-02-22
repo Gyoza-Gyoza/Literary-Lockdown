@@ -5,6 +5,8 @@ public class NetworkThing : MonoBehaviour
 {
     private NetworkManager m_NetworkManager;
 
+    private string m_PlayerName;
+
     private void Awake()
     {
         m_NetworkManager = GetComponent<NetworkManager>();
@@ -14,6 +16,7 @@ public class NetworkThing : MonoBehaviour
     private void OnGUI()
     {
         GUILayout.BeginArea(new Rect(10, 10, 300, 300));
+
         if (!m_NetworkManager.IsClient && !m_NetworkManager.IsServer)
         {
             StartButtons();
@@ -21,8 +24,6 @@ public class NetworkThing : MonoBehaviour
         else
         {
             StatusLabels();
-
-            SubmitNewPosition();
         }
 
         GUILayout.EndArea();
