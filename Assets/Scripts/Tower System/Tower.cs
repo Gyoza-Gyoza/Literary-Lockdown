@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using TMPro;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -14,9 +15,12 @@ public class Tower : NetworkBehaviour
     private List<Stats> bonusStats = new();
 
     [Header("Synced Variables")]
+    private NetworkVariable<FixedString512Bytes> m_GameObjectName = new NetworkVariable<FixedString512Bytes>("Default Tower Name", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private NetworkVariable<Stats> m_baseStats = new NetworkVariable<Stats>();
     [SerializeField]
     protected NetworkVariable<Vector3> m_Position = new NetworkVariable<Vector3>(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    [SerializeField]
+    public NetworkVariable<FixedString512Bytes> m_TowerName = new NetworkVariable<FixedString512Bytes>("Default Tower Name", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     [Header("Components")]
     protected SpriteRenderer m_Renderer;
@@ -43,7 +47,10 @@ public class Tower : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        m_GameObjectName.OnValueChanged += OnGameObjectNameChangeRpc;
         m_Position.OnValueChanged += OnPositionChangedRpc;
+        m_TowerName.OnValueChanged += OnTowerNameChangedRpc;
+
 
         if (OwnerClientId == NetworkManager.Singleton.LocalClientId)
         {
@@ -51,8 +58,13 @@ public class Tower : NetworkBehaviour
             GetComponentInChildren<TextMeshPro>().color = Color.green;
         }
 
+        m_TowerName.Value = GameObject.Find($"Player_{OwnerClientId}").GetComponent<PlayerClientController>().playerName.Value.ToString();
+
+
         // Late join safety
+        OnGameObjectNameChangeRpc(new FixedString512Bytes(""), gameObject.name.Replace("(Clone)", $"_{OwnerClientId}"));
         OnPositionChangedRpc(Vector3.zero, m_Position.Value);
+        OnTowerNameChangedRpc(new FixedString512Bytes(""), GameObject.Find($"Player_{OwnerClientId}").GetComponent<PlayerClientController>().playerName.Value.ToString());
     }
 
 
@@ -144,5 +156,17 @@ public class Tower : NetworkBehaviour
     protected void OnPositionChangedRpc(Vector3 oldValue,  Vector3 newValue)
     {
         transform.position = newValue;
+    }
+
+    [Rpc(SendTo.Everyone)]
+    protected void OnTowerNameChangedRpc(FixedString512Bytes oldValue, FixedString512Bytes newValue)
+    {
+        GetComponentInChildren<TextMeshPro>().text = newValue.ToString();
+    }
+
+    [Rpc(SendTo.Everyone)]
+    protected void OnGameObjectNameChangeRpc(FixedString512Bytes oldValue, FixedString512Bytes newValue)
+    {
+        gameObject.name = newValue.ToString();
     }
 }
