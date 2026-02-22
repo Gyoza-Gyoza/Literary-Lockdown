@@ -55,7 +55,7 @@ public class Tower : NetworkBehaviour
         OnPositionChangedRpc(Vector3.zero, m_Position.Value);
     }
 
-    [Rpc(SendTo.Server)]
+
     public void StartMovementRpc()
     {
         Debug.Log($"StartMovement | Local={NetworkManager.Singleton.LocalClientId} " +
@@ -127,9 +127,17 @@ public class Tower : NetworkBehaviour
 
     protected void OnMouseDown()
     {
-        // Activate UI element
-        UIManager.Instance.TowerControlPanel.SetActive(true);
-        UIManager.Instance.seletedTower = gameObject;
+        if (IsOwner)
+        {
+            // Activate UI element
+            UIManager.Instance.TowerControlPanel.SetActive(true);
+            UIManager.Instance.seletedTower = gameObject;
+        }
+        else
+        {
+            UIManager.Instance.TowerControlPanel.SetActive(false);
+            UIManager.Instance.seletedTower = null;
+        }
     }
 
     [Rpc(SendTo.Server)]

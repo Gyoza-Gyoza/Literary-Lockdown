@@ -64,16 +64,18 @@ public class PlayerClientController : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server)]
-    public void SpawnTowerRpc(int towerIndex)
+    public void SpawnTowerServerRpc(int towerIndex, ulong clientID)
     {
         //GameObject towerToSpawn = Instantiate(towerPrefabList[towerIndex]);
-        NetworkObject towerToSpawn = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(towerPrefabList[towerIndex], playerID);
-
-        // Edit tower Stats
-        towerToSpawn.name = $"{towerToSpawn.name.Replace("(Clone)", "")}_{m_PlayerName}";
-        towerToSpawn.GetComponentInChildren<TextMeshPro>().text = m_PlayerName;
+        NetworkObject towerToSpawn = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(towerPrefabList[towerIndex], clientID);
     }
 
+
+    [Rpc(SendTo.Owner)]
+    public void SpawnTowerRpc(int towerIndex)
+    {
+        SpawnTowerServerRpc(towerIndex, playerID);
+    }
 
     public void DestroyTowerRpc(GameObject gameObject)
     {
@@ -84,7 +86,6 @@ public class PlayerClientController : NetworkBehaviour
         }
     }
     #endregion
-
 
     public string GetUsername()
     {
