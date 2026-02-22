@@ -8,10 +8,10 @@ using UnityEngine;
 public class PlayerClientController : NetworkBehaviour
 {
     [Header("Player Stats")]
-    private NetworkVariable<FixedString512Bytes> playerName = new NetworkVariable<FixedString512Bytes>("Player Connected", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<FixedString512Bytes> playerName = new NetworkVariable<FixedString512Bytes>("Player Connected", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     [SerializeField]
+    private NetworkVariable<FixedString512Bytes> m_GameObjectName = new NetworkVariable<FixedString512Bytes>("Default Name", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private ulong playerID;
-    public string m_PlayerName;
 
     [Header("Tower Stats")]
     public int maxTowers;
@@ -30,12 +30,12 @@ public class PlayerClientController : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        playerName.OnValueChanged += OnPlayerNameChanged;
         currentTowers.OnValueChanged += OnCurrentTowersChangedRpc;
+        m_GameObjectName.OnValueChanged += ChangeGameObjectNameRpc;
 
         if (IsOwner)
         {
-            ChangeGameObjectNameRpc($"Player_{NetworkManager.Singleton.LocalClientId.ToString()}");
+            m_GameObjectName.Value = $"Player_{NetworkManager.Singleton.LocalClientId.ToString()}";
 
             PlayerMetadata playerMetadata = SaveLoadManager.LoadData();
             playerName.Value = playerMetadata.playerName;
@@ -45,6 +45,8 @@ public class PlayerClientController : NetworkBehaviour
             // Enable TowerSpawning UI
             towerSpawningUI.SetActive(true);
         }
+
+        ChangeGameObjectNameRpc("" , m_GameObjectName.Value);
     }
 
     #region Tower Handler
@@ -64,16 +66,21 @@ public class PlayerClientController : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server)]
-    public void SpawnTowerRpc(int towerIndex)
+    public void SpawnTowerServerRpc(int towerIndex, ulong clientID)
     {
         //GameObject towerToSpawn = Instantiate(towerPrefabList[towerIndex]);
-        NetworkObject towerToSpawn = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(towerPrefabList[towerIndex], playerID);
+        NetworkObject towerToSpawn = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(towerPrefabList[towerIndex], clientID);
 
-        // Edit tower Stats
-        towerToSpawn.name = $"{towerToSpawn.name.Replace("(Clone)", "")}_{m_PlayerName}";
-        towerToSpawn.GetComponentInChildren<TextMeshPro>().text = m_PlayerName;
+        // Rename the tower
+        towerToSpawn.GetComponent<Tower>().m_TowerName.Value = GameObject.Find($"Player_{clientID}").GetComponent<PlayerClientController>().playerName.Value;
     }
 
+
+    [Rpc(SendTo.Owner)]
+    public void SpawnTowerRpc(int towerIndex)
+    {
+        SpawnTowerServerRpc(towerIndex, playerID);
+    }
 
     public void DestroyTowerRpc(GameObject gameObject)
     {
@@ -85,26 +92,20 @@ public class PlayerClientController : NetworkBehaviour
     }
     #endregion
 
-
     public string GetUsername()
     {
         return playerName.Value.ToString();
     }
 
-    [Rpc(SendTo.Server)]
-    public void ChangeGameObjectNameRpc(string newGOName)
+    [Rpc(SendTo.Everyone)]
+    public void ChangeGameObjectNameRpc(FixedString512Bytes previousValue, FixedString512Bytes newValue)
     {
-        gameObject.name = newGOName;
+        gameObject.name = newValue.ToString();
     }
 
     [Rpc(SendTo.Server)]
     public void OnCurrentTowersChangedRpc(int previousValue, int newValue)
     {
         currentTowers.Value = newValue;
-    }
-
-    public void OnPlayerNameChanged(FixedString512Bytes previousValue, FixedString512Bytes newValue)
-    {
-        m_PlayerName = newValue.ToString();
     }
 }
