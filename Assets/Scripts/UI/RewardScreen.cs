@@ -70,16 +70,15 @@ public class RewardScreen : MonoBehaviour
     void Update()
     {
         #region Debugging / Testing Inputs
+        //if (Input.GetKeyDown(KeyCode.O))
+        //{
+        //    this.FadeOut();
+        //}
 
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            this.FadeOut();
-        }
-
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            this.FadeIn();
-        }
+        //if (Input.GetKeyDown(KeyCode.I))
+        //{
+        //    this.FadeIn();
+        //}
         #endregion
     }
 }
