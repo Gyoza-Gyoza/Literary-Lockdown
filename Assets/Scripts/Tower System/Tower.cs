@@ -8,6 +8,7 @@ using UnityEngine.UIElements;
 public class Tower : NetworkBehaviour
 {
     private Vector3 localPosition;
+    [SerializeField] private AttackRange attackRange;
 
     [SerializeField]
     private bool isMoving;
@@ -35,15 +36,15 @@ public class Tower : NetworkBehaviour
             return totalBonus;
         }
     }
-    public Stats TotalStats
-    {
-        get
-        {
-            Stats finalStats = baseStats;
-            foreach (Stats stats in bonusStats) baseStats += stats;
-            return finalStats;
-        }
-    }
+    //public Stats TotalStats
+    //{
+    //    get
+    //    {
+    //        Stats finalStats = baseStats;
+    //        foreach (Stats stats in bonusStats) baseStats += stats;
+    //        return finalStats;
+    //    }
+    //}
 
     public override void OnNetworkSpawn()
     {
