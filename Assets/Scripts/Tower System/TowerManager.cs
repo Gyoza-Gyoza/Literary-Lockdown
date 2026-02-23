@@ -5,8 +5,10 @@ using UnityEngine;
 
 public class TowerManager : NetworkBehaviour
 {
+    [SerializeField] private Spawner spawner;
     private List<Tower> towerList = new();
-    private List<EnemyBehaviour> enemyList = new();
+    private List<NetworkObject> enemyList = new();
+    public List<NetworkObject> EnemyList => spawner.EnemyList;
 
     public static TowerManager Instance { get; private set; }
 
@@ -32,9 +34,9 @@ public class TowerManager : NetworkBehaviour
             if (tower.target != null) continue;
             else
             {
-                foreach (EnemyBehaviour enemy in enemyList)
+                foreach (NetworkObject enemy in enemyList)
                 {
-                    if (Vector2.Distance(tower.transform.position, enemy.transform.position) <= tower.attackRange)
+                    if (Vector2.Distance(tower.transform.position, enemy.transform.position) <= tower.attackRange.Value)
                     {
                         tower.target = enemy;
                         break;
@@ -47,11 +49,12 @@ public class TowerManager : NetworkBehaviour
     {
         foreach (Tower tower in towerList)
         {
-            if (tower.target != null && tower.canAttack)
+            if (tower.target != null && tower.canAttack.Value)
             {
                 NetworkObject projectile = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(tower.projectilePrefab);
                 projectile.transform.position = tower.transform.position;
                 projectile.transform.LookAt(tower.target.transform);
+                projectile.GetComponent<Bullet>().speed = tower.projectileSpeed.Value;
                 Debug.Log($"Attacking");
             }
         }
@@ -108,8 +111,8 @@ public class TowerManager : NetworkBehaviour
     //    }
     //}
 }
-public enum TowerType
-{
-    Hansel,
-    Gretel
-}
+//public enum TowerType
+//{
+//    Hansel,
+//    Gretel
+//}

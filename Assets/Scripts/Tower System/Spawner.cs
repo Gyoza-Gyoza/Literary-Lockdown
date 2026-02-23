@@ -6,8 +6,8 @@ public class Spawner : NetworkBehaviour
 {
     [SerializeField] private NetworkObject enemyPrefab;
     [SerializeField] private float spawnInterval = 1f;
-    private List<EnemyBehaviour> enemyList = new();
-    public List<EnemyBehaviour> EnemyList => enemyList;
+    private List<NetworkObject> enemyList = new();
+    public List<NetworkObject> EnemyList => enemyList;
 
     private float timer;
     void Update()
@@ -22,7 +22,7 @@ public class Spawner : NetworkBehaviour
     private void SpawnEnemy()
     {
         NetworkObject enemy = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(enemyPrefab);
-        enemyList.Add(enemy.GetComponent<EnemyBehaviour>());
+        enemyList.Add(enemy);
         enemy.transform.position = transform.position;
         enemy.transform.rotation = transform.rotation;
     }

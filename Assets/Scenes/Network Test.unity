@@ -1243,6 +1243,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerManager
   ShowTopMostFoldoutHeaderGroup: 1
+  spawner: {fileID: 438943307}
 --- !u!4 &1493182264
 Transform:
   m_ObjectHideFlags: 0

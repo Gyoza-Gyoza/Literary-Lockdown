@@ -7,11 +7,12 @@ using UnityEngine;
 using UnityEngine.UIElements;
 public class Tower : NetworkBehaviour
 {
-    public float attackRange;
+    public NetworkVariable<float> projectileSpeed;
+    public NetworkVariable<float> attackRange;
     public NetworkObject projectilePrefab;
-    public bool canAttack;
+    public NetworkVariable<bool> canAttack;
     [SerializeField] private float attackSpeed = 0.2f;
-    public EnemyBehaviour target;
+    public NetworkObject target;
 
     [SerializeField]
     private bool isMoving;
@@ -51,13 +52,14 @@ public class Tower : NetworkBehaviour
     //}
     private void AttackCooldown()
     {
-        if (!canAttack)
+        if (!IsServer) return;
+        if (!canAttack.Value)
         {
             timer += Time.deltaTime;
             if (timer >= attackSpeed)
             {
                 timer -= attackSpeed;
-                canAttack = true;
+                canAttack.Value = true;
             }
         }
     }
@@ -211,6 +213,6 @@ public class Tower : NetworkBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
+        Gizmos.DrawWireSphere(transform.position, attackRange.Value);
     }
 }
