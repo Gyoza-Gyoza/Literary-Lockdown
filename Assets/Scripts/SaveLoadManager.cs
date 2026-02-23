@@ -8,6 +8,7 @@ public class SaveLoadManager : MonoBehaviour
     private PlayerMetadata m_playerData;
 
     [Header("UI Elements")]
+    public TMP_InputField inputField;
     public TextMeshProUGUI TMPInputUsername;
     public TextMeshProUGUI TMPInputUsername_Placeholder;
 
@@ -57,7 +58,7 @@ public class SaveLoadManager : MonoBehaviour
 
         if (m_playerData.playerName != "" && SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(0))
         {
-            TMPInputUsername_Placeholder.text = m_playerData.playerName;
+            TMPInputUsername_Placeholder.text = "Saved as " + m_playerData.playerName;
         }
     }
 
@@ -65,6 +66,12 @@ public class SaveLoadManager : MonoBehaviour
     {
         m_playerData.playerName = TMPInputUsername.text;
         SaveData(m_playerData);
+        
+        if (m_playerData.playerName == TMPInputUsername.text)
+        {
+            inputField.text = "";
+            TMPInputUsername_Placeholder.text = "Saved as " + m_playerData.playerName;
+        }
     }
 
     public void LoadScene(int sceneIndex)
