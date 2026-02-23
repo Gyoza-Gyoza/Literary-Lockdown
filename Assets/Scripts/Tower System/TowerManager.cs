@@ -64,13 +64,17 @@ public class TowerManager : NetworkBehaviour
             }
         }
     }
+
+    // This function handles the attack logic for towers. 
+    // It checks if the tower can attack and spawns a projectile facing the targeted enemy.
+    // It also initializes the projectile's speed and damage based on the tower's stats.
     private void TowerAttackHandler()
     {
         foreach (Tower tower in towerList)
         {
             if (tower.target != null && tower.canAttack)
             {
-                NetworkObject projectile = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(tower.projectilePrefab);
+                NetworkObject projectile = Instantiate(tower.projectilePrefab);
                 projectile.transform.position = tower.transform.position;
 
                 Vector3 direction = tower.target.transform.position - tower.transform.position;
@@ -81,9 +85,10 @@ public class TowerManager : NetworkBehaviour
                 var bullet = projectile.GetComponent<Bullet>();
                 if (bullet != null)
                 {
-                    bullet.speed = tower.projectileSpeed.Value;
-                    bullet.damage = tower.damage.Value;
+                    bullet.speed.Value = tower.projectileSpeed.Value;
+                    bullet.damage.Value = tower.damage.Value;
                 }
+                projectile.Spawn();
                 tower.canAttack = false;
             }
         }

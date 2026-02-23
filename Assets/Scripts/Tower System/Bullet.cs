@@ -3,11 +3,11 @@ using Unity.Netcode;
 public class Bullet : NetworkBehaviour
 {
     [SerializeField] private float lifetime = 1f;
-    [HideInInspector] public float speed = 0f;
-    [HideInInspector] public int damage = 0;
+    [HideInInspector] public NetworkVariable<float> speed;
+    [HideInInspector] public NetworkVariable<int> damage;
     private void Update()
     {
-        transform.Translate(Vector3.up * speed * Time.deltaTime);
+        transform.Translate(Vector3.up * speed.Value * Time.deltaTime);
 
         if (lifetime <= 0f)
         {
@@ -36,7 +36,7 @@ public class Bullet : NetworkBehaviour
 
         if (collision.gameObject.TryGetComponent<EnemyBehaviour>(out EnemyBehaviour enemy))
         {
-            enemy.TakeDamage(damage);
+            enemy.TakeDamage(damage.Value);
             DestroyBullet();
         }
     }
