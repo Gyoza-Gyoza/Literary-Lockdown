@@ -794,10 +794,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Rapunzel
   ShowTopMostFoldoutHeaderGroup: 1
-  attackRange: 2
+  projectileSpeed:
+    m_InternalValue: 2
+  attackRange:
+    m_InternalValue: 2
   projectilePrefab: {fileID: 3516673801502512669, guid: 330e2d2bab858fd46971d8d26717497d, type: 3}
   canAttack: 0
-  attackSpeed: 0.2
+  attackSpeed: 0.5
   target: {fileID: 0}
   isMoving: 0
   m_Position:

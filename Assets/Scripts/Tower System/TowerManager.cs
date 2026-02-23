@@ -5,10 +5,22 @@ using UnityEngine;
 
 public class TowerManager : NetworkBehaviour
 {
-    [SerializeField] private Spawner spawner;
     private List<Tower> towerList = new();
-    private List<NetworkObject> enemyList = new();
-    public List<NetworkObject> EnemyList => spawner.EnemyList;
+    public List<NetworkObject> EnemyList
+    {
+        get
+        {
+            List<NetworkObject> currentEnemies = new();
+            foreach (NetworkObject obj in NetworkManager.Singleton.SpawnManager.SpawnedObjectsList)
+            {
+                if (obj.GetComponent<EnemyBehaviour>())
+                {
+                    currentEnemies.Add(obj);
+                }
+            }
+            return currentEnemies;
+        }
+    }
 
     public static TowerManager Instance { get; private set; }
 
@@ -31,16 +43,23 @@ public class TowerManager : NetworkBehaviour
     {
         foreach (Tower tower in towerList)
         {
-            if (tower.target != null) continue;
-            else
+            tower.target = null;
+            Debug.Log("Tower has no target, searching for enemies");
+            Debug.Log($"Enemy count: {EnemyList.Count}");
+
+            float closestDistance = float.PositiveInfinity;
+
+            foreach (NetworkObject enemy in EnemyList)
             {
-                foreach (NetworkObject enemy in enemyList)
+                float distance = Vector2.Distance(tower.transform.position, enemy.transform.position);
+                if (distance <= tower.attackRange.Value) // Make sure it's within range
                 {
-                    if (Vector2.Distance(tower.transform.position, enemy.transform.position) <= tower.attackRange.Value)
+                    if (distance < closestDistance) // Get closest enemy
                     {
+                        closestDistance = distance;
                         tower.target = enemy;
-                        break;
                     }
+                    Debug.Log($"Enemy detected");
                 }
             }
         }
@@ -49,13 +68,23 @@ public class TowerManager : NetworkBehaviour
     {
         foreach (Tower tower in towerList)
         {
-            if (tower.target != null && tower.canAttack.Value)
+            if (tower.target != null && tower.canAttack)
             {
                 NetworkObject projectile = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(tower.projectilePrefab);
                 projectile.transform.position = tower.transform.position;
-                projectile.transform.LookAt(tower.target.transform);
-                projectile.GetComponent<Bullet>().speed = tower.projectileSpeed.Value;
-                Debug.Log($"Attacking");
+
+                Vector3 direction = tower.target.transform.position - tower.transform.position;
+                direction.Normalize();
+
+                projectile.transform.rotation = Quaternion.FromToRotation(Vector3.up, direction);
+
+                var bullet = projectile.GetComponent<Bullet>();
+                if (bullet != null)
+                {
+                    bullet.speed = tower.projectileSpeed.Value;
+                    bullet.damage = tower.damage.Value;
+                }
+                tower.canAttack = false;
             }
         }
     }

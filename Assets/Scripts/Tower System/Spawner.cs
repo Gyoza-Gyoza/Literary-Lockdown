@@ -6,12 +6,22 @@ public class Spawner : NetworkBehaviour
 {
     [SerializeField] private NetworkObject enemyPrefab;
     [SerializeField] private float spawnInterval = 1f;
-    private List<NetworkObject> enemyList = new();
-    public List<NetworkObject> EnemyList => enemyList;
 
     private float timer;
+    public static Spawner Instance { get; private set; }
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        
+    }
     void Update()
     {
+        if (!IsServer) return;
         timer += Time.deltaTime;
         if (timer >= spawnInterval)
         {
@@ -22,7 +32,6 @@ public class Spawner : NetworkBehaviour
     private void SpawnEnemy()
     {
         NetworkObject enemy = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(enemyPrefab);
-        enemyList.Add(enemy);
         enemy.transform.position = transform.position;
         enemy.transform.rotation = transform.rotation;
     }

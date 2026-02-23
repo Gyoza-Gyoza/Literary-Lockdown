@@ -9,8 +9,9 @@ public class Tower : NetworkBehaviour
 {
     public NetworkVariable<float> projectileSpeed;
     public NetworkVariable<float> attackRange;
+    public NetworkVariable<int> damage;
     public NetworkObject projectilePrefab;
-    public NetworkVariable<bool> canAttack;
+    public bool canAttack;
     [SerializeField] private float attackSpeed = 0.2f;
     public NetworkObject target;
 
@@ -53,13 +54,13 @@ public class Tower : NetworkBehaviour
     private void AttackCooldown()
     {
         if (!IsServer) return;
-        if (!canAttack.Value)
+        if (!canAttack)
         {
             timer += Time.deltaTime;
             if (timer >= attackSpeed)
             {
                 timer -= attackSpeed;
-                canAttack.Value = true;
+                canAttack = true;
             }
         }
     }

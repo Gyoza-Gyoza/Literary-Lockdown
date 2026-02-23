@@ -4,12 +4,22 @@ using Unity.Netcode;
 public class NetworkThing : MonoBehaviour
 {
     private NetworkManager m_NetworkManager;
+    [SerializeField] private GameObject[] spawnOnStart;
 
     private string m_PlayerName;
 
     private void Awake()
     {
         m_NetworkManager = GetComponent<NetworkManager>();
+
+        NetworkManager.Singleton.OnServerStarted += () =>
+        {
+            foreach (GameObject obj in spawnOnStart)
+            {
+                NetworkObject networkObject = Instantiate(obj).GetComponent<NetworkObject>();
+                networkObject.Spawn();
+            }
+        };
     }
 
 
