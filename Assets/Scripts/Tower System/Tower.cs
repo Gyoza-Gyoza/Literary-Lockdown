@@ -7,13 +7,17 @@ using UnityEngine;
 using UnityEngine.UIElements;
 public class Tower : NetworkBehaviour
 {
-    private Vector3 localPosition;
-    [SerializeField] private AttackRange attackRange;
+    public float attackRange;
+    public NetworkObject projectilePrefab;
+    public bool canAttack;
+    [SerializeField] private float attackSpeed = 0.2f;
+    public EnemyBehaviour target;
 
     [SerializeField]
     private bool isMoving;
     private Stats baseStats;
     private List<Stats> bonusStats = new();
+    private float timer = 0f;
 
     [Header("Synced Variables")]
     private NetworkVariable<FixedString512Bytes> m_GameObjectName = new NetworkVariable<FixedString512Bytes>("Default Tower Name", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -45,7 +49,39 @@ public class Tower : NetworkBehaviour
     //        return finalStats;
     //    }
     //}
-
+    private void AttackCooldown()
+    {
+        if (!canAttack)
+        {
+            timer += Time.deltaTime;
+            if (timer >= attackSpeed)
+            {
+                timer -= attackSpeed;
+                canAttack = true;
+            }
+        }
+    }
+    //[Rpc(SendTo.Server)]
+    //public void AttackRpc()
+    //{
+    //    Vector3 enemyPos = GetClosestEnemy(out Vector3 facingVector);
+    //    NetworkObject bullet = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(projectilePrefab);
+    //    bullet.transform.position = transform.position;
+    //    bullet.transform.localEulerAngles = facingVector;
+    //}
+    //private Vector3 GetClosestEnemy(out Vector3 facingVector)
+    //{
+    //    Vector3 result = Vector3.positiveInfinity;
+    //    facingVector = Vector3.zero;
+    //    foreach (EnemyBehaviour enemy in Enemies)
+    //    {
+    //        facingVector = transform.position - enemy.transform.position;
+    //        if (result.magnitude <= facingVector.magnitude) 
+    //            result = enemy.transform.position;
+    //            facingVector = facingVector.normalized;
+    //    }
+    //    return result;
+    //}
     public override void OnNetworkSpawn()
     {
         m_GameObjectName.OnValueChanged += OnGameObjectNameChangeRpc;
@@ -136,6 +172,8 @@ public class Tower : NetworkBehaviour
 
         CharacterMovementState();
         transform.position = m_Position.Value;
+
+        AttackCooldown();
     }
 
     protected void OnMouseDown()
@@ -169,5 +207,10 @@ public class Tower : NetworkBehaviour
     protected void OnGameObjectNameChangeRpc(FixedString512Bytes oldValue, FixedString512Bytes newValue)
     {
         gameObject.name = newValue.ToString();
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 }

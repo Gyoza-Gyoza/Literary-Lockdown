@@ -72,7 +72,10 @@ public class PlayerClientController : NetworkBehaviour
         NetworkObject towerToSpawn = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(towerPrefabList[towerIndex], clientID);
 
         // Rename the tower
-        towerToSpawn.GetComponent<Tower>().m_TowerName.Value = GameObject.Find($"Player_{clientID}").GetComponent<PlayerClientController>().playerName.Value;
+        Tower tower = towerToSpawn.GetComponent<Tower>(); 
+        tower.m_TowerName.Value = GameObject.Find($"Player_{clientID}").GetComponent<PlayerClientController>().playerName.Value;
+        TowerManager.Instance.AddTower(tower);
+        Debug.Log($"Tower spawned for player {clientID}. Current towers: {currentTowers.Value}");
     }
 
 
@@ -87,6 +90,7 @@ public class PlayerClientController : NetworkBehaviour
         if (gameObject.GetComponent<NetworkObject>().IsOwner)
         {
             gameObject.GetComponent<NetworkObject>().Despawn();
+            TowerManager.Instance.RemoveTower(gameObject.GetComponent<Tower>());
             currentTowers.Value -= 1;
         }
     }
