@@ -25,7 +25,7 @@ public class NetworkThing : MonoBehaviour
 
     private void OnGUI()
     {
-        GUILayout.BeginArea(new Rect(10, 10, 300, 300));
+        GUILayout.BeginArea(new Rect(0, Screen.height /2, Screen.width, Screen.height));
 
         if (!m_NetworkManager.IsClient && !m_NetworkManager.IsServer)
         {
