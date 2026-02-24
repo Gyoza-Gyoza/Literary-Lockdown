@@ -79,6 +79,17 @@ public class ObjectivesManager : NetworkBehaviour
         }
     }
 
+    public void PrematureEndGame()
+    {
+        if (IsServer)
+        {
+            remainingTime.Value = 0;
+            startGame.Value = false;
+            gameEnded.Value = true;
+        }
+
+    }
+
     public void CaptureBooks()
     {
         if (!IsServer) return;
