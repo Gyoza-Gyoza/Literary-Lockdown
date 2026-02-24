@@ -34,8 +34,6 @@ public class ObjectivesManager : NetworkBehaviour
         {
             // Only server sets the NetworkVariable; clients will enable UI via OnValueChanged
             //startGame.Value = true;
-
-            UIManager.Instance.ShowPlayerReadyUI();
         };
     }
 

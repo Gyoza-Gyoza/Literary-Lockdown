@@ -47,6 +47,7 @@ public class PlayerClientController : NetworkBehaviour
 
             // Enable TowerSpawning UI
             towerSpawningUI.SetActive(true);
+            UIManager.Instance.ShowPlayerReadyUI();
         }
 
         ChangeGameObjectNameRpc("" , m_GameObjectName.Value);
