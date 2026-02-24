@@ -29,12 +29,15 @@ public class Spawner : NetworkBehaviour
     }
     void Update()
     {
-        if (!IsServer) return;
-        timer += Time.deltaTime;
-        if (timer >= spawnInterval)
+        if (ObjectivesManager.Instance.isGameStart()) 
         {
-            timer -= spawnInterval;
-            SpawnEnemy();
+            if (!IsServer) return;
+            timer += Time.deltaTime;
+            if (timer >= spawnInterval)
+            {
+                timer -= spawnInterval;
+                SpawnEnemy();
+            }
         }
     }
     private void SpawnEnemy()

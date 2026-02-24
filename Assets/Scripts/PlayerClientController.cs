@@ -13,6 +13,9 @@ public class PlayerClientController : NetworkBehaviour
     private NetworkVariable<FixedString512Bytes> m_GameObjectName = new NetworkVariable<FixedString512Bytes>("Default Name", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private ulong playerID;
 
+    [SerializeField]
+    public NetworkVariable<bool> playerReady = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
     [Header("Tower Stats")]
     public int maxTowers;
     public NetworkVariable<int> currentTowers = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);

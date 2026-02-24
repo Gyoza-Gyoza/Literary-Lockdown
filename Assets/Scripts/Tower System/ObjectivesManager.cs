@@ -9,6 +9,7 @@ public class ObjectivesManager : NetworkBehaviour
 
     public TextMeshProUGUI timeText;
     private NetworkVariable<float> remainingTime = new NetworkVariable<float>(900); // 15 minutes in seconds
+    [SerializeField]
     private NetworkVariable<bool> startGame = new NetworkVariable<bool>(false);
     private NetworkVariable<bool> gameEnded = new NetworkVariable<bool>(false);
 
@@ -32,7 +33,9 @@ public class ObjectivesManager : NetworkBehaviour
         NetworkManager.Singleton.OnServerStarted += () =>
         {
             // Only server sets the NetworkVariable; clients will enable UI via OnValueChanged
-            startGame.Value = true;
+            //startGame.Value = true;
+
+            UIManager.Instance.ShowPlayerReadyUI();
         };
     }
 
@@ -66,7 +69,7 @@ public class ObjectivesManager : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        if (startGame.Value)
+        if (startGame.Value == true)
         {
             remainingTime.Value -= Time.deltaTime;
 
@@ -76,6 +79,19 @@ public class ObjectivesManager : NetworkBehaviour
                 startGame.Value = false;
                 gameEnded.Value = true;
             }
+        }
+        else
+        {
+            foreach(NetworkClient playerClient in NetworkManager.ConnectedClientsList)
+            {
+                PlayerClientController cilent = playerClient.PlayerObject.GetComponent<PlayerClientController>();
+                if (cilent.playerReady.Value == false)
+                {
+                    return;
+                }
+            }
+
+            startGame.Value = true;
         }
     }
 
@@ -164,5 +180,10 @@ public class ObjectivesManager : NetworkBehaviour
         {
             rewardScreen.SetActive(false);
         }
+    }
+
+    public bool isGameStart()
+    {
+        return startGame.Value;
     }
 }

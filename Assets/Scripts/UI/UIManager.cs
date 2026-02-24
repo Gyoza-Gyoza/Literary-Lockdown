@@ -9,6 +9,8 @@ public class UIManager : MonoBehaviour
 
     public GameObject seletedTower;
 
+    [Header("UI")]
+    public GameObject playerReadyUI;
 
     public void Awake()
     {
@@ -36,5 +38,10 @@ public class UIManager : MonoBehaviour
             Vector3 targetPosition = Camera.main.WorldToScreenPoint(seletedTower.transform.position);
             TowerControlPanel.transform.position = targetPosition;
         }
+    }
+
+    public void ShowPlayerReadyUI()
+    {
+        playerReadyUI.SetActive(true);
     }
 }
