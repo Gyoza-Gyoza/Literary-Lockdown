@@ -43,5 +43,6 @@ public class EnemyBehaviour : NetworkBehaviour
         {
             Destroy(gameObject);
         }
+        ObjectivesManager.Instance.CaptureBooks();
     }
 }
