@@ -9,6 +9,14 @@ public class Spawner : NetworkBehaviour
 
     private float timer;
     public static Spawner Instance { get; private set; }
+    public override void OnNetworkSpawn()
+    {
+        if (IsServer)
+        {
+            transform.position = WaypointManager.Instance.startPoint.position;
+            transform.rotation = WaypointManager.Instance.startPoint.rotation;
+        }
+    }
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -31,8 +39,9 @@ public class Spawner : NetworkBehaviour
     }
     private void SpawnEnemy()
     {
-        NetworkObject enemy = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(enemyPrefab);
+        NetworkObject enemy = Instantiate(enemyPrefab);
         enemy.transform.position = transform.position;
         enemy.transform.rotation = transform.rotation;
+        enemy.Spawn();
     }
 }
