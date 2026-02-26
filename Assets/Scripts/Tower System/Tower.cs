@@ -167,7 +167,7 @@ public class Tower : NetworkBehaviour
 
     protected void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && IsOwner)
         {
             // Disable character movement if active
             ToggleCharacterMovementRpc();
