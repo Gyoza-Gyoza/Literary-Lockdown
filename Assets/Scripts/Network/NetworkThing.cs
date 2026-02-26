@@ -8,7 +8,7 @@ public class NetworkThing : MonoBehaviour
     [SerializeField] private GameObject[] spawnOnStart;
 
     private string m_PlayerName;
-    private string targetIPAddr = "";
+    private string targetIPAddr = "IP Addr";
 
     private void Awake()
     {
