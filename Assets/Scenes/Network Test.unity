@@ -2202,7 +2202,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Transports.UTP.UnityTransport
   m_ProtocolType: 0
-  m_UseWebSockets: 0
+  m_UseWebSockets: 1
   m_UseEncryption: 0
   m_MaxPacketQueueSize: 128
   m_MaxPayloadSize: 6144
@@ -2211,9 +2211,9 @@ MonoBehaviour:
   m_MaxConnectAttempts: 60
   m_DisconnectTimeoutMS: 30000
   ConnectionData:
-    Address: 127.0.0.1
+    Address: 172.20.10.7
     Port: 7777
-    ServerListenAddress: 127.0.0.1
+    ServerListenAddress: 172.20.10.7
     ClientBindPort: 0
   DebugSimulator:
     PacketDelayMS: 0
