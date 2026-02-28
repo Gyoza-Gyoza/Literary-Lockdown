@@ -7,6 +7,7 @@ TagManager:
   - CharacterSelect
   - NetworkManager
   - TowerSpawner
+  - TileMap
   layers:
   - Default
   - TransparentFX

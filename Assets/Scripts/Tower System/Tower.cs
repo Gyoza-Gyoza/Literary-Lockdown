@@ -4,7 +4,8 @@ using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.Tilemaps;
+
 public class Tower : NetworkBehaviour
 {
     public NetworkVariable<float> projectileSpeed;
@@ -127,6 +128,15 @@ public class Tower : NetworkBehaviour
     private void ToggleCharacterMovementRpc(RpcParams rpcParams = default)
     {
         if (!IsOwner) return;
+
+        // Check for tilemap pathing
+        GridLayout gridLayout = GameObject.FindWithTag("TileMap").GetComponent<GridLayout>();
+        Vector3 cursorPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3Int cellPosition = gridLayout.WorldToCell(cursorPos);
+
+        TowerDefenseTiles tile = gridLayout.GetComponentInChildren<Tilemap>().GetTile(cellPosition) as TowerDefenseTiles;
+
+        if (tile != null && !tile.towerFriendly) return;  
 
         // Check raycast for overlapping characters
         Collider2D[] hitAll = Physics2D.OverlapPointAll(transform.position);
