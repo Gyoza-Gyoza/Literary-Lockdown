@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class RewardScreen : MonoBehaviour
 {
@@ -20,6 +21,12 @@ public class RewardScreen : MonoBehaviour
         pagesEarnedText.text = input.ToString();
     }
 
+
+    public void ExitToMain()
+    {
+        Debug.Log("Exit to main called");
+        SceneManager.LoadScene("Main");
+    }
 
     #region ############# Fades ##################
     public void FadeIn()
