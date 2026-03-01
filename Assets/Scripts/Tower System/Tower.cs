@@ -43,15 +43,6 @@ public class Tower : NetworkBehaviour
             return totalBonus;
         }
     }
-    //public Stats TotalStats
-    //{
-    //    get
-    //    {
-    //        Stats finalStats = baseStats;
-    //        foreach (Stats stats in bonusStats) baseStats += stats;
-    //        return finalStats;
-    //    }
-    //}
     private void AttackCooldown()
     {
         if (!IsServer) return;
@@ -65,27 +56,6 @@ public class Tower : NetworkBehaviour
             }
         }
     }
-    //[Rpc(SendTo.Server)]
-    //public void AttackRpc()
-    //{
-    //    Vector3 enemyPos = GetClosestEnemy(out Vector3 facingVector);
-    //    NetworkObject bullet = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(projectilePrefab);
-    //    bullet.transform.position = transform.position;
-    //    bullet.transform.localEulerAngles = facingVector;
-    //}
-    //private Vector3 GetClosestEnemy(out Vector3 facingVector)
-    //{
-    //    Vector3 result = Vector3.positiveInfinity;
-    //    facingVector = Vector3.zero;
-    //    foreach (EnemyBehaviour enemy in Enemies)
-    //    {
-    //        facingVector = transform.position - enemy.transform.position;
-    //        if (result.magnitude <= facingVector.magnitude) 
-    //            result = enemy.transform.position;
-    //            facingVector = facingVector.normalized;
-    //    }
-    //    return result;
-    //}
     public override void OnNetworkSpawn()
     {
         m_GameObjectName.OnValueChanged += OnGameObjectNameChangeRpc;
