@@ -44,8 +44,6 @@ public class TowerManager : NetworkBehaviour
         foreach (Tower tower in towerList)
         {
             tower.target = null;
-            Debug.Log("Tower has no target, searching for enemies");
-            Debug.Log($"Enemy count: {EnemyList.Count}");
 
             float closestDistance = float.PositiveInfinity;
 
@@ -59,7 +57,6 @@ public class TowerManager : NetworkBehaviour
                         closestDistance = distance;
                         tower.target = enemy;
                     }
-                    Debug.Log($"Enemy detected");
                 }
             }
         }
@@ -95,58 +92,4 @@ public class TowerManager : NetworkBehaviour
     }
     public void AddTower(Tower tower) => towerList.Add(tower);
     public void RemoveTower(Tower tower) => towerList.Remove(tower);
-
-    //[SerializeField] private GameObject towerTemplate;
-    //[SerializeField] private int maxTowers; 
-
-    //private void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.P)) CreateTowerRPC("Hansel");
-    //}
-    //[Rpc(SendTo.Server)]
-    //public void CreateTowerRPC(string name)
-    //{
-    //    if (IsServer)
-    //    {
-    //        GameObject result = Instantiate(towerTemplate);
-    //        result.AddComponent(GetTowerType(name));
-
-    //        TowerData towerData = new();
-    //        if (Database.instance.database.TryGetValue("Towers", out List<object> towerObjects))
-    //        {
-    //            foreach (object obj in towerObjects)
-    //            {
-    //                TowerData data = (TowerData)obj;
-    //                if (data.Name == name)
-    //                {
-    //                    towerData = data;
-    //                    break;
-    //                }
-    //            }
-    //        }
-
-    //        //Add initialization logic here
-    //        //tower.InitializeObject(towerData.Sprite, towerData.Stats);
-    //        towerList.Add(result.GetComponent<Tower>());
-
-    //        result.GetComponent<NetworkObject>().Spawn();
-    //    }
-    //}
-    //private Type GetTowerType(string name)
-    //{
-    //    switch (name)
-    //    {
-    //        case "Hansel":
-    //            return typeof(Hansel);
-    //        case "Gretel":
-    //            return typeof(Gretel);
-    //        default:
-    //            throw new ArgumentException($"Tower type '{name}' not recognized.");
-    //    }
-    //}
 }
-//public enum TowerType
-//{
-//    Hansel,
-//    Gretel
-//}
