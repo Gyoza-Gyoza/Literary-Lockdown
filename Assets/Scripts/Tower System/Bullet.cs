@@ -1,10 +1,14 @@
 using UnityEngine;
 using Unity.Netcode;
+using System.Collections.Generic;
+using NUnit.Framework;
 public class Bullet : NetworkBehaviour
 {
     [SerializeField] private float lifetime = 1f;
+    [SerializeField] private bool destroyOnHit;
     [HideInInspector] public NetworkVariable<float> speed;
     [HideInInspector] public NetworkVariable<int> damage;
+    private List<EnemyBehaviour> hitEnemies = new();
     private void Update()
     {
         transform.Translate(Vector3.up * speed.Value * Time.deltaTime);
@@ -30,14 +34,18 @@ public class Bullet : NetworkBehaviour
             Destroy(gameObject);
         }
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if (!IsServer) return;
-
         if (collision.gameObject.TryGetComponent<EnemyBehaviour>(out EnemyBehaviour enemy))
         {
-            enemy.TakeDamage(damage.Value);
-            DestroyBullet();
+            if (!hitEnemies.Contains(enemy))
+            {
+                enemy.TakeDamage(damage.Value);
+                Debug.Log("Hit enemy");
+                hitEnemies.Add(enemy);
+                if (destroyOnHit) DestroyBullet();
+            }
         }
     }
 }

@@ -1017,7 +1017,7 @@ GameObject:
   - component: {fileID: 1803639721653793602}
   - component: {fileID: 4121326571265556422}
   - component: {fileID: 7473356174981125094}
-  - component: {fileID: 537405256090690072}
+  - component: {fileID: 1935770352997089363}
   m_Layer: 0
   m_Name: Wolf
   m_TagString: Untagged
@@ -1149,7 +1149,7 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
---- !u!114 &537405256090690072
+--- !u!114 &1935770352997089363
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1158,19 +1158,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 9187233742414272678}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 560a6f75b058b2b4da1ea843d7c9c0c5, type: 3}
+  m_Script: {fileID: 11500000, guid: 59ea4a9fa3bb1db43bcd0c5eeeee0b03, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Rapunzel
+  m_EditorClassIdentifier: Assembly-CSharp::Wolf
   ShowTopMostFoldoutHeaderGroup: 1
   projectileSpeed:
-    m_InternalValue: 10
+    m_InternalValue: 0
   attackRange:
-    m_InternalValue: 2
+    m_InternalValue: 1
   damage:
     m_InternalValue: 1
-  projectilePrefab: {fileID: 3516673801502512669, guid: 330e2d2bab858fd46971d8d26717497d, type: 3}
+  projectilePrefab: {fileID: 3516673801502512669, guid: e964e860dba1c0e478b19aead583b36f, type: 3}
   canAttack: 0
-  attackSpeed: 0.5
+  attackSpeed: 0.4
   target: {fileID: 0}
   isMoving: 0
   m_Position:
