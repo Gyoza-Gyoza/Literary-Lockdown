@@ -74,12 +74,12 @@ public class TowerManager : NetworkBehaviour
                 NetworkObject projectile = Instantiate(tower.projectilePrefab);
                 projectile.transform.position = tower.transform.position;
 
-                Vector3 direction = tower.target.transform.position - tower.transform.position;
+                Vector2 direction = tower.target.transform.position - tower.transform.position;
                 direction.Normalize();
 
-                projectile.transform.rotation = Quaternion.FromToRotation(Vector3.up, direction);
+                projectile.transform.rotation = Quaternion.FromToRotation(Vector2.up, direction);
 
-                var bullet = projectile.GetComponent<Bullet>();
+                var bullet = projectile.GetComponentInChildren<Bullet>();
                 if (bullet != null)
                 {
                     bullet.speed.Value = tower.projectileSpeed.Value;

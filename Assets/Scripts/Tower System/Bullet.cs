@@ -5,6 +5,7 @@ using NUnit.Framework;
 public class Bullet : NetworkBehaviour
 {
     [SerializeField] private float lifetime = 1f;
+    [SerializeField] private bool destroyOnHit;
     [HideInInspector] public NetworkVariable<float> speed;
     [HideInInspector] public NetworkVariable<int> damage;
     private List<EnemyBehaviour> hitEnemies = new();
@@ -33,16 +34,6 @@ public class Bullet : NetworkBehaviour
             Destroy(gameObject);
         }
     }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (!IsServer) return;
-
-        if (collision.gameObject.TryGetComponent<EnemyBehaviour>(out EnemyBehaviour enemy))
-        {
-            enemy.TakeDamage(damage.Value);
-            DestroyBullet();
-        }
-    }
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (!IsServer) return;
@@ -53,7 +44,7 @@ public class Bullet : NetworkBehaviour
                 enemy.TakeDamage(damage.Value);
                 Debug.Log("Hit enemy");
                 hitEnemies.Add(enemy);
-                DestroyBullet();
+                if (destroyOnHit) DestroyBullet();
             }
         }
     }
