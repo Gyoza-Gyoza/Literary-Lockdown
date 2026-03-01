@@ -5,4 +5,5 @@ using System;
 public class PlayerMetadata
 {
     public string playerName;
+    public int pagesHeld;
 }
