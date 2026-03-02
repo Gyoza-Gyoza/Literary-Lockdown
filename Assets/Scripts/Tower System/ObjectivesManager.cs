@@ -12,6 +12,7 @@ public class ObjectivesManager : NetworkBehaviour
     [SerializeField]
     private NetworkVariable<bool> startGame = new NetworkVariable<bool>(false);
     private NetworkVariable<bool> gameEnded = new NetworkVariable<bool>(false);
+    private int pageAmount; 
 
     public NetworkVariable<int> booksCaptured = new NetworkVariable<int>(0);
     public TextMeshProUGUI booksCapturedText;
@@ -114,7 +115,8 @@ public class ObjectivesManager : NetworkBehaviour
     {
         rewardScreen.SetActive(true);
         booksRewardsText.text = $"{booksCaptured.Value}";
-        pagesRewardsText.text = $"{booksCaptured.Value * Random.Range(1.5f, 2.3f)}";
+        pageAmount.Value = (int)(booksCaptured.Value * Random.Range(1.5f, 2.3f));
+        pagesRewardsText.text = $"{pageAmount.Value}";
     }
 
     private void OnRemainingTimeChanged(float oldValue, float newValue)

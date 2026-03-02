@@ -71,6 +71,7 @@ public class RewardScreen : MonoBehaviour
     void Start()
     {
         this.canvasGroup = this.GetComponent<CanvasGroup>();
+        gameObject.SetActive(false);
     }
 
     // Update is called once per frame
