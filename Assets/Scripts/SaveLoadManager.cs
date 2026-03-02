@@ -5,18 +5,26 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class SaveLoadManager : MonoBehaviour
 {
-    private PlayerMetadata m_playerData;
+    private static PlayerMetadata m_playerData;
+    public static PlayerMetadata PlayerData
+    {
+        get
+        {
+            m_playerData = LoadData();
+            return m_playerData;
+        }
+    }
 
     [Header("UI Elements")]
     public TMP_InputField inputField;
     public TextMeshProUGUI TMPInputUsername;
     public TextMeshProUGUI TMPInputUsername_Placeholder;
 
-
-    public static void SaveData(PlayerMetadata data)
+    public static SaveLoadManager Instance { get; private set; }
+    public static void SaveData()
     {
         // Convert the C# object to a JSON string
-        string json = JsonUtility.ToJson(data, true); // The 'true' pretty-prints the JSON for readability
+        string json = JsonUtility.ToJson(m_playerData, true); // The 'true' pretty-prints the JSON for readability
 
         // Define the file path using Application.persistentDataPath for cross-platform compatibility
         string path = Path.Combine(Application.persistentDataPath, "PlayerMetadata.json");
@@ -54,18 +62,28 @@ public class SaveLoadManager : MonoBehaviour
 
     public void Awake()
     {
-        m_playerData = LoadData();
-
-        if (m_playerData.playerName != "" && SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(0))
+        if (Instance == null)
         {
-            TMPInputUsername_Placeholder.text = "Saved as " + m_playerData.playerName;
+            Instance = this;
+
+            DontDestroyOnLoad(gameObject); // Persist across scenes
+            m_playerData = LoadData();
+
+            if (m_playerData.playerName != "" && SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(0))
+            {
+                TMPInputUsername_Placeholder.text = "Saved as " + m_playerData.playerName;
+            }
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
 
     public void SetUsername()
     {
         m_playerData.playerName = TMPInputUsername.text;
-        SaveData(m_playerData);
+        SaveData();
         
         if (m_playerData.playerName == TMPInputUsername.text)
         {
