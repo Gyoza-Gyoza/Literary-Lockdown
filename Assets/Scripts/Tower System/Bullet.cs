@@ -28,10 +28,11 @@ public class Bullet : NetworkBehaviour
         if (networkObject != null && networkObject.IsSpawned)
         {
             networkObject.Despawn();
+            Destroy(transform.parent.gameObject);
         }
         else
         {
-            Destroy(gameObject);
+            Destroy(transform.parent.gameObject);
         }
     }
     private void OnTriggerStay2D(Collider2D collision)
