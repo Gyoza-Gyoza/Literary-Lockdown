@@ -202,7 +202,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 538470900}
+      - m_Target: {fileID: 1450144751}
         m_TargetAssemblyTypeName: SaveLoadManager, Assembly-CSharp
         m_MethodName: LoadScene
         m_Mode: 3
@@ -263,6 +263,7 @@ GameObject:
   - component: {fileID: 74649571}
   - component: {fileID: 74649573}
   - component: {fileID: 74649572}
+  - component: {fileID: 74649574}
   m_Layer: 5
   m_Name: Pages Held (1)
   m_TagString: Untagged
@@ -389,6 +390,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 74649570}
   m_CullTransparentMesh: 1
+--- !u!114 &74649574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 74649570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91d3af7e389a0b64c9b3a0a3e182d715, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UpdatePages
 --- !u!1 &236081969
 GameObject:
   m_ObjectHideFlags: 0
@@ -876,7 +889,6 @@ GameObject:
   - component: {fileID: 538470899}
   - component: {fileID: 538470898}
   - component: {fileID: 538470897}
-  - component: {fileID: 538470900}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -945,21 +957,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &538470900
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 538470896}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de846fb89e057a74fbcff7cd8eb67566, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SaveLoadManager
-  inputField: {fileID: 1178032398}
-  TMPInputUsername: {fileID: 741112897}
-  TMPInputUsername_Placeholder: {fileID: 1502419287}
 --- !u!1 &618461121
 GameObject:
   m_ObjectHideFlags: 0
@@ -6280,7 +6277,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 538470900}
+      - m_Target: {fileID: 1450144751}
         m_TargetAssemblyTypeName: SaveLoadManager, Assembly-CSharp
         m_MethodName: SetUsername
         m_Mode: 1
@@ -6883,12 +6880,12 @@ GameObject:
   - component: {fileID: 1446604299}
   - component: {fileID: 1446604298}
   m_Layer: 5
-  m_Name: Button
+  m_Name: BTN_Upgrades
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1446604297
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6952,7 +6949,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1446604299}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1450144751}
+        m_TargetAssemblyTypeName: SaveLoadManager, Assembly-CSharp
+        m_MethodName: LoadScene
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1446604299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6991,6 +7000,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1446604296}
   m_CullTransparentMesh: 1
+--- !u!1 &1450144750
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1450144752}
+  - component: {fileID: 1450144751}
+  m_Layer: 0
+  m_Name: SaveLoadManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1450144751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1450144750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de846fb89e057a74fbcff7cd8eb67566, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveLoadManager
+  inputField: {fileID: 1178032398}
+  TMPInputUsername: {fileID: 741112897}
+  TMPInputUsername_Placeholder: {fileID: 1502419287}
+--- !u!4 &1450144752
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1450144750}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -619.3163, y: 639.3453, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1502419284
 GameObject:
   m_ObjectHideFlags: 0
@@ -7583,3 +7639,4 @@ SceneRoots:
   - {fileID: 538470899}
   - {fileID: 2089394359}
   - {fileID: 432722308}
+  - {fileID: 1450144752}

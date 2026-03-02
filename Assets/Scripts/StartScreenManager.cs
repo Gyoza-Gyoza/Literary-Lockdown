@@ -7,6 +7,6 @@ public class StartScreenManager : MonoBehaviour
 
     private void Start()
     {
-        pagesHeld.text = ObjectivesManager.Instance.pageAmount.Value.ToString();
+        //pagesHeld.text = ObjectivesManager.Instance.pageAmount.ToString();
     }
 }

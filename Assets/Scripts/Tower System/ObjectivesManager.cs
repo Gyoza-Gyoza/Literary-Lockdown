@@ -115,8 +115,10 @@ public class ObjectivesManager : NetworkBehaviour
     {
         rewardScreen.SetActive(true);
         booksRewardsText.text = $"{booksCaptured.Value}";
-        pageAmount.Value = (int)(booksCaptured.Value * Random.Range(1.5f, 2.3f));
-        pagesRewardsText.text = $"{pageAmount.Value}";
+        pageAmount = (int)(booksCaptured.Value * Random.Range(1.5f, 2.3f));
+        pagesRewardsText.text = $"{pageAmount}";
+        SaveLoadManager.PlayerData.pagesHeld += pageAmount;
+        SaveLoadManager.SaveData();
     }
 
     private void OnRemainingTimeChanged(float oldValue, float newValue)
@@ -136,6 +138,7 @@ public class ObjectivesManager : NetworkBehaviour
         var booksParent = booksCapturedText.transform.parent.gameObject;
         if (timeParent != null) timeParent.SetActive(newValue);
         if (booksParent != null) booksParent.SetActive(newValue);
+        Debug.Log($"Start game changed");
     }
 
     private void OnGameEndedChanged(bool oldValue, bool newValue)
@@ -167,8 +170,8 @@ public class ObjectivesManager : NetworkBehaviour
         if (booksCapturedText != null)
             booksCapturedText.text = $"{booksCaptured.Value}";
 
-        var timeParent = timeText?.transform?.parent?.gameObject;
-        var booksParent = booksCapturedText?.transform?.parent?.gameObject;
+        var timeParent = timeText.transform.parent.gameObject;
+        var booksParent = booksCapturedText.transform.parent.gameObject;
         if (timeParent != null) timeParent.SetActive(startGame.Value);
         if (booksParent != null) booksParent.SetActive(startGame.Value);
 

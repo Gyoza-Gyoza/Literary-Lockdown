@@ -21753,7 +21753,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5224507606358953122, guid: b62adeaae6fd16b419f36cf5261210ad, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -23499,7 +23499,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1539516683}
   - component: {fileID: 1539516682}
-  - component: {fileID: 1539516684}
   - component: {fileID: 1539516685}
   m_Layer: 0
   m_Name: EventSystem
@@ -23538,21 +23537,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1539516684
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1539516680}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de846fb89e057a74fbcff7cd8eb67566, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SaveLoadManager
-  inputField: {fileID: 0}
-  TMPInputUsername: {fileID: 0}
-  TMPInputUsername_Placeholder: {fileID: 0}
 --- !u!114 &1539516685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24277,6 +24261,53 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &2141525397
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2141525399}
+  - component: {fileID: 2141525398}
+  m_Layer: 0
+  m_Name: SaveLoadManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2141525398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2141525397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de846fb89e057a74fbcff7cd8eb67566, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveLoadManager
+  inputField: {fileID: 0}
+  TMPInputUsername: {fileID: 0}
+  TMPInputUsername_Placeholder: {fileID: 0}
+--- !u!4 &2141525399
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2141525397}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -619.3163, y: 639.3453, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -24288,3 +24319,4 @@ SceneRoots:
   - {fileID: 1539516683}
   - {fileID: 1698101062}
   - {fileID: 230792368}
+  - {fileID: 2141525399}
