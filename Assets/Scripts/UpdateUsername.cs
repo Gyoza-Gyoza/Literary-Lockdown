@@ -30,6 +30,7 @@ public class UpdateUsername : MonoBehaviour
         {
             inputField.text = "";
             TMPInputUsername_Placeholder.text = "Saved as " + SaveLoadManager.PlayerData.playerName;
+            text.text = SaveLoadManager.PlayerData.playerName;
         }
         else
         {

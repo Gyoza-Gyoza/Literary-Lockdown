@@ -5,17 +5,22 @@ using TMPro;
 public class ObjectivesManager : NetworkBehaviour
 {
     [SerializeField] private GameObject rewardScreen;
+    [SerializeField] private GameObject networkScreen;
     [SerializeField] private TextMeshProUGUI booksRewardsText, pagesRewardsText; 
 
     public TextMeshProUGUI timeText;
     private NetworkVariable<float> remainingTime = new NetworkVariable<float>(900); // 15 minutes in seconds
     [SerializeField]
     private NetworkVariable<bool> startGame = new NetworkVariable<bool>(false);
+    public bool isGameStart() { return startGame.Value;}
     private NetworkVariable<bool> gameEnded = new NetworkVariable<bool>(false);
     private int pageAmount; 
 
     public NetworkVariable<int> booksCaptured = new NetworkVariable<int>(0);
     public TextMeshProUGUI booksCapturedText;
+
+    public NetworkVariable<int> playersInLobby = new NetworkVariable<int>(0);
+    public NetworkVariable<int> playersReadyInLobby = new NetworkVariable<int>(0);
 
     public static ObjectivesManager Instance;
     public void Awake()
@@ -185,8 +190,5 @@ public class ObjectivesManager : NetworkBehaviour
         }
     }
 
-    public bool isGameStart()
-    {
-        return startGame.Value;
-    }
+
 }
