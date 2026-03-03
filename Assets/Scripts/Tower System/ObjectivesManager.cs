@@ -4,9 +4,9 @@ using TMPro;
 
 public class ObjectivesManager : NetworkBehaviour
 {
-    [SerializeField] private GameObject rewardScreen;
-    [SerializeField] private GameObject networkScreen;
-    [SerializeField] private TextMeshProUGUI booksRewardsText, pagesRewardsText; 
+    [SerializeField] private GameObject rewardScreen, networkScreen;
+    [SerializeField] private TextMeshProUGUI booksRewardsText, pagesRewardsText, currntPlayers, totalPlayers;
+    [SerializeField] private TMP_Dropdown difficultyDropdown;
 
     public TextMeshProUGUI timeText;
     private NetworkVariable<float> remainingTime = new NetworkVariable<float>(900); // 15 minutes in seconds
@@ -22,7 +22,7 @@ public class ObjectivesManager : NetworkBehaviour
     public NetworkVariable<int> playersInLobby = new NetworkVariable<int>(0);
     public NetworkVariable<int> playersReadyInLobby = new NetworkVariable<int>(0);
 
-    
+    public NetworkVariable<int> difficulty = new NetworkVariable<int>(0);
 
     public static ObjectivesManager Instance;
     public void Awake()
@@ -73,6 +73,10 @@ public class ObjectivesManager : NetworkBehaviour
 
     void Update()
     {
+        currntPlayers.text = playersReadyInLobby.Value.ToString();
+        totalPlayers.text = playersInLobby.Value.ToString();
+        difficultyDropdown.value = difficulty.Value;
+
         if (!IsServer) return;
 
         if (startGame.Value == true)
@@ -88,6 +92,7 @@ public class ObjectivesManager : NetworkBehaviour
         }
         else
         {
+
             foreach(NetworkClient playerClient in NetworkManager.ConnectedClientsList)
             {
                 PlayerClientController cilent = playerClient.PlayerObject.GetComponent<PlayerClientController>();
@@ -96,7 +101,6 @@ public class ObjectivesManager : NetworkBehaviour
                     return;
                 }
             }
-
             startGame.Value = true;
         }
     }
@@ -126,6 +130,12 @@ public class ObjectivesManager : NetworkBehaviour
         pagesRewardsText.text = $"{pageAmount}";
         SaveLoadManager.PlayerData.pagesHeld += pageAmount;
         SaveLoadManager.SaveData();
+    }
+
+    public void SetDifficulty()
+    {
+        difficulty.Value = difficultyDropdown.value;
+        Debug.Log("Current difficulty is " + difficulty.Value);
     }
 
     private void OnRemainingTimeChanged(float oldValue, float newValue)
@@ -166,11 +176,6 @@ public class ObjectivesManager : NetworkBehaviour
         int seconds = (int)(secondsTotal % 60);
         if (timeText != null)
             timeText.text = $"{minutes}:{seconds:00}";
-    }
-
-    private void UpdatePlayersReady()
-    {
-
     }
 
     private void ApplyAllNetworkValuesToUI()

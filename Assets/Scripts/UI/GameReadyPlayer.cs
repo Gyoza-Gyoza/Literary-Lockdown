@@ -24,11 +24,13 @@ public class GameReadyPlayer : MonoBehaviour
 
         if (playerClient.playerReady.Value == true)
         {
+            ObjectivesManager.Instance.playersReadyInLobby.Value++;
             btnImage.sprite = sprite_Cancel;
             //playersReady++;
         }
         else
         {
+            ObjectivesManager.Instance.playersReadyInLobby.Value--;
             btnImage.sprite = sprite_Ready;
             //playersReady--;
         }

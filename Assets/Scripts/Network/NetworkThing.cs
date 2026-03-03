@@ -42,6 +42,7 @@ public class NetworkThing : MonoBehaviour
         {
             if (NetworkScreen.activeSelf)
             {
+                //ObjectivesManager.Instance.playersInLobby.Value++;
                 NetworkScreen.SetActive(false);
             }
             if (m_NetworkManager.IsHost)
@@ -58,6 +59,7 @@ public class NetworkThing : MonoBehaviour
     public void StartHost()
     {
         m_NetworkManager.StartHost();
+        ObjectivesManager.Instance.playersInLobby.Value++;
     }
 
     public void ClientJoin()
@@ -83,6 +85,7 @@ public class NetworkThing : MonoBehaviour
         var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
         transport.SetConnectionData(enteredIP, 7777);
         m_NetworkManager.StartClient();
+        ObjectivesManager.Instance.playersInLobby.Value++;
     }
 
     private void StatusLabels()
