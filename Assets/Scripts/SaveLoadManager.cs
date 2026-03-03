@@ -17,12 +17,14 @@ public class SaveLoadManager : MonoBehaviour
     }
 
     [Header("UI Elements")]
-    public TMP_InputField inputField;
-    public TextMeshProUGUI TMPInputUsername;
-    public TextMeshProUGUI TMPInputUsername_Placeholder;
+    //public TMP_InputField inputField;
+    //public TextMeshProUGUI TMPInputUsername;
+    //public TextMeshProUGUI TMPInputUsername_Placeholder;
 
-    private static SaveLoadManager instance;
-    public static SaveLoadManager Instance { get { return instance; } private set { instance = value; DontDestroyOnLoad(value.gameObject); } }
+    //private static SaveLoadManager instance;
+    public static SaveLoadManager Instance { get; private set ;}
+    //public static SaveLoadManager Instance { get { return instance; } private set { instance = value; DontDestroyOnLoad(value.gameObject); } }
+
     public static void SaveData()
     {
         // Convert the C# object to a JSON string
@@ -71,10 +73,14 @@ public class SaveLoadManager : MonoBehaviour
             DontDestroyOnLoad(gameObject); // Persist across scenes
             m_playerData = LoadData();
 
+            //trying to remove start
+            /*
             if (m_playerData.playerName != "" && SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(0))
             {
                 TMPInputUsername_Placeholder.text = "Saved as " + m_playerData.playerName;
             }
+            */
+            //end
         }
         else
         {
@@ -82,16 +88,24 @@ public class SaveLoadManager : MonoBehaviour
         }
     }
 
-    public void SetUsername()
+    public void SetUsername(string input)
     {
-        m_playerData.playerName = TMPInputUsername.text;
+        m_playerData.playerName = input;
         SaveData();
         
+        //Trying to remove start
+        /*
         if (m_playerData.playerName == TMPInputUsername.text)
         {
             inputField.text = "";
             TMPInputUsername_Placeholder.text = "Saved as " + m_playerData.playerName;
         }
+        else
+        {
+            Debug.Log("Failed to save username");
+        }
+        */
+        //end
     }
 
     public void LoadScene(int sceneIndex)
