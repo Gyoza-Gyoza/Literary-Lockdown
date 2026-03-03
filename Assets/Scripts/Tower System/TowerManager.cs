@@ -5,58 +5,91 @@ using UnityEngine;
 
 public class TowerManager : NetworkBehaviour
 {
-    [SerializeField] private GameObject towerTemplate;
-    [SerializeField] private int maxTowers; 
     private List<Tower> towerList = new();
+    public List<NetworkObject> EnemyList
+    {
+        get
+        {
+            List<NetworkObject> currentEnemies = new();
+            foreach (NetworkObject obj in NetworkManager.Singleton.SpawnManager.SpawnedObjectsList)
+            {
+                if (obj.GetComponent<EnemyBehaviour>())
+                {
+                    currentEnemies.Add(obj);
+                }
+            }
+            return currentEnemies;
+        }
+    }
 
+    public static TowerManager Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+    }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P)) CreateTowerRPC("Hansel");
+        if (!IsServer) return;
+        EnemyDetectionHandler();
+        TowerAttackHandler();
     }
-    [Rpc(SendTo.Server)]
-    public void CreateTowerRPC(string name)
+    private void EnemyDetectionHandler()
     {
-        if (IsServer)
+        foreach (Tower tower in towerList)
         {
-            GameObject result = Instantiate(towerTemplate);
-            result.AddComponent(GetTowerType(name));
+            tower.target = null;
 
-            TowerData towerData = new();
-            if (Database.instance.database.TryGetValue("Towers", out List<object> towerObjects))
+            float closestDistance = float.PositiveInfinity;
+
+            foreach (NetworkObject enemy in EnemyList)
             {
-                foreach (object obj in towerObjects)
+                float distance = Vector2.Distance(tower.transform.position, enemy.transform.position);
+                if (distance <= tower.attackRange.Value) // Make sure it's within range
                 {
-                    TowerData data = (TowerData)obj;
-                    if (data.Name == name)
+                    if (distance < closestDistance) // Get closest enemy
                     {
-                        towerData = data;
-                        break;
+                        closestDistance = distance;
+                        tower.target = enemy;
                     }
                 }
             }
-
-            //Add initialization logic here
-            //tower.InitializeObject(towerData.Sprite, towerData.Stats);
-            towerList.Add(result.GetComponent<Tower>());
-
-            result.GetComponent<NetworkObject>().Spawn();
         }
     }
-    private Type GetTowerType(string name)
+
+    // This function handles the attack logic for towers. 
+    // It checks if the tower can attack and spawns a projectile facing the targeted enemy.
+    // It also initializes the projectile's speed and damage based on the tower's stats.
+    private void TowerAttackHandler()
     {
-        switch (name)
+        foreach (Tower tower in towerList)
         {
-            case "Hansel":
-                return typeof(Hansel);
-            case "Gretel":
-                return typeof(Gretel);
-            default:
-                throw new ArgumentException($"Tower type '{name}' not recognized.");
+            if (tower.target != null && tower.canAttack)
+            {
+                NetworkObject projectile = Instantiate(tower.projectilePrefab);
+                projectile.transform.position = tower.transform.position;
+
+                Vector2 direction = tower.target.transform.position - tower.transform.position;
+                direction.Normalize();
+
+                projectile.transform.rotation = Quaternion.FromToRotation(Vector2.up, direction);
+
+                var bullet = projectile.GetComponentInChildren<Bullet>();
+                if (bullet != null)
+                {
+                    bullet.speed.Value = tower.projectileSpeed.Value;
+                    bullet.damage.Value = tower.damage.Value;
+                }
+                projectile.Spawn();
+                tower.canAttack = false;
+            }
         }
     }
-}
-public enum TowerType
-{
-    Hansel,
-    Gretel
+    public void AddTower(Tower tower) => towerList.Add(tower);
+    public void RemoveTower(Tower tower) => towerList.Remove(tower);
 }

@@ -1,19 +1,34 @@
-using UnityEngine;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
+using UnityEngine;
 
 public class NetworkThing : MonoBehaviour
 {
     private NetworkManager m_NetworkManager;
+    [SerializeField] private GameObject[] spawnOnStart;
+
+    private string m_PlayerName;
+    private string targetIPAddr = "IP Addr";
 
     private void Awake()
     {
         m_NetworkManager = GetComponent<NetworkManager>();
+
+        NetworkManager.Singleton.OnServerStarted += () =>
+        {
+            foreach (GameObject obj in spawnOnStart)
+            {
+                NetworkObject networkObject = Instantiate(obj).GetComponent<NetworkObject>();
+                networkObject.Spawn();
+            }
+        };
     }
 
 
     private void OnGUI()
     {
-        GUILayout.BeginArea(new Rect(10, 10, 300, 300));
+        GUILayout.BeginArea(new Rect(0, Screen.height /2, Screen.width, Screen.height));
+
         if (!m_NetworkManager.IsClient && !m_NetworkManager.IsServer)
         {
             StartButtons();
@@ -21,8 +36,6 @@ public class NetworkThing : MonoBehaviour
         else
         {
             StatusLabels();
-
-            SubmitNewPosition();
         }
 
         GUILayout.EndArea();
@@ -31,8 +44,16 @@ public class NetworkThing : MonoBehaviour
     private void StartButtons()
     {
         if (GUILayout.Button("Host")) m_NetworkManager.StartHost();
-        if (GUILayout.Button("Client")) m_NetworkManager.StartClient();
         if (GUILayout.Button("Server")) m_NetworkManager.StartServer();
+        targetIPAddr = GUILayout.TextField(targetIPAddr, 25);
+        if (GUILayout.Button("Client Join")) Connect(targetIPAddr);
+    }
+
+    public void Connect(string enteredIP)
+    {
+        var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+        transport.SetConnectionData(enteredIP, 7777);
+        m_NetworkManager.StartClient();
     }
 
     private void StatusLabels()
@@ -43,6 +64,7 @@ public class NetworkThing : MonoBehaviour
         GUILayout.Label("Transport: " +
             m_NetworkManager.NetworkConfig.NetworkTransport.GetType().Name);
         GUILayout.Label("Mode: " + mode);
+        GUILayout.Label("IP Address: " + m_NetworkManager.GetComponent<UnityTransport>().ConnectionData.Address);
     }
 
     private void SubmitNewPosition()

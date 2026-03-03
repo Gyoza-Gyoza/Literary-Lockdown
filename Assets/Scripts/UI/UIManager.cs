@@ -4,7 +4,13 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
-    public GameObject CharacterSelect_UI;
+    public GameObject TowerSpawner;
+    public GameObject TowerControlPanel;
+
+    public GameObject seletedTower;
+
+    [Header("UI")]
+    public GameObject playerReadyUI;
 
     public void Awake()
     {
@@ -27,6 +33,15 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (TowerControlPanel.activeSelf && seletedTower != null)
+        {
+            Vector3 targetPosition = Camera.main.WorldToScreenPoint(seletedTower.transform.position);
+            TowerControlPanel.transform.position = targetPosition;
+        }
+    }
+
+    public void ShowPlayerReadyUI()
+    {
+        playerReadyUI.SetActive(true);
     }
 }

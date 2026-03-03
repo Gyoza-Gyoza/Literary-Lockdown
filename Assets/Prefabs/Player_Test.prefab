@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 896757296
+  GlobalObjectIdHash: 39672330
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -73,15 +73,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
   ShowTopMostFoldoutHeaderGroup: 1
-  defaultSprite: {fileID: -1413294825, guid: 99a24620d31e5ce4e823c32d11e17c2c, type: 3}
-  m_Position:
-    m_InternalValue: {x: 0, y: 0, z: 0}
   characterSpriteList:
   - {fileID: -1413294825, guid: 99a24620d31e5ce4e823c32d11e17c2c, type: 3}
   - {fileID: 1363809998, guid: 0c187a32c5bde4747be8d00770b07403, type: 3}
   - {fileID: -2088749509, guid: 57a1443e67528144aa07582927559650, type: 3}
   m_characterSpriteIndex: 0
   isMoving: 0
+  defaultSprite: {fileID: -1413294825, guid: 99a24620d31e5ce4e823c32d11e17c2c, type: 3}
+  m_Position:
+    m_InternalValue: {x: 0, y: 0, z: 0}
 --- !u!212 &5250470513874852071
 SpriteRenderer:
   serializedVersion: 2
