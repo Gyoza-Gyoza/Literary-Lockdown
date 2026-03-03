@@ -1,3 +1,5 @@
+using System.Xml.Schema;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,6 +12,11 @@ public class GameReadyPlayer : MonoBehaviour
 
     public Image btnImage;
 
+    public TextMeshPro currentReadyText;
+    public TextMeshPro playersInSessionText;
+
+    //private int playersReady = 0;
+
     public void TogglePlayerReady()
     {
         PlayerClientController playerClient = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerClientController>();
@@ -17,12 +24,21 @@ public class GameReadyPlayer : MonoBehaviour
 
         if (playerClient.playerReady.Value == true)
         {
+            ObjectivesManager.Instance.playersReadyInLobby.Value++;
             btnImage.sprite = sprite_Cancel;
+            //playersReady++;
         }
         else
         {
+            ObjectivesManager.Instance.playersReadyInLobby.Value--;
             btnImage.sprite = sprite_Ready;
+            //playersReady--;
         }
+    }
+
+    public void UpdatePlayersReady()
+    {
+
     }
 
     public void Awake()

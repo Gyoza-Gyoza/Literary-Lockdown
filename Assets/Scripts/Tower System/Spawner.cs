@@ -7,6 +7,11 @@ public class Spawner : NetworkBehaviour
     [SerializeField] private NetworkObject enemyPrefab;
     [SerializeField] private float spawnInterval = 1f;
 
+
+    public float extraFreqPerDifficulty = 0.5f;
+    public float frequencyChangePerMin = 0.02f;
+
+    private float counter;
     private float timer;
     public static Spawner Instance { get; private set; }
     public override void OnNetworkSpawn()
@@ -32,10 +37,23 @@ public class Spawner : NetworkBehaviour
         if (ObjectivesManager.Instance.isGameStart()) 
         {
             if (!IsServer) return;
+            counter += Time.deltaTime;
             timer += Time.deltaTime;
-            if (timer >= spawnInterval)
+
+            Debug.Log("interval is at " + spawnInterval + ", extra freq per difficulty is at " + extraFreqPerDifficulty + ", difficulty value is " + ObjectivesManager.Instance.difficulty.Value);
+            Debug.Log("final calc " + (spawnInterval - (extraFreqPerDifficulty * (float)ObjectivesManager.Instance.difficulty.Value)));
+
+            if (timer >= 60f)
             {
-                timer -= spawnInterval;
+                timer -= 60f;
+                spawnInterval -= frequencyChangePerMin;
+            }
+
+            float finalcalc = (spawnInterval - (extraFreqPerDifficulty * (float)ObjectivesManager.Instance.difficulty.Value));
+
+            if (counter >= finalcalc)
+            {
+                counter -= finalcalc;
                 SpawnEnemy();
             }
         }

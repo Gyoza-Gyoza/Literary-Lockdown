@@ -1,22 +1,34 @@
 using System;
 using System.IO;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 public class SaveLoadManager : MonoBehaviour
 {
-    private PlayerMetadata m_playerData;
+    private static PlayerMetadata m_playerData;
+    public static PlayerMetadata PlayerData
+    {
+        get
+        {
+            m_playerData = LoadData();
+            return m_playerData;
+        }
+    }
 
     [Header("UI Elements")]
-    public TMP_InputField inputField;
-    public TextMeshProUGUI TMPInputUsername;
-    public TextMeshProUGUI TMPInputUsername_Placeholder;
+    //public TMP_InputField inputField;
+    //public TextMeshProUGUI TMPInputUsername;
+    //public TextMeshProUGUI TMPInputUsername_Placeholder;
 
+    //private static SaveLoadManager instance;
+    public static SaveLoadManager Instance { get; private set ;}
+    //public static SaveLoadManager Instance { get { return instance; } private set { instance = value; DontDestroyOnLoad(value.gameObject); } }
 
-    public static void SaveData(PlayerMetadata data)
+    public static void SaveData()
     {
         // Convert the C# object to a JSON string
-        string json = JsonUtility.ToJson(data, true); // The 'true' pretty-prints the JSON for readability
+        string json = JsonUtility.ToJson(m_playerData, true); // The 'true' pretty-prints the JSON for readability
 
         // Define the file path using Application.persistentDataPath for cross-platform compatibility
         string path = Path.Combine(Application.persistentDataPath, "PlayerMetadata.json");
@@ -54,28 +66,50 @@ public class SaveLoadManager : MonoBehaviour
 
     public void Awake()
     {
-        m_playerData = LoadData();
-
-        if (m_playerData.playerName != "" && SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(0))
+        if (Instance == null)
         {
-            TMPInputUsername_Placeholder.text = "Saved as " + m_playerData.playerName;
+            Instance = this;
+
+            DontDestroyOnLoad(gameObject); // Persist across scenes
+            m_playerData = LoadData();
+
+            //trying to remove start
+            /*
+            if (m_playerData.playerName != "" && SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(0))
+            {
+                TMPInputUsername_Placeholder.text = "Saved as " + m_playerData.playerName;
+            }
+            */
+            //end
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
 
-    public void SetUsername()
+    public void SetUsername(string input)
     {
-        m_playerData.playerName = TMPInputUsername.text;
-        SaveData(m_playerData);
+        m_playerData.playerName = input;
+        SaveData();
         
+        //Trying to remove start
+        /*
         if (m_playerData.playerName == TMPInputUsername.text)
         {
             inputField.text = "";
             TMPInputUsername_Placeholder.text = "Saved as " + m_playerData.playerName;
         }
+        else
+        {
+            Debug.Log("Failed to save username");
+        }
+        */
+        //end
     }
 
     public void LoadScene(int sceneIndex)
     {
-        SceneManager.LoadScene(sceneIndex);
+        SceneManager.LoadScene(sceneIndex, LoadSceneMode.Single);
     }
 }

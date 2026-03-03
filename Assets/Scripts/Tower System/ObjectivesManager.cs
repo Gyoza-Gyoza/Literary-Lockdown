@@ -4,17 +4,25 @@ using TMPro;
 
 public class ObjectivesManager : NetworkBehaviour
 {
-    [SerializeField] private GameObject rewardScreen;
-    [SerializeField] private TextMeshProUGUI booksRewardsText, pagesRewardsText; 
+    [SerializeField] private GameObject rewardScreen, networkScreen;
+    [SerializeField] private TextMeshProUGUI booksRewardsText, pagesRewardsText, currntPlayers, totalPlayers;
+    [SerializeField] private TMP_Dropdown difficultyDropdown;
 
     public TextMeshProUGUI timeText;
     private NetworkVariable<float> remainingTime = new NetworkVariable<float>(900); // 15 minutes in seconds
     [SerializeField]
     private NetworkVariable<bool> startGame = new NetworkVariable<bool>(false);
+    public bool isGameStart() { return startGame.Value;}
     private NetworkVariable<bool> gameEnded = new NetworkVariable<bool>(false);
+    private int pageAmount; 
 
     public NetworkVariable<int> booksCaptured = new NetworkVariable<int>(0);
     public TextMeshProUGUI booksCapturedText;
+
+    public NetworkVariable<int> playersInLobby = new NetworkVariable<int>(0);
+    public NetworkVariable<int> playersReadyInLobby = new NetworkVariable<int>(0);
+
+    public NetworkVariable<int> difficulty = new NetworkVariable<int>(0);
 
     public static ObjectivesManager Instance;
     public void Awake()
@@ -65,6 +73,10 @@ public class ObjectivesManager : NetworkBehaviour
 
     void Update()
     {
+        currntPlayers.text = playersReadyInLobby.Value.ToString();
+        totalPlayers.text = playersInLobby.Value.ToString();
+        difficultyDropdown.value = difficulty.Value;
+
         if (!IsServer) return;
 
         if (startGame.Value == true)
@@ -80,6 +92,7 @@ public class ObjectivesManager : NetworkBehaviour
         }
         else
         {
+
             foreach(NetworkClient playerClient in NetworkManager.ConnectedClientsList)
             {
                 PlayerClientController cilent = playerClient.PlayerObject.GetComponent<PlayerClientController>();
@@ -88,7 +101,6 @@ public class ObjectivesManager : NetworkBehaviour
                     return;
                 }
             }
-
             startGame.Value = true;
         }
     }
@@ -114,7 +126,16 @@ public class ObjectivesManager : NetworkBehaviour
     {
         rewardScreen.SetActive(true);
         booksRewardsText.text = $"{booksCaptured.Value}";
-        pagesRewardsText.text = $"{booksCaptured.Value * Random.Range(1.5f, 2.3f)}";
+        pageAmount = (int)(booksCaptured.Value * Random.Range(1.5f, 2.3f));
+        pagesRewardsText.text = $"{pageAmount}";
+        SaveLoadManager.PlayerData.pagesHeld += pageAmount;
+        SaveLoadManager.SaveData();
+    }
+
+    public void SetDifficulty()
+    {
+        difficulty.Value = difficultyDropdown.value;
+        Debug.Log("Current difficulty is " + difficulty.Value);
     }
 
     private void OnRemainingTimeChanged(float oldValue, float newValue)
@@ -134,6 +155,7 @@ public class ObjectivesManager : NetworkBehaviour
         var booksParent = booksCapturedText.transform.parent.gameObject;
         if (timeParent != null) timeParent.SetActive(newValue);
         if (booksParent != null) booksParent.SetActive(newValue);
+        Debug.Log($"Start game changed");
     }
 
     private void OnGameEndedChanged(bool oldValue, bool newValue)
@@ -165,8 +187,8 @@ public class ObjectivesManager : NetworkBehaviour
         if (booksCapturedText != null)
             booksCapturedText.text = $"{booksCaptured.Value}";
 
-        var timeParent = timeText?.transform?.parent?.gameObject;
-        var booksParent = booksCapturedText?.transform?.parent?.gameObject;
+        var timeParent = timeText.transform.parent.gameObject;
+        var booksParent = booksCapturedText.transform.parent.gameObject;
         if (timeParent != null) timeParent.SetActive(startGame.Value);
         if (booksParent != null) booksParent.SetActive(startGame.Value);
 
@@ -180,8 +202,5 @@ public class ObjectivesManager : NetworkBehaviour
         }
     }
 
-    public bool isGameStart()
-    {
-        return startGame.Value;
-    }
+
 }

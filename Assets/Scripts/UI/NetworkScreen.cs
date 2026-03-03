@@ -3,30 +3,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class RewardScreen : MonoBehaviour
+public class NetworkScreen : MonoBehaviour
 {
-    public TextMeshProUGUI booksKilledText;
-    public TextMeshProUGUI pagesEarnedText;
+    //public TextMeshProUGUI booksKilledText;
+    //public TMP_InputField ipInput;
     public CanvasGroup canvasGroup;
     public float fadeInTiming = 1f;
     public float fadeOutTiming = 1f;
-
-    public void SetBooksKilled(int input)
-    {
-        booksKilledText.text = input.ToString();
-    }
-
-    public void SetPagesEarned(int input)
-    {
-        pagesEarnedText.text = input.ToString();
-    }
-
-
-    public void ExitToMain()
-    {
-        Debug.Log("Exit to main called");
-        SceneManager.LoadScene("Main");
-    }
 
     #region ############# Fades ##################
     public void FadeIn()
@@ -46,7 +29,6 @@ public class RewardScreen : MonoBehaviour
         canvasGroup.alpha = 1f;
         yield break;
     }
-
     public void CanvasOpacity(float input)
     {
         canvasGroup.alpha = input;
@@ -56,7 +38,6 @@ public class RewardScreen : MonoBehaviour
     {
         StartCoroutine(FadeIOutorutine(fadeOutTiming));
     }
-
 
     IEnumerator FadeIOutorutine(float timing)
     {
@@ -76,7 +57,9 @@ public class RewardScreen : MonoBehaviour
     void Start()
     {
         this.canvasGroup = this.GetComponent<CanvasGroup>();
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
+        //CanvasOpacity(0f);
+        FadeIn();
     }
 
     // Update is called once per frame

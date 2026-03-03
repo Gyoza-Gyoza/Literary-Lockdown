@@ -364,6 +364,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1210491843923121724}
   - component: {fileID: 4461455069799360735}
+  - component: {fileID: 7004354691318354243}
   m_Layer: 5
   m_Name: Reward_Screen
   m_TagString: Untagged
@@ -406,8 +407,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RewardScreen
   booksKilledText: {fileID: 4640980543866556937}
   pagesEarnedText: {fileID: 338772679655369417}
+  canvasGroup: {fileID: 0}
   fadeInTiming: 1
   fadeOutTiming: 1
+--- !u!225 &7004354691318354243
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5224507606358953122}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &5782831239910529907
 GameObject:
   m_ObjectHideFlags: 0

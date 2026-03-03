@@ -1,3 +1,4 @@
+using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
@@ -5,10 +6,13 @@ using UnityEngine;
 public class NetworkThing : MonoBehaviour
 {
     private NetworkManager m_NetworkManager;
+    public GameObject NetworkScreen;
     [SerializeField] private GameObject[] spawnOnStart;
 
     private string m_PlayerName;
     private string targetIPAddr = "IP Addr";
+
+    public TMP_InputField ipInput;
 
     private void Awake()
     {
@@ -29,16 +33,43 @@ public class NetworkThing : MonoBehaviour
     {
         GUILayout.BeginArea(new Rect(0, Screen.height /2, Screen.width, Screen.height));
 
-        if (!m_NetworkManager.IsClient && !m_NetworkManager.IsServer)
+        //if (!m_NetworkManager.IsClient && !m_NetworkManager.IsServer)
+        //{
+            //StartButtons();
+       //}
+        //else
+        if (m_NetworkManager.IsServer || m_NetworkManager.IsClient || m_NetworkManager.IsHost)
         {
-            StartButtons();
-        }
-        else
-        {
-            StatusLabels();
+            if (NetworkScreen.activeSelf)
+            {
+                //ObjectivesManager.Instance.playersInLobby.Value++;
+                NetworkScreen.SetActive(false);
+            }
+            if (m_NetworkManager.IsHost)
+            {
+                StatusLabels();
+            }
         }
 
         GUILayout.EndArea();
+    }
+
+    
+
+    public void StartHost()
+    {
+        m_NetworkManager.StartHost();
+        ObjectivesManager.Instance.playersInLobby.Value++;
+    }
+
+    public void ClientJoin()
+    {
+        Connect(ipInput.text);
+    }
+
+    public void LocalJoin()
+    {
+        Connect("localhost");
     }
 
     private void StartButtons()
@@ -54,6 +85,7 @@ public class NetworkThing : MonoBehaviour
         var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
         transport.SetConnectionData(enteredIP, 7777);
         m_NetworkManager.StartClient();
+        ObjectivesManager.Instance.playersInLobby.Value++;
     }
 
     private void StatusLabels()
