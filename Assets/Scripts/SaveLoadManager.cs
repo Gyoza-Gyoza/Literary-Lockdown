@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 public class SaveLoadManager : MonoBehaviour
@@ -20,7 +21,8 @@ public class SaveLoadManager : MonoBehaviour
     public TextMeshProUGUI TMPInputUsername;
     public TextMeshProUGUI TMPInputUsername_Placeholder;
 
-    public static SaveLoadManager Instance { get; private set; }
+    private static SaveLoadManager instance;
+    public static SaveLoadManager Instance { get { return instance; } private set { instance = value; DontDestroyOnLoad(value.gameObject); } }
     public static void SaveData()
     {
         // Convert the C# object to a JSON string
@@ -94,6 +96,6 @@ public class SaveLoadManager : MonoBehaviour
 
     public void LoadScene(int sceneIndex)
     {
-        SceneManager.LoadScene(sceneIndex);
+        SceneManager.LoadScene(sceneIndex, LoadSceneMode.Single);
     }
 }

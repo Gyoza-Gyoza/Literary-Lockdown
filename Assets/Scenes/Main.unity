@@ -265,7 +265,7 @@ GameObject:
   - component: {fileID: 169041798}
   - component: {fileID: 169041797}
   m_Layer: 5
-  m_Name: BTN_Upgrades (1)
+  m_Name: Shop Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -341,7 +341,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 2
+          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -11579,7 +11579,7 @@ GameObject:
   - component: {fileID: 1446604299}
   - component: {fileID: 1446604298}
   m_Layer: 5
-  m_Name: BTN_Upgrades
+  m_Name: Companion Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
