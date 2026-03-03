@@ -7,6 +7,9 @@ public class Spawner : NetworkBehaviour
     [SerializeField] private NetworkObject enemyPrefab;
     [SerializeField] private float spawnInterval = 1f;
 
+    public float frequencyChangePerMin = 0.04f;
+
+    private float counter;
     private float timer;
     public static Spawner Instance { get; private set; }
     public override void OnNetworkSpawn()
@@ -32,10 +35,18 @@ public class Spawner : NetworkBehaviour
         if (ObjectivesManager.Instance.isGameStart()) 
         {
             if (!IsServer) return;
+            counter += Time.deltaTime;
             timer += Time.deltaTime;
-            if (timer >= spawnInterval)
+
+            if (timer >= 60f)
             {
-                timer -= spawnInterval;
+                timer -= 60f;
+                spawnInterval -= frequencyChangePerMin;
+            }
+
+            if (counter >= spawnInterval)
+            {
+                counter -= spawnInterval;
                 SpawnEnemy();
             }
         }

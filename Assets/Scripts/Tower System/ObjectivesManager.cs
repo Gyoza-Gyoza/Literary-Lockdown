@@ -22,6 +22,8 @@ public class ObjectivesManager : NetworkBehaviour
     public NetworkVariable<int> playersInLobby = new NetworkVariable<int>(0);
     public NetworkVariable<int> playersReadyInLobby = new NetworkVariable<int>(0);
 
+    
+
     public static ObjectivesManager Instance;
     public void Awake()
     {
@@ -164,6 +166,11 @@ public class ObjectivesManager : NetworkBehaviour
         int seconds = (int)(secondsTotal % 60);
         if (timeText != null)
             timeText.text = $"{minutes}:{seconds:00}";
+    }
+
+    private void UpdatePlayersReady()
+    {
+
     }
 
     private void ApplyAllNetworkValuesToUI()
