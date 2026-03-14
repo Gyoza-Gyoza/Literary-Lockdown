@@ -16,6 +16,9 @@ public class Tower : NetworkBehaviour
     [SerializeField] private float attackSpeed = 0.2f;
     public NetworkObject target;
 
+    public targetStyle towerTargetStyle = targetStyle.Closest;
+    public enum targetStyle {Furthest, Closest}
+
     [SerializeField]
     private bool isMoving;
     private Stats baseStats;
@@ -52,10 +55,21 @@ public class Tower : NetworkBehaviour
             if (timer >= attackSpeed)
             {
                 timer -= attackSpeed;
-                canAttack = true;
+                if (TryGetComponent<Animator>(out Animator animator))
+                {
+                    animator.SetTrigger("CanAttack");
+                }
+                //canAttack = true;
+
             }
         }
     }
+
+    public void CanAttack()
+    {
+        canAttack = true;
+    }
+
     public override void OnNetworkSpawn()
     {
         m_GameObjectName.OnValueChanged += OnGameObjectNameChangeRpc;

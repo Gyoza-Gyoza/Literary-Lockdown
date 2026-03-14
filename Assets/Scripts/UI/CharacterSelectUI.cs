@@ -14,6 +14,14 @@ public class CharacterSelectUI : MonoBehaviour
 
     public void TrySpawnTower(int towerIndex)
     {
-        NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerClientController>().TrySpawnTower(towerIndex);
+        if ( NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerClientController>().TrySpawnTower(towerIndex))
+        {
+            //close the UI
+        }
+        else { 
+         
+            //display an error ig
+               
+        }
     }
 }
