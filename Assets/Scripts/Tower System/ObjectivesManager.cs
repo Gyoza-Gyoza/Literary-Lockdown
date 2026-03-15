@@ -73,6 +73,23 @@ public class ObjectivesManager : NetworkBehaviour
 
     void Update()
     {
+        if (IsServer)
+        {
+            playersInLobby.Value = NetworkManager.ConnectedClientsList.Count;
+
+            playersReadyInLobby.Value = 0;
+            foreach (NetworkClient playerClient in NetworkManager.ConnectedClientsList)
+            {
+                PlayerClientController cilent = playerClient.PlayerObject.GetComponent<PlayerClientController>();
+                if (cilent.playerReady.Value == false)
+                {
+                    continue;
+                }
+
+                playersReadyInLobby.Value++;
+            }
+        }
+
         currntPlayers.text = playersReadyInLobby.Value.ToString();
         totalPlayers.text = playersInLobby.Value.ToString();
         difficultyDropdown.value = difficulty.Value;
