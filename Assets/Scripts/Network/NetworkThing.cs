@@ -8,6 +8,7 @@ using Unity.Services.Authentication;
 using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using Unity.Collections;
+using UnityEngine.SceneManagement;
 
 public class NetworkThing : MonoBehaviour
 {
@@ -33,6 +34,8 @@ public class NetworkThing : MonoBehaviour
                 networkObject.Spawn();
             }
         };
+
+        NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
     }
 
 
@@ -124,14 +127,6 @@ public class NetworkThing : MonoBehaviour
         Connect("localhost");
     }
 
-    private void StartButtons()
-    {
-        if (GUILayout.Button("Host")) m_NetworkManager.StartHost();
-        if (GUILayout.Button("Server")) m_NetworkManager.StartServer();
-        targetIPAddr = GUILayout.TextField(targetIPAddr, 25);
-        if (GUILayout.Button("Client Join")) Connect(targetIPAddr);
-    }
-
     public void Connect(string enteredIP)
     {
         var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
@@ -152,21 +147,23 @@ public class NetworkThing : MonoBehaviour
         GUILayout.Label("Join Code: " + m_LobbyJoinCode);
     }
 
-    private void SubmitNewPosition()
+    private void OnClientDisconnect(ulong clientId)
     {
-        if (GUILayout.Button(m_NetworkManager.IsServer ? "Move" : "Request Position Change"))
+        Debug.Log($"Client with ID {clientId} has disconnected.");
+
+        // Check if the disconnected client is the local client
+        if (clientId == NetworkManager.Singleton.LocalClientId)
         {
-            if (m_NetworkManager.IsServer && !m_NetworkManager.IsClient)
+            // The local player was disconnected (e.g. Server shut down, lost connection)
+            Debug.Log("You have been disconnected from the server.");
+            SceneManager.LoadScene(0);
+        }
+        else
+        {
+            // Another player disconnected
+            if (m_NetworkManager.IsServer)
             {
-                foreach (ulong uid in m_NetworkManager.ConnectedClientsIds)
-                {
-                    m_NetworkManager.SpawnManager.GetPlayerNetworkObject(uid).GetComponent<Tower>();
-                }
-            }
-            else
-            {
-                var playerObject = m_NetworkManager.SpawnManager.GetLocalPlayerObject();
-                var player = playerObject.GetComponent<Tower>();
+                // Logic for the server handling a dropped player (e.g. decrease player count)
             }
         }
     }
