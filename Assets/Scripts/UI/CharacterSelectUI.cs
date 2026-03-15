@@ -8,6 +8,8 @@ public class CharacterSelectUI : MonoBehaviour
     private NetworkManager m_networkManager;
     private RectTransform rectTransform;
 
+    public GameObject rapHold;
+
     public float openUIy = 160f;
     public float closeUIy = -201f;
     public float rate = 1f;
