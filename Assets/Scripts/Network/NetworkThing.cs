@@ -7,6 +7,7 @@ using Unity.Services.Core;
 using Unity.Services.Authentication;
 using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
+using Unity.Collections;
 
 public class NetworkThing : MonoBehaviour
 {
@@ -14,11 +15,9 @@ public class NetworkThing : MonoBehaviour
     public GameObject NetworkScreen;
     [SerializeField] private GameObject[] spawnOnStart;
 
+    public string m_LobbyJoinCode;
     private string m_PlayerName;
     private string targetIPAddr = "IP Addr";
-
-    private string m_LobbyJoinCode;
-
     public TMP_InputField ipInput;
     public TMP_Text TMP_joinCodeText;
 
@@ -82,8 +81,11 @@ public class NetworkThing : MonoBehaviour
         }
         var allocation = await RelayService.Instance.CreateAllocationAsync(maxConnections);
         NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(AllocationUtils.ToRelayServerData(allocation, connectionType));
+
+        // Get the lobby join code and display it to the user
         m_LobbyJoinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
         SetJoinCodeUI(m_LobbyJoinCode);
+
         return NetworkManager.Singleton.StartHost() ? m_LobbyJoinCode : null;
     }
 
@@ -97,8 +99,10 @@ public class NetworkThing : MonoBehaviour
 
         var allocation = await RelayService.Instance.JoinAllocationAsync(joinCode: joinCode);
         NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(AllocationUtils.ToRelayServerData(allocation, connectionType));
-        m_LobbyJoinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+
+        m_LobbyJoinCode = joinCode;
         SetJoinCodeUI(m_LobbyJoinCode);
+
         return !string.IsNullOrEmpty(joinCode) && NetworkManager.Singleton.StartClient();
     }
 
