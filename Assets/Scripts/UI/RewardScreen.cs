@@ -24,6 +24,12 @@ public class RewardScreen : MonoBehaviour
 
     public void ExitToMain()
     {
+        // Close the connection to the server if we are the host or client
+        Unity.Netcode.NetworkManager.Singleton.Shutdown();
+
+        // Destory Network GameObject
+        Destroy(GameObject.FindWithTag("NetworkManager").gameObject);
+
         Debug.Log("Exit to main called");
         SceneManager.LoadScene("Main");
     }

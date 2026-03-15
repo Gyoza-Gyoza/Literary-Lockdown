@@ -1,7 +1,14 @@
+using System.Threading.Tasks;
 using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
+using Unity.Services.Core;
+using Unity.Services.Authentication;
+using Unity.Services.Relay;
+using Unity.Services.Relay.Models;
+using Unity.Collections;
+using UnityEngine.SceneManagement;
 
 public class NetworkThing : MonoBehaviour
 {
@@ -9,10 +16,11 @@ public class NetworkThing : MonoBehaviour
     public GameObject NetworkScreen;
     [SerializeField] private GameObject[] spawnOnStart;
 
+    public string m_LobbyJoinCode;
     private string m_PlayerName;
     private string targetIPAddr = "IP Addr";
-
     public TMP_InputField ipInput;
+    public TMP_Text TMP_joinCodeText;
 
     private void Awake()
     {
@@ -26,6 +34,8 @@ public class NetworkThing : MonoBehaviour
                 networkObject.Spawn();
             }
         };
+
+        NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
     }
 
 
@@ -56,28 +66,65 @@ public class NetworkThing : MonoBehaviour
 
     
 
-    public void StartHost()
+    public async void StartHost()
     {
-        m_NetworkManager.StartHost();
-        ObjectivesManager.Instance.playersInLobby.Value++;
+        //m_NetworkManager.StartHost();
+        //ObjectivesManager.Instance.playersInLobby.Value++;
+
+        // Use only dtls or wss, udp is unencrypted and not recommended for production
+        await StartHostWithRelay(4, "dtls");
     }
 
-    public void ClientJoin()
+    public async Task<string> StartHostWithRelay(int maxConnections, string connectionType)
     {
-        Connect(ipInput.text);
+        await UnityServices.InitializeAsync();
+        if (!AuthenticationService.Instance.IsSignedIn)
+        {
+            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        }
+        var allocation = await RelayService.Instance.CreateAllocationAsync(maxConnections);
+        NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(AllocationUtils.ToRelayServerData(allocation, connectionType));
+
+        // Get the lobby join code and display it to the user
+        m_LobbyJoinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+        SetJoinCodeUI(m_LobbyJoinCode);
+
+        return NetworkManager.Singleton.StartHost() ? m_LobbyJoinCode : null;
+    }
+
+    public async Task<bool> JoinLobbyWithRelay(string joinCode, string connectionType)
+    {
+        await UnityServices.InitializeAsync();
+        if (!AuthenticationService.Instance.IsSignedIn)
+        {
+            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        }
+
+        var allocation = await RelayService.Instance.JoinAllocationAsync(joinCode: joinCode);
+        NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(AllocationUtils.ToRelayServerData(allocation, connectionType));
+
+        m_LobbyJoinCode = joinCode;
+        SetJoinCodeUI(m_LobbyJoinCode);
+
+        return !string.IsNullOrEmpty(joinCode) && NetworkManager.Singleton.StartClient();
+    }
+
+    public void SetJoinCodeUI(string joinCode)
+    {
+        TMP_joinCodeText.text = $"Join Code: {joinCode}";
+    }
+
+    public async void ClientJoin()
+    {
+        //Connect(ipInput.text);
+
+        // Use only dtls or wss, udp is unencrypted and not recommended for production
+        await JoinLobbyWithRelay(ipInput.text, "dtls");
     }
 
     public void LocalJoin()
     {
         Connect("localhost");
-    }
-
-    private void StartButtons()
-    {
-        if (GUILayout.Button("Host")) m_NetworkManager.StartHost();
-        if (GUILayout.Button("Server")) m_NetworkManager.StartServer();
-        targetIPAddr = GUILayout.TextField(targetIPAddr, 25);
-        if (GUILayout.Button("Client Join")) Connect(targetIPAddr);
     }
 
     public void Connect(string enteredIP)
@@ -96,24 +143,27 @@ public class NetworkThing : MonoBehaviour
         GUILayout.Label("Transport: " +
             m_NetworkManager.NetworkConfig.NetworkTransport.GetType().Name);
         GUILayout.Label("Mode: " + mode);
-        GUILayout.Label("IP Address: " + m_NetworkManager.GetComponent<UnityTransport>().ConnectionData.Address);
+        //GUILayout.Label("IP Address: " + m_NetworkManager.GetComponent<UnityTransport>().ConnectionData.Address);
+        GUILayout.Label("Join Code: " + m_LobbyJoinCode);
     }
 
-    private void SubmitNewPosition()
+    private void OnClientDisconnect(ulong clientId)
     {
-        if (GUILayout.Button(m_NetworkManager.IsServer ? "Move" : "Request Position Change"))
+        Debug.Log($"Client with ID {clientId} has disconnected.");
+
+        // Check if the disconnected client is the local client
+        if (clientId == NetworkManager.Singleton.LocalClientId)
         {
-            if (m_NetworkManager.IsServer && !m_NetworkManager.IsClient)
+            // The local player was disconnected (e.g. Server shut down, lost connection)
+            Debug.Log("You have been disconnected from the server.");
+            SceneManager.LoadScene(0);
+        }
+        else
+        {
+            // Another player disconnected
+            if (m_NetworkManager.IsServer)
             {
-                foreach (ulong uid in m_NetworkManager.ConnectedClientsIds)
-                {
-                    m_NetworkManager.SpawnManager.GetPlayerNetworkObject(uid).GetComponent<Tower>();
-                }
-            }
-            else
-            {
-                var playerObject = m_NetworkManager.SpawnManager.GetLocalPlayerObject();
-                var player = playerObject.GetComponent<Tower>();
+                // Logic for the server handling a dropped player (e.g. decrease player count)
             }
         }
     }

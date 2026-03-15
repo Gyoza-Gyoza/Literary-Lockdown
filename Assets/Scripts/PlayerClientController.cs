@@ -55,18 +55,20 @@ public class PlayerClientController : NetworkBehaviour
 
     #region Tower Handler
 
-    public void TrySpawnTower(int towerIndex)
+    public bool TrySpawnTower(int towerIndex)
     {
         if (currentTowers.Value >= maxTowers)
         {
             Debug.Log("Max towers reached. Cannot spawn more.");
-            return;
+            return false;
         }
 
         currentTowers.Value += 1;
 
         // Spawn the tower on the server
         SpawnTowerRpc(towerIndex);
+
+        return true;
     }
 
     [Rpc(SendTo.Server)]
@@ -93,7 +95,7 @@ public class PlayerClientController : NetworkBehaviour
     {
         if (gameObject.GetComponent<NetworkObject>().IsOwner)
         {
-            gameObject.GetComponent<NetworkObject>().Despawn();
+            gameObject.GetComponent<Tower>().DestroyTowerRpc();
             TowerManager.Instance.RemoveTower(gameObject.GetComponent<Tower>());
             currentTowers.Value -= 1;
         }

@@ -45,18 +45,44 @@ public class TowerManager : NetworkBehaviour
         {
             tower.target = null;
 
-            float closestDistance = float.PositiveInfinity;
-
+            float distanceToBeat = 0f;
+            switch (tower.towerTargetStyle)
+            {
+                case Tower.targetStyle.Closest:
+                    distanceToBeat = float.PositiveInfinity;
+                    break;
+                case Tower.targetStyle.Furthest:
+                    distanceToBeat = float.NegativeInfinity;
+                    break;
+            }
             foreach (NetworkObject enemy in EnemyList)
             {
                 float distance = Vector2.Distance(tower.transform.position, enemy.transform.position);
                 if (distance <= tower.attackRange.Value) // Make sure it's within range
                 {
-                    if (distance < closestDistance) // Get closest enemy
+                    switch (tower.towerTargetStyle)
                     {
-                        closestDistance = distance;
-                        tower.target = enemy;
+                        case Tower.targetStyle.Closest:
+
+                            if (distance < distanceToBeat) // Get closest enemy
+                            {
+                                distanceToBeat = distance;
+                                tower.target = enemy;
+                            }
+
+                            break;
+                        case Tower.targetStyle.Furthest:
+
+                            if (distance > distanceToBeat) // Get furthest enemy
+                            {
+                                distanceToBeat = distance;
+                                tower.target = enemy;
+                            }
+
+                            break;
+
                     }
+
                 }
             }
         }
@@ -71,6 +97,7 @@ public class TowerManager : NetworkBehaviour
         {
             if (tower.target != null && tower.canAttack)
             {
+                //Should trigger animation instead
                 NetworkObject projectile = Instantiate(tower.projectilePrefab);
                 projectile.transform.position = tower.transform.position;
 
