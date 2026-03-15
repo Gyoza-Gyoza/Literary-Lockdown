@@ -1,7 +1,12 @@
+using System.Threading.Tasks;
 using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
+using Unity.Services.Core;
+using Unity.Services.Authentication;
+using Unity.Services.Relay;
+using Unity.Services.Relay.Models;
 
 public class NetworkThing : MonoBehaviour
 {
@@ -12,7 +17,10 @@ public class NetworkThing : MonoBehaviour
     private string m_PlayerName;
     private string targetIPAddr = "IP Addr";
 
+    private string m_LobbyJoinCode;
+
     public TMP_InputField ipInput;
+    public TMP_Text TMP_joinCodeText;
 
     private void Awake()
     {
@@ -56,15 +64,55 @@ public class NetworkThing : MonoBehaviour
 
     
 
-    public void StartHost()
+    public async void StartHost()
     {
-        m_NetworkManager.StartHost();
-        ObjectivesManager.Instance.playersInLobby.Value++;
+        //m_NetworkManager.StartHost();
+        //ObjectivesManager.Instance.playersInLobby.Value++;
+
+        // Use only dtls or wss, udp is unencrypted and not recommended for production
+        await StartHostWithRelay(4, "dtls");
     }
 
-    public void ClientJoin()
+    public async Task<string> StartHostWithRelay(int maxConnections, string connectionType)
     {
-        Connect(ipInput.text);
+        await UnityServices.InitializeAsync();
+        if (!AuthenticationService.Instance.IsSignedIn)
+        {
+            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        }
+        var allocation = await RelayService.Instance.CreateAllocationAsync(maxConnections);
+        NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(AllocationUtils.ToRelayServerData(allocation, connectionType));
+        m_LobbyJoinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+        SetJoinCodeUI(m_LobbyJoinCode);
+        return NetworkManager.Singleton.StartHost() ? m_LobbyJoinCode : null;
+    }
+
+    public async Task<bool> JoinLobbyWithRelay(string joinCode, string connectionType)
+    {
+        await UnityServices.InitializeAsync();
+        if (!AuthenticationService.Instance.IsSignedIn)
+        {
+            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        }
+
+        var allocation = await RelayService.Instance.JoinAllocationAsync(joinCode: joinCode);
+        NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(AllocationUtils.ToRelayServerData(allocation, connectionType));
+        m_LobbyJoinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+        SetJoinCodeUI(m_LobbyJoinCode);
+        return !string.IsNullOrEmpty(joinCode) && NetworkManager.Singleton.StartClient();
+    }
+
+    public void SetJoinCodeUI(string joinCode)
+    {
+        TMP_joinCodeText.text = $"Join Code: {joinCode}";
+    }
+
+    public async void ClientJoin()
+    {
+        //Connect(ipInput.text);
+
+        // Use only dtls or wss, udp is unencrypted and not recommended for production
+        await JoinLobbyWithRelay(ipInput.text, "dtls");
     }
 
     public void LocalJoin()
@@ -96,7 +144,8 @@ public class NetworkThing : MonoBehaviour
         GUILayout.Label("Transport: " +
             m_NetworkManager.NetworkConfig.NetworkTransport.GetType().Name);
         GUILayout.Label("Mode: " + mode);
-        GUILayout.Label("IP Address: " + m_NetworkManager.GetComponent<UnityTransport>().ConnectionData.Address);
+        //GUILayout.Label("IP Address: " + m_NetworkManager.GetComponent<UnityTransport>().ConnectionData.Address);
+        GUILayout.Label("Join Code: " + m_LobbyJoinCode);
     }
 
     private void SubmitNewPosition()
