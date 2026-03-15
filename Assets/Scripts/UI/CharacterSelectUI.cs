@@ -34,10 +34,18 @@ public class CharacterSelectUI : MonoBehaviour
         }
     }
 
-    public void OpenUI()
+    public void ToggleUI()
     {
-        StartCoroutine(lerpCoroutine(closeUIy, openUIy));
-        opened = true;
+        if (opened)
+        {
+            StartCoroutine(lerpCoroutine(openUIy, closeUIy));
+            opened = false;
+        }
+        else
+        {
+            StartCoroutine(lerpCoroutine(closeUIy, openUIy));
+            opened = true;
+        }
     }
 
     IEnumerator lerpCoroutine(float start, float end)
