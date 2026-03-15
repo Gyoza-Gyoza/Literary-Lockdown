@@ -60,6 +60,7 @@ public class PlayerClientController : NetworkBehaviour
         if (currentTowers.Value >= maxTowers)
         {
             Debug.Log("Max towers reached. Cannot spawn more.");
+            UIManager.Instance.ShowModalWindow("Tower Limit Reached", $"You can only have {maxTowers} towers at a time.");
             return false;
         }
 
