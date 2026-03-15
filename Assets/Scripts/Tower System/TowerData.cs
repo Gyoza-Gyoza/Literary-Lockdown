@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[System.Serializable]
 public struct TowerData
 {
     private string name;
