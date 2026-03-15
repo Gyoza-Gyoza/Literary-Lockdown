@@ -686,7 +686,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 1
-  m_Children: []
+  m_Children:
+  - {fileID: 1045170473}
   m_Father: {fileID: 1824524768}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
@@ -5752,9 +5753,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de846fb89e057a74fbcff7cd8eb67566, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaveLoadManager
-  inputField: {fileID: 0}
-  TMPInputUsername: {fileID: 0}
-  TMPInputUsername_Placeholder: {fileID: 0}
 --- !u!4 &670891800
 Transform:
   m_ObjectHideFlags: 0
@@ -6063,14 +6061,14 @@ RectTransform:
   m_GameObject: {fileID: 1045170472}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.48543692, y: 0.48543692, z: 0.48543692}
+  m_LocalScale: {x: 0.6666667, y: 0.6666667, z: 0.6666667}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1345995195}
+  m_Father: {fileID: 449647408}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 55.64, y: -41.43}
+  m_AnchoredPosition: {x: 578, y: -59}
   m_SizeDelta: {x: 114, y: 108}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1045170474
@@ -6330,7 +6328,6 @@ RectTransform:
   m_LocalScale: {x: 2.06, y: 2.06, z: 2.06}
   m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 1045170473}
   - {fileID: 1571212943}
   m_Father: {fileID: 1824524768}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
