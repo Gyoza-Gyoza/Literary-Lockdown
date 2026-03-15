@@ -127,6 +127,7 @@ public class NetworkThing : MonoBehaviour
         {
             // Empty Join Code
             Debug.Log($"Failed to join relay lobby: Code cannot be empty");
+            UIManager.Instance.ShowModalWindow("Join Failed", "Join code cannot be empty.");
         }
         catch (Exception e)
         {
@@ -135,10 +136,12 @@ public class NetworkThing : MonoBehaviour
                 case string msg when msg.Contains("Bad Request"):
                     // Error code 400, likely due to invalid join code format
                     Debug.Log($"Failed to join relay lobby: Join code not found");
+                    UIManager.Instance.ShowModalWindow("Join Failed", "Invalid Join Code.");
                     break;
                 default:
                     Debug.LogWarning($"Some other error");
                     Debug.LogError($"{e.Message}");
+                    UIManager.Instance.ShowModalWindow("Error", $"{e.Message}");
                     break;
             }
         }

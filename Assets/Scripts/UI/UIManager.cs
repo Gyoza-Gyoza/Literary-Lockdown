@@ -1,3 +1,5 @@
+using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -8,6 +10,12 @@ public class UIManager : MonoBehaviour
     public GameObject TowerControlPanel;
 
     public GameObject seletedTower;
+
+    [Header("Modal Window")]
+    public GameObject ModalWindow;
+    public TextMeshProUGUI ModalTitle;
+    public TextMeshProUGUI ModalContent;
+
 
     [Header("UI")]
     public GameObject playerReadyUI;
@@ -38,6 +46,44 @@ public class UIManager : MonoBehaviour
             Vector3 targetPosition = Camera.main.WorldToScreenPoint(seletedTower.transform.position);
             TowerControlPanel.transform.position = targetPosition;
         }
+    }
+
+    public void ShowModalWindow(string title, string message)
+    {
+        ModalTitle.text = title;
+        ModalContent.text = message;
+
+        StartCoroutine(DisplayModalWindow(3f));
+    }
+
+    public IEnumerator DisplayModalWindow(float displayDuration)
+    {
+        float count = 0f;
+        float lerpDuration = 0.5f;
+
+        while (count <= lerpDuration)
+        {
+            count += Time.fixedDeltaTime;
+
+            ModalWindow.transform.position = new Vector2(transform.position.x, Mathf.Lerp(-111, 110, count / lerpDuration));
+
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+        }
+
+        yield return new WaitForSeconds(displayDuration);
+
+        count = 0f;
+
+        while (count <= lerpDuration)
+        {
+            count += Time.fixedDeltaTime;
+
+            ModalWindow.transform.position = new Vector2(transform.position.x, Mathf.Lerp(110, -111, count / lerpDuration));
+
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+        }
+
+        yield break;
     }
 
     public void ShowPlayerReadyUI()
