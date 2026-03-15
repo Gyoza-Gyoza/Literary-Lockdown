@@ -210,4 +210,14 @@ public class Tower : NetworkBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange.Value);
     }
+
+    [Rpc(SendTo.Server)]
+    public void DestroyTowerRpc(RpcParams rpcParams = default)
+    {
+        // Prevent unauthorized clients from despawning another player's tower
+        if (rpcParams.Receive.SenderClientId != OwnerClientId) return;
+
+
+        GetComponent<NetworkObject>().Despawn();
+    }
 }

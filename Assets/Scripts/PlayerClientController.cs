@@ -95,7 +95,7 @@ public class PlayerClientController : NetworkBehaviour
     {
         if (gameObject.GetComponent<NetworkObject>().IsOwner)
         {
-            gameObject.GetComponent<NetworkObject>().Despawn();
+            gameObject.GetComponent<Tower>().DestroyTowerRpc();
             TowerManager.Instance.RemoveTower(gameObject.GetComponent<Tower>());
             currentTowers.Value -= 1;
         }
