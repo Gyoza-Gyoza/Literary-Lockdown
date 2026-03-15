@@ -175,7 +175,7 @@ public class Tower : NetworkBehaviour
 
     protected void OnMouseDown()
     {
-        if (IsOwner)
+        if (IsOwner && ObjectivesManager.Instance.isGameStart() == false)
         {
             // Activate UI element
             UIManager.Instance.TowerControlPanel.SetActive(true);

@@ -102,6 +102,12 @@ public class ObjectivesManager : NetworkBehaviour
                 }
             }
             startGame.Value = true;
+
+            // Hide Character Select UI
+            GameObject.FindFirstObjectByType<CharacterSelectUI>().ToggleUI();
+
+            UIManager.Instance.TowerControlPanel.SetActive(false);
+            UIManager.Instance.seletedTower = null;
         }
     }
 

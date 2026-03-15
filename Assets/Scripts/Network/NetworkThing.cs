@@ -1,13 +1,13 @@
+using System;
 using System.Threading.Tasks;
 using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
-using UnityEngine;
-using Unity.Services.Core;
 using Unity.Services.Authentication;
+using Unity.Services.Core;
 using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
-using Unity.Collections;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class NetworkThing : MonoBehaviour
@@ -119,7 +119,29 @@ public class NetworkThing : MonoBehaviour
         //Connect(ipInput.text);
 
         // Use only dtls or wss, udp is unencrypted and not recommended for production
-        await JoinLobbyWithRelay(ipInput.text, "dtls");
+        try
+        {
+            await JoinLobbyWithRelay(ipInput.text, "dtls");
+        }
+        catch (ArgumentNullException e)
+        {
+            // Empty Join Code
+            Debug.Log($"Failed to join relay lobby: Code cannot be empty");
+        }
+        catch (Exception e)
+        {
+            switch(e.Message)            
+            {
+                case string msg when msg.Contains("Bad Request"):
+                    // Error code 400, likely due to invalid join code format
+                    Debug.Log($"Failed to join relay lobby: Join code not found");
+                    break;
+                default:
+                    Debug.LogWarning($"Some other error");
+                    Debug.LogError($"{e.Message}");
+                    break;
+            }
+        }
     }
 
     public void LocalJoin()
