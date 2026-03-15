@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6636855022268821105}
   - component: {fileID: 7640169672862091391}
+  - component: {fileID: 7987610836991102675}
   m_Layer: 0
   m_Name: BGM
   m_TagString: Untagged
@@ -45,7 +46,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 848f42049599d514aacf9bfd7bd83ff5, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.4
+  m_Volume: 0.3
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -120,6 +121,31 @@ AudioSource:
     - serializedVersion: 3
       time: 0
       value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!169 &7987610836991102675
+AudioLowPassFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 281657574327503794}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_LowpassResonanceQ: 1
+  lowpassLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.22727273
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -273,8 +299,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
   audioList:
-  - {fileID: 0}
+  - {fileID: 8300000, guid: 06f18f6c50a445449ba3a0904057b196, type: 3}
+  - {fileID: 8300000, guid: ce8dc635b52997d4ba4cd3b883d12871, type: 3}
   SFXSource: {fileID: 5729740033774791311}
   BGMSource: {fileID: 7640169672862091391}
+  BGMlowPassFilter: {fileID: 7987610836991102675}
   LowPitchRange: 0.95
   HighPitchRange: 1.05

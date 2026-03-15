@@ -11,11 +11,13 @@ public class AudioManager : MonoBehaviour
     private static AudioManager instance;
     public AudioSource SFXSource;
     public AudioSource BGMSource;
+    public AudioLowPassFilter BGMlowPassFilter;
     //Random pitch variation
     public float LowPitchRange = 0.95f;
     public float HighPitchRange = 1.05f;
 
     //Dictionary<SoundType, AudioClip> _mySoundDictionary = new();
+    private bool isPaused = false;
 
     private void Awake()
     {
@@ -43,5 +45,18 @@ public class AudioManager : MonoBehaviour
         float randomPitch = UnityEngine.Random.Range(instance.LowPitchRange, instance.HighPitchRange);
         instance.SFXSource.pitch = randomPitch;
         instance.SFXSource.PlayOneShot(clip);
+    }
+    public static void TogglePauseBGM(AudioClip clip)
+    {
+        if(instance.isPaused)
+        {
+            instance.BGMlowPassFilter.enabled = true;
+            instance.BGMlowPassFilter.cutoffFrequency = 500f;
+        }
+        else
+        {
+            instance.BGMlowPassFilter.enabled = false;
+            instance.BGMlowPassFilter.cutoffFrequency = 5000f;
+        }
     }
 }
