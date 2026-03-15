@@ -138,6 +138,10 @@ public class NetworkThing : MonoBehaviour
                     Debug.Log($"Failed to join relay lobby: Join code not found");
                     UIManager.Instance.ShowModalWindow("Join Failed", "Invalid Join Code.");
                     break;
+                case string msg when msg.Contains("Not Found"):
+                    Debug.Log($"Failed to join relay lobby: Join code not found");
+                    UIManager.Instance.ShowModalWindow("Join Failed", "Expired or Invalid Join Code.");
+                    break;
                 default:
                     Debug.LogWarning($"Some other error");
                     Debug.LogError($"{e.Message}");
@@ -179,6 +183,8 @@ public class NetworkThing : MonoBehaviour
         // Check if the disconnected client is the local client
         if (clientId == NetworkManager.Singleton.LocalClientId)
         {
+            Destroy(NetworkManager.Singleton.gameObject);
+
             // The local player was disconnected (e.g. Server shut down, lost connection)
             Debug.Log("You have been disconnected from the server.");
             SceneManager.LoadScene(0);
