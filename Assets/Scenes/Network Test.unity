@@ -2451,7 +2451,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CharacterSelectUI
   closeUI: {fileID: 1394451090}
   openUIy: 0
-  closeUIy: -201
+  closeUIy: -1000
   rate: 0.3
 --- !u!1001 &586265713
 PrefabInstance:
