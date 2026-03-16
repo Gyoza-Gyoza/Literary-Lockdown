@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TowerManager : NetworkBehaviour
 {
-    private List<Tower> towerList = new();
+    public List<Tower> towerList = new();
     public List<NetworkObject> EnemyList
     {
         get
@@ -36,6 +36,7 @@ public class TowerManager : NetworkBehaviour
     private void Update()
     {
         if (!IsServer) return;
+
         EnemyDetectionHandler();
         TowerAttackHandler();
     }

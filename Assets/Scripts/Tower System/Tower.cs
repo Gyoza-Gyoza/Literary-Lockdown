@@ -96,6 +96,13 @@ public class Tower : NetworkBehaviour
         DisplayRange();
     }
 
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+
+        // Find the tower 's index in the tower list and remove it
+        TowerManager.Instance.towerList.Remove(this);
+    }
 
     public void StartMovementRpc()
     {
