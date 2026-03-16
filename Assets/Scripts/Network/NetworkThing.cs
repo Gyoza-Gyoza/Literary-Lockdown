@@ -18,7 +18,6 @@ public class NetworkThing : MonoBehaviour
 
     public string m_LobbyJoinCode;
     private string m_PlayerName;
-    private string targetIPAddr = "IP Addr";
     public TMP_InputField ipInput;
     public TMP_Text TMP_joinCodeText;
 

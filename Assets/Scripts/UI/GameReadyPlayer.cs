@@ -12,8 +12,8 @@ public class GameReadyPlayer : MonoBehaviour
 
     public Image btnImage;
 
-    public TextMeshPro currentReadyText;
-    public TextMeshPro playersInSessionText;
+    public TextMeshProUGUI currentReadyText;
+    public TextMeshProUGUI playersInSessionText;
 
     //private int playersReady = 0;
 

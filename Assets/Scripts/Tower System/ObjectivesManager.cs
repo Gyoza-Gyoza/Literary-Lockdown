@@ -1,15 +1,11 @@
 using UnityEngine;
 using Unity.Netcode;
 using TMPro;
+using UnityEngine.UIElements;
 
 public class ObjectivesManager : NetworkBehaviour
 {
-    [SerializeField] private GameObject rewardScreen, networkScreen;
-    [SerializeField] private TextMeshProUGUI booksRewardsText, pagesRewardsText, currntPlayers, totalPlayers;
-    [SerializeField] private TMP_Dropdown difficultyDropdown;
-
-    public TextMeshProUGUI timeText;
-    private NetworkVariable<float> remainingTime = new NetworkVariable<float>(900); // 15 minutes in seconds
+    public NetworkVariable<float> remainingTime = new NetworkVariable<float>(300); // 5 minutes in seconds
     [SerializeField]
     private NetworkVariable<bool> startGame = new NetworkVariable<bool>(false);
     public bool isGameStart() { return startGame.Value;}
@@ -17,14 +13,15 @@ public class ObjectivesManager : NetworkBehaviour
     private int pageAmount; 
 
     public NetworkVariable<int> booksCaptured = new NetworkVariable<int>(0);
-    public TextMeshProUGUI booksCapturedText;
 
     public NetworkVariable<int> playersInLobby = new NetworkVariable<int>(0);
     public NetworkVariable<int> playersReadyInLobby = new NetworkVariable<int>(0);
 
     public NetworkVariable<int> difficulty = new NetworkVariable<int>(0);
+    public NetworkVariable<int> timerValue = new NetworkVariable<int>(0);
 
     public static ObjectivesManager Instance;
+
     public void Awake()
     {
         if (Instance == null)
@@ -55,8 +52,77 @@ public class ObjectivesManager : NetworkBehaviour
             startGame.OnValueChanged += OnStartGameChanged;
             gameEnded.OnValueChanged += OnGameEndedChanged;
 
+            // Yes
+            difficulty.OnValueChanged += (oldValue, newValue) =>
+            {
+                ObjectiveUIController.Instance.difficultyDropdown.value = newValue;
+            };
+
+            ObjectiveUIController.Instance.difficultyDropdown.onValueChanged.AddListener((int value) => { OnDifficultyChanged(value); });
+
+            timerValue.OnValueChanged += (oldValue, newValue) =>
+            {
+                ObjectiveUIController.Instance.timerDropdown.value = newValue;
+            };
+
+            ObjectiveUIController.Instance.timerDropdown.onValueChanged.AddListener((int value) => { OnTimerDurationChange(value); });
+
             // Initialize UI from current networked values so late-joining clients see current state immediately
             ApplyAllNetworkValuesToUI();
+        }
+    }
+
+    public void OnDifficultyChanged(int value)
+    {
+        if (IsHost)
+        {
+            difficulty.Value = value;
+        }
+        else
+        {
+            Debug.LogWarning("Only host can change difficulty");
+            UIManager.Instance.ShowModalWindow("Permission Denied", "Only the host can change the difficulty setting.");
+            ObjectiveUIController.Instance.difficultyDropdown.value = difficulty.Value;
+        }
+    }
+
+    public void OnTimerDurationChange(int value)
+    {
+        if (IsHost)
+        {
+            switch (value)
+            {
+                case 0:
+                    remainingTime.Value = 300; // 5 minutes
+                    break;
+                case 1:
+                    remainingTime.Value = 600; // 10 minutes
+                    break;
+                case 2:
+                    remainingTime.Value = 900; // 15 minutes
+                    break;
+                case 3:
+                    remainingTime.Value = 1800; // 30 minutes
+                    break;
+                case 4:
+                    remainingTime.Value = 2700; // 45 minutes
+                    break;
+                case 5:
+                    remainingTime.Value = 3600; // 60 minutes
+                    break;
+                default:
+                    Debug.LogError("Invalid timer duration value");
+                    UIManager.Instance.ShowModalWindow("Error", "Invalid timer duration value.");
+                    break;
+            }
+
+            // Update the NetworkVariable to sync with clients
+            timerValue.Value = value; 
+        }
+        else
+        {
+            Debug.LogWarning("Only host can change timer duration");
+            UIManager.Instance.ShowModalWindow("Permission Denied", "Only the host can change the timer duration.");
         }
     }
 
@@ -88,46 +154,59 @@ public class ObjectivesManager : NetworkBehaviour
 
                 playersReadyInLobby.Value++;
             }
-        }
 
-        currntPlayers.text = playersReadyInLobby.Value.ToString();
-        totalPlayers.text = playersInLobby.Value.ToString();
-        difficultyDropdown.value = difficulty.Value;
-
-        if (!IsServer) return;
-
-        if (startGame.Value == true)
-        {
-            remainingTime.Value -= Time.deltaTime;
-
-            if (remainingTime.Value <= 0 || Input.GetKeyDown(KeyCode.P))
+            // Server Logic for game start
+            if (startGame.Value == true)
             {
-                remainingTime.Value = 0;
-                startGame.Value = false;
-                gameEnded.Value = true;
-            }
-        }
-        else
-        {
+                remainingTime.Value -= Time.deltaTime;
 
-            foreach(NetworkClient playerClient in NetworkManager.ConnectedClientsList)
-            {
-                PlayerClientController cilent = playerClient.PlayerObject.GetComponent<PlayerClientController>();
-                if (cilent.playerReady.Value == false)
+                if (remainingTime.Value <= 0 || Input.GetKeyDown(KeyCode.P))
                 {
-                    return;
+                    remainingTime.Value = 0;
+                    startGame.Value = false;
+                    gameEnded.Value = true;
                 }
             }
-            startGame.Value = true;
+            else
+            {
+                // Server Logic to check if all players are ready to start the game
+                foreach (NetworkClient playerClient in NetworkManager.ConnectedClientsList)
+                {
+                    PlayerClientController cilent = playerClient.PlayerObject.GetComponent<PlayerClientController>();
+                    if (cilent.playerReady.Value == false)
+                    {
+                        return;
+                    }
+                }
 
-            // Hide Character Select UI
-            GameObject.FindFirstObjectByType<CharacterSelectUI>().ToggleUI();
+                // Check pass, start game
+                startGame.Value = true;
 
-            TowerManager.Instance.HideRangeOfTowers();
-
-            UIManager.Instance.TowerControlPanel.SetActive(false);
-            UIManager.Instance.seletedTower = null;
+                // Send command to enable game UI for all clients
+                InitializeGameStartRpc();
+            }
         }
+    }
+
+    [Rpc(SendTo.Everyone)]
+    public void InitializeGameStartRpc()
+    {
+        // Hide Character Select UI
+        FindFirstObjectByType<CharacterSelectUI>().gameObject.SetActive(false);
+
+        // Show Objective UI
+        var timeParent = ObjectiveUIController.Instance.timeText.transform.parent.gameObject;
+        var booksParent = ObjectiveUIController.Instance.booksCapturedText.transform.parent.gameObject;
+        if (timeParent != null) timeParent.SetActive(true);
+        if (booksParent != null) booksParent.SetActive(true);
+
+        TowerManager.Instance.HideRangeOfTowers();
+
+        // Disable tower control panel UI
+        UIManager.Instance.TowerControlPanel.SetActive(false);
+        UIManager.Instance.TowerSpawner.SetActive(false);
+        UIManager.Instance.TowerSpawnerClosed.SetActive(false);
+        UIManager.Instance.seletedTower = null;
     }
 
     public void PrematureEndGame()
@@ -138,7 +217,6 @@ public class ObjectivesManager : NetworkBehaviour
             startGame.Value = false;
             gameEnded.Value = true;
         }
-
     }
 
     public void CaptureBooks()
@@ -147,39 +225,19 @@ public class ObjectivesManager : NetworkBehaviour
         booksCaptured.Value++;
     }
 
-    private void EndGame()
-    {
-        rewardScreen.SetActive(true);
-        booksRewardsText.text = $"{booksCaptured.Value}";
-        pageAmount = (int)(booksCaptured.Value * Random.Range(1.5f, 2.3f));
-        pagesRewardsText.text = $"{pageAmount}";
-        SaveLoadManager.PlayerData.pagesHeld += pageAmount;
-        SaveLoadManager.SaveData();
-    }
-
-    public void SetDifficulty()
-    {
-        difficulty.Value = difficultyDropdown.value;
-        Debug.Log("Current difficulty is " + difficulty.Value);
-    }
-
     private void OnRemainingTimeChanged(float oldValue, float newValue)
     {
-        UpdateTimeText(newValue);
+        ObjectiveUIController.Instance.UpdateTimeText(newValue);
     }
 
     private void OnBooksCapturedChanged(int oldValue, int newValue)
     {
-        if (booksCapturedText != null)
-            booksCapturedText.text = $"{newValue}";
+        if (ObjectiveUIController.Instance.booksCapturedText != null)
+            ObjectiveUIController.Instance.booksCapturedText.text = $"{newValue}";
     }
 
     private void OnStartGameChanged(bool oldValue, bool newValue)
     {
-        var timeParent = timeText.transform.parent.gameObject;
-        var booksParent = booksCapturedText.transform.parent.gameObject;
-        if (timeParent != null) timeParent.SetActive(newValue);
-        if (booksParent != null) booksParent.SetActive(newValue);
         Debug.Log($"Start game changed");
     }
 
@@ -187,45 +245,23 @@ public class ObjectivesManager : NetworkBehaviour
     {
         if (newValue)
         {
-            EndGame();
+            ObjectiveUIController.Instance.EndGame();
         }
         else
         {
-            if (rewardScreen != null) rewardScreen.SetActive(false);
+            if (ObjectiveUIController.Instance.rewardScreen != null) ObjectiveUIController.Instance.rewardScreen.SetActive(false);
         }
-    }
-
-    private void UpdateTimeText(float secondsTotal)
-    {
-        int minutes = (int)(secondsTotal / 60);
-        int seconds = (int)(secondsTotal % 60);
-        if (timeText != null)
-            timeText.text = $"{minutes}:{seconds:00}";
     }
 
     private void ApplyAllNetworkValuesToUI()
     {
-        // Called on client when they spawn to initialize UI
-        if (timeText != null)
-            UpdateTimeText(remainingTime.Value);
-
-        if (booksCapturedText != null)
-            booksCapturedText.text = $"{booksCaptured.Value}";
-
-        var timeParent = timeText.transform.parent.gameObject;
-        var booksParent = booksCapturedText.transform.parent.gameObject;
-        if (timeParent != null) timeParent.SetActive(startGame.Value);
-        if (booksParent != null) booksParent.SetActive(startGame.Value);
-
         if (gameEnded.Value)
         {
-            EndGame();
+            ObjectiveUIController.Instance.EndGame();
         }
-        else if (rewardScreen != null)
+        else if (ObjectiveUIController.Instance.rewardScreen != null)
         {
-            rewardScreen.SetActive(false);
+            ObjectiveUIController.Instance.rewardScreen.SetActive(false);
         }
     }
-
-
 }
