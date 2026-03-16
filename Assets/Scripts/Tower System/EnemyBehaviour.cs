@@ -20,11 +20,13 @@ public class EnemyBehaviour : NetworkBehaviour
             currentWaypointIndex.Value++;
             if (currentWaypointIndex.Value >= WaypointManager.Instance.waypoints.Length)
             {
-                DestroyEnemy();
+                DestroyEnemyRpc();
             }
         }
     }
-    public void TakeDamage(int damage)
+
+    [Rpc(SendTo.Server)]
+    public void TakeDamageRpc(int damage)
     {
         health.Value -= damage;
 
@@ -32,10 +34,12 @@ public class EnemyBehaviour : NetworkBehaviour
 
         if (health.Value <= 0)
         {
-            DestroyEnemy();
+            DestroyEnemyRpc();
         }
     }
-    public void DestroyEnemy()
+
+    [Rpc(SendTo.Server)]
+    public void DestroyEnemyRpc()
     {
         NetworkObject networkObject = GetComponent<NetworkObject>();
         if (networkObject != null && networkObject.IsSpawned)
