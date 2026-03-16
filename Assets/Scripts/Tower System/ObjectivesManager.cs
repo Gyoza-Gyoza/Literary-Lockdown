@@ -195,7 +195,7 @@ public class ObjectivesManager : NetworkBehaviour
         FindFirstObjectByType<CharacterSelectUI>().gameObject.SetActive(false);
 
         // Show Objective UI
-        var timeParent = ObjectiveUIController.Instance.timeText.transform.parent.gameObject;
+        var timeParent = ObjectiveUIController.Instance.timeText.transform.parent.gameObject.transform.parent.gameObject;
         var booksParent = ObjectiveUIController.Instance.booksCapturedText.transform.parent.gameObject;
         if (timeParent != null) timeParent.SetActive(true);
         if (booksParent != null) booksParent.SetActive(true);
