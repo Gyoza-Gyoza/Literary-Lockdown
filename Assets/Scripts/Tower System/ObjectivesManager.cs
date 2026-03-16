@@ -123,6 +123,8 @@ public class ObjectivesManager : NetworkBehaviour
             // Hide Character Select UI
             GameObject.FindFirstObjectByType<CharacterSelectUI>().ToggleUI();
 
+            TowerManager.Instance.HideRangeOfTowers();
+
             UIManager.Instance.TowerControlPanel.SetActive(false);
             UIManager.Instance.seletedTower = null;
         }

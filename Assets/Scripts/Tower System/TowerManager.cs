@@ -119,4 +119,12 @@ public class TowerManager : NetworkBehaviour
     }
     public void AddTower(Tower tower) => towerList.Add(tower);
     public void RemoveTower(Tower tower) => towerList.Remove(tower);
+
+    public void HideRangeOfTowers()
+    {
+        foreach(Tower t in towerList)
+        {
+            t.HideRange();
+        }
+    }
 }

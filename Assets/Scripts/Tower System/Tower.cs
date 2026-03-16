@@ -3,6 +3,7 @@ using System.Globalization;
 using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -34,7 +35,9 @@ public class Tower : NetworkBehaviour
     public NetworkVariable<FixedString512Bytes> m_TowerName = new NetworkVariable<FixedString512Bytes>("Default Tower Name", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     [Header("Components")]
-    protected SpriteRenderer m_Renderer;
+    //protected SpriteRenderer m_Renderer;
+    [SerializeField] protected GameObject rangeIndicator;
+
 
     public Stats BaseStats => baseStats;
     public Stats BonusStats
@@ -90,6 +93,7 @@ public class Tower : NetworkBehaviour
         OnGameObjectNameChangeRpc(new FixedString512Bytes(""), gameObject.name.Replace("(Clone)", $"_{OwnerClientId}"));
         OnPositionChangedRpc(Vector3.zero, m_Position.Value);
         OnTowerNameChangedRpc(new FixedString512Bytes(""), GameObject.Find($"Player_{OwnerClientId}").GetComponent<PlayerClientController>().playerName.Value.ToString());
+        DisplayRange();
     }
 
 
@@ -106,6 +110,18 @@ public class Tower : NetworkBehaviour
     {
         m_Position.Value = targetPosition;
         transform.position = m_Position.Value;
+    }
+
+    public void DisplayRange()
+    {
+        rangeIndicator.SetActive(true);
+        rangeIndicator.transform.localScale = new Vector3(attackRange.Value, attackRange.Value, attackRange.Value);
+    }
+
+    public void HideRange()
+    {
+        rangeIndicator.SetActive(false);
+        //rangeIndicator.transform.localScale = new Vector3(attackRange.Value, attackRange.Value, attackRange.Value);
     }
 
     [Rpc(SendTo.Owner)]

@@ -27,6 +27,9 @@ public class EnemyBehaviour : NetworkBehaviour
     public void TakeDamage(int damage)
     {
         health.Value -= damage;
+
+        //Take damage polish
+
         if (health.Value <= 0)
         {
             DestroyEnemy();
