@@ -50,8 +50,31 @@ public class ObjectivesManager : NetworkBehaviour
             startGame.OnValueChanged += OnStartGameChanged;
             gameEnded.OnValueChanged += OnGameEndedChanged;
 
+            // Yes
+            difficulty.OnValueChanged += (oldValue, newValue) =>
+            {
+                ObjectiveUIController.Instance.difficultyDropdown.value = newValue;
+            };
+
+            ObjectiveUIController.Instance.difficultyDropdown.onValueChanged.AddListener((int value) => { OnDifficultyChanged(value); });
+
+
             // Initialize UI from current networked values so late-joining clients see current state immediately
             ApplyAllNetworkValuesToUI();
+        }
+    }
+
+    public void OnDifficultyChanged(int value)
+    {
+        if (IsHost)
+        {
+            difficulty.Value = value;
+        }
+        else
+        {
+            Debug.LogWarning("Only host can change difficulty");
+            UIManager.Instance.ShowModalWindow("Permission Denied", "Only the host can change the difficulty setting.");
+            ObjectiveUIController.Instance.difficultyDropdown.value = difficulty.Value;
         }
     }
 

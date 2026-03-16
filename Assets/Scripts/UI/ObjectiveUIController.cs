@@ -5,7 +5,7 @@ public class ObjectiveUIController : MonoBehaviour
 {
     [SerializeField] public GameObject rewardScreen, networkScreen;
     [SerializeField] private TextMeshProUGUI booksRewardsText, pagesRewardsText, currntPlayers, totalPlayers;
-    [SerializeField] private TMP_Dropdown difficultyDropdown;
+    [SerializeField] public TMP_Dropdown difficultyDropdown;
     private int pageAmount;
 
     public TextMeshProUGUI booksCapturedText;
@@ -33,7 +33,6 @@ public class ObjectiveUIController : MonoBehaviour
         {
             currntPlayers.text = ObjectivesManager.Instance.playersReadyInLobby.Value.ToString();
             totalPlayers.text = ObjectivesManager.Instance.playersInLobby.Value.ToString();
-            difficultyDropdown.value = ObjectivesManager.Instance.difficulty.Value;
 
             UpdateTimeText(ObjectivesManager.Instance.remainingTime.Value);
         }
