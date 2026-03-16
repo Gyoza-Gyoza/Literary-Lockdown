@@ -22,6 +22,14 @@ public class CharacterSelectUI : MonoBehaviour
         //closeUI.SetActive(false);
     }
 
+    public void Update()
+    {
+        if (ObjectivesManager.Instance.isGameStart() && opened)
+        {
+            HideUITotally();
+        }
+    }
+
     public void TrySpawnTower(int towerIndex)
     {
         if (NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerClientController>().TrySpawnTower(towerIndex))
@@ -45,6 +53,15 @@ public class CharacterSelectUI : MonoBehaviour
             closeUI.SetActive(false);
             opened = true;
         }
+    }
+
+    public void HideUITotally()
+    {
+
+            StartCoroutine(lerpCoroutine(openUIy, closeUIy));
+            closeUI.SetActive(false);
+            opened = false;
+
     }
 
     IEnumerator lerpCoroutine(float start, float end)
