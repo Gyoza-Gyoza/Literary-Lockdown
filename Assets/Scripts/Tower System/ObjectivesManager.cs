@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 public class ObjectivesManager : NetworkBehaviour
 {
-    public NetworkVariable<float> remainingTime = new NetworkVariable<float>(900); // 15 minutes in seconds
+    public NetworkVariable<float> remainingTime = new NetworkVariable<float>(300); // 5 minutes in seconds
     [SerializeField]
     private NetworkVariable<bool> startGame = new NetworkVariable<bool>(false);
     public bool isGameStart() { return startGame.Value;}
