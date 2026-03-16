@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance;
 
     public GameObject TowerSpawner;
+    public GameObject TowerSpawnerClosed;
     public GameObject TowerControlPanel;
 
     public GameObject seletedTower;
