@@ -39,6 +39,15 @@ public class CompanionUpgradeManager : MonoBehaviour
         attackSpeedText.text = tower.attackSpeed.ToString();
         costText.text = tower.cost.ToString();
     }
+
+    public void Upgrade()
+    {
+        damageText.text = (int.Parse(damageText.text) + 1).ToString();
+        attackSpeedText.text = (int.Parse(attackSpeedText.text) + 1).ToString();
+        SaveLoadManager.PlayerData.pagesHeld -= int.Parse(costText.text);
+        SaveLoadManager.SaveData();
+        costText.text = (int.Parse(costText.text) + 200).ToString();
+    }
 }
 [System.Serializable]
 public class SerializableTowerData
