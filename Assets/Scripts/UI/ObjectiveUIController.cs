@@ -6,6 +6,7 @@ public class ObjectiveUIController : MonoBehaviour
     [SerializeField] public GameObject rewardScreen, networkScreen;
     [SerializeField] private TextMeshProUGUI booksRewardsText, pagesRewardsText, currntPlayers, totalPlayers;
     [SerializeField] public TMP_Dropdown difficultyDropdown;
+    [SerializeField] public TMP_Dropdown timerDropdown;
     private int pageAmount;
 
     public TextMeshProUGUI booksCapturedText;
