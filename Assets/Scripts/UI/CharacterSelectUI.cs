@@ -8,7 +8,7 @@ public class CharacterSelectUI : MonoBehaviour
     private NetworkManager m_networkManager;
     private RectTransform rectTransform;
 
-    public GameObject rapHold;
+    public GameObject closeUI;
 
     public float openUIy = 160f;
     public float closeUIy = -201f;
@@ -18,12 +18,17 @@ public class CharacterSelectUI : MonoBehaviour
 
     public void Awake()
     {
-        rectTransform = GetComponent<RectTransform>();
+        rectTransform = this.GetComponent<RectTransform>();
+        //closeUI.SetActive(false);
     }
 
     public void TrySpawnTower(int towerIndex)
     {
-        NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerClientController>().TrySpawnTower(towerIndex);
+        if (NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerClientController>().TrySpawnTower(towerIndex))
+        {
+            ToggleUI();
+        }
+
     }
 
     public void ToggleUI()
@@ -31,11 +36,13 @@ public class CharacterSelectUI : MonoBehaviour
         if (opened)
         {
             StartCoroutine(lerpCoroutine(openUIy, closeUIy));
+            closeUI.SetActive(true);
             opened = false;
         }
         else
         {
             StartCoroutine(lerpCoroutine(closeUIy, openUIy));
+            closeUI.SetActive(false);
             opened = true;
         }
     }
