@@ -5,11 +5,6 @@ using UnityEngine.UI;
 
 public class LobbyButtons : MonoBehaviour
 {
-    public GameObject joinLobbyModal;
-
-    private string m_lobbyCode;
-    public TMP_InputField lobbyCodeInputField;
-
     public async void HostLobby()
     {
         await SceneManager.LoadSceneAsync("Game Lobby");
@@ -18,21 +13,10 @@ public class LobbyButtons : MonoBehaviour
         GameObject.FindFirstObjectByType<NetworkHandler>().StartHost();
     }
 
-    public void ShowJoinLobbyModal()
-    {
-        joinLobbyModal.SetActive(true);
-    }
-
-    public void HideJoinLobbyModal()
-    {
-        joinLobbyModal.SetActive(false);
-    }
-
     public async void JoinLobby()
     {
-        m_lobbyCode = lobbyCodeInputField.text;
-
         await SceneManager.LoadSceneAsync("Game Lobby");
-        await GameObject.FindFirstObjectByType<NetworkHandler>().JoinLobbyWithRelay(m_lobbyCode, "dtls");
+        
+        GameObject.FindFirstObjectByType<NetworkHandler>().joinLobbyModal.SetActive(true);
     }
 }

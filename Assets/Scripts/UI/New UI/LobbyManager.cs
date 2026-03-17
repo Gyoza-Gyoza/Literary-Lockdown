@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System;
+using System.Threading.Tasks;
 using TMPro;
 using Unity.Netcode;
 using Unity.VisualScripting;
@@ -35,11 +36,6 @@ public class LobbyManager : NetworkBehaviour
 
         if (playerList_GO != null) 
             Debug.Log($"Found Player List GameObject: {playerList_GO.name}");
-
-        if (IsHost)
-        {
-            AddPlayer(NetworkManager.Singleton.LocalClientId);
-        }
     }
 
     private void OnPlayerListChange()
@@ -70,9 +66,16 @@ public class LobbyManager : NetworkBehaviour
         }
     }
 
-    private void AddPlayer(ulong clientId)
+    private async void AddPlayer(ulong clientId)
     {
+        Debug.Log($"Adding player with client ID: {clientId} to the lobby.");
         playerList.Add(clientId);
+
+        while (GameObject.Find($"Player_{clientId}") == null)
+        {
+            await Task.Yield(); // Wait until the next frame
+        }
+
         OnPlayerListChange();
     }
 
