@@ -7,6 +7,13 @@ public class LobbyButtons : MonoBehaviour
 {
     public async void HostLobby()
     {
+        // Set raid details in lobby details script
+        RaidSettings raidSettings = GameObject.FindFirstObjectByType<RaidSettings>();
+        raidSettings.LockInSettings();
+
+        LobbyDetails lobbyDetails = GameObject.FindFirstObjectByType<LobbyDetails>();
+        DontDestroyOnLoad(lobbyDetails.gameObject);
+
         await SceneManager.LoadSceneAsync("Game Lobby");
 
         // Start Host Function

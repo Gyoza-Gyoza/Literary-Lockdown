@@ -47,6 +47,12 @@ public class ObjectivesManager : NetworkBehaviour
             // Initialize UI from current networked values so late-joining clients see current state immediately
             ApplyAllNetworkValuesToUI();
         }
+
+        if (IsHost)
+        {
+            // Try find the GameObject with the timer and difficulty settings
+
+        }
     }
 
     public override void OnNetworkDespawn()

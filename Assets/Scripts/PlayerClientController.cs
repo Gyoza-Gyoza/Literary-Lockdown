@@ -116,13 +116,20 @@ public class PlayerClientController : NetworkBehaviour
         gameObject.name = newValue.ToString();
     }
 
+    [Rpc(SendTo.Owner)]
+    public void SetReadyStatusRpc(bool isReady, RpcParams rpcParams = default)
+    {
+        if (rpcParams.Receive.SenderClientId == NetworkManager.ServerClientId)
+            playerReady.Value = isReady;
+    }
+
     public void UpdateReadyStatusRpc(bool oldValue, bool newValue)
     {
         playerReady.Value = newValue;
         LobbyManager.Instance.ForceReadyUpdate();
     }
 
-    [Rpc(SendTo.Server)]
+    [Rpc(SendTo.Owner)]
     public void OnCurrentTowersChangedRpc(int previousValue, int newValue)
     {
         currentTowers.Value = newValue;

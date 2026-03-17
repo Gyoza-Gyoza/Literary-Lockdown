@@ -6,6 +6,7 @@ using UnityEngine;
 public class RaidSettings : MonoBehaviour
 {
     public static RaidSettings instance;
+    public GameObject lobbyDetailsGO;
 
     [Header("Difficulty")]
     public TextMeshProUGUI diffcultyTxt;
@@ -35,6 +36,12 @@ public class RaidSettings : MonoBehaviour
     {
         UpdateDifficulty();
         UpdateTimer();
+    }
+
+    public void LockInSettings()
+    {
+        LobbyDetails lobbyDetails = Instantiate(lobbyDetailsGO).GetComponent<LobbyDetails>();
+        lobbyDetails.SetRaidDetails(difficultyIndex, timerList[timerIndex]);
     }
 
     #region Difficulty Functions
