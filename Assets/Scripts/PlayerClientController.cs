@@ -40,6 +40,7 @@ public class PlayerClientController : NetworkBehaviour
         {
             m_GameObjectName.Value = $"Player_{NetworkManager.Singleton.LocalClientId.ToString()}";
 
+            // Get Player name
             PlayerMetadata playerMetadata = SaveLoadManager.LoadData();
             playerName.Value = playerMetadata.playerName;
 
