@@ -47,6 +47,16 @@ public class ObjectivesManager : NetworkBehaviour
             // Initialize UI from current networked values so late-joining clients see current state immediately
             ApplyAllNetworkValuesToUI();
         }
+
+        if (IsHost)
+        {
+            // Try find the GameObject with the timer and difficulty settings
+            var (raidDifficulty, raidTime) = FindFirstObjectByType<LobbyDetails>().GetRaidDetails();
+
+            // Assign the extracted values to the NetworkVariables
+            difficulty.Value = raidDifficulty;
+            remainingTime.Value = raidTime;
+        }
     }
 
     public override void OnNetworkDespawn()

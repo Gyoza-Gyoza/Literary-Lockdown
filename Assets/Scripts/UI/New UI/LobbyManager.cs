@@ -166,11 +166,11 @@ public class LobbyManager : NetworkBehaviour
             {
                 // Reset the ready status for the next scene
                 PlayerClientController cilent = playerClient.PlayerObject.GetComponent<PlayerClientController>();
-                cilent.playerReady.Value = false;
+                cilent.SetReadyStatusRpc(false);
             }
-        }
 
-        NetworkManager.Singleton.SceneManager.LoadScene("Network Test", UnityEngine.SceneManagement.LoadSceneMode.Single);
+            NetworkManager.Singleton.SceneManager.LoadScene("Network Test", UnityEngine.SceneManagement.LoadSceneMode.Single);
+        }
     }
 
     #endregion
