@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -7,6 +8,10 @@ public class UpdatePages : MonoBehaviour
     public void Awake()
     {
         text = GetComponent<TextMeshProUGUI>();
-        // text.text = SaveLoadManager.PlayerData.pagesHeld.ToString();
+    }
+
+    public void Update()
+    {
+        text.text = SaveLoadManager.PlayerData.pagesHeld.ToString();
     }
 }
