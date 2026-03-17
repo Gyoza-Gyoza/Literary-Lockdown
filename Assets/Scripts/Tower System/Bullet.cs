@@ -15,14 +15,16 @@ public class Bullet : NetworkBehaviour
 
         if (lifetime <= 0f)
         {
-            DestroyBullet();
+            DestroyBulletRpc();
         }
         else
         {
             lifetime -= Time.deltaTime;
         }
     }
-    public void DestroyBullet()
+
+    [Rpc(SendTo.Server)]
+    public void DestroyBulletRpc()
     {
         NetworkObject networkObject = GetComponent<NetworkObject>();
         if (networkObject != null && networkObject.IsSpawned)
@@ -35,6 +37,7 @@ public class Bullet : NetworkBehaviour
             Destroy(transform.parent.gameObject);
         }
     }
+
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (!IsServer) return;
@@ -45,7 +48,7 @@ public class Bullet : NetworkBehaviour
                 enemy.TakeDamageRpc(damage.Value);
                 Debug.Log("Hit enemy");
                 hitEnemies.Add(enemy);
-                if (destroyOnHit) DestroyBullet();
+                if (destroyOnHit) DestroyBulletRpc();
             }
         }
     }
