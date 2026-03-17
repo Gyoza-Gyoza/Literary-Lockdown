@@ -113,6 +113,7 @@ public class PlayerClientController : NetworkBehaviour
             gameObject.GetComponent<Tower>().DestroyTowerRpc();
             TowerManager.Instance.RemoveTower(gameObject.GetComponent<Tower>());
             currentTowers.Value -= 1;
+            //CharacterSelectUI.instance.
         }
     }
     #endregion
