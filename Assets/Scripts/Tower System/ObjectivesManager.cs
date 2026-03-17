@@ -96,9 +96,11 @@ public class ObjectivesManager : NetworkBehaviour
                 if (remainingTime.Value <= 0 || Input.GetKeyDown(KeyCode.P))
                 {
                     remainingTime.Value = 0;
-                    startGame.Value = false;
+                    //startGame.Value = false;
                     gameEnded.Value = true;
                 }
+
+                ApplyAllNetworkValuesToUI();
             }
             else
             {
@@ -190,7 +192,13 @@ public class ObjectivesManager : NetworkBehaviour
     {
         if (gameEnded.Value)
         {
+            gameEnded.Value = false;
+            startGame.Value = false;
+            
+
             ObjectiveUIController.Instance.EndGame();
+            GetComponent<NetworkObject>().Despawn();
+            Destroy(gameObject);
         }
         else if (ObjectiveUIController.Instance.rewardScreen != null)
         {
