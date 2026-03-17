@@ -201,6 +201,8 @@ public class ObjectivesManager : NetworkBehaviour
             ObjectiveUIController.Instance.EndGame();
             GetComponent<NetworkObject>().Despawn();
             Destroy(gameObject);
+
+            Debug.Log("This shouldnt exist");
         }
         else if (ObjectiveUIController.Instance.rewardScreen != null)
         {

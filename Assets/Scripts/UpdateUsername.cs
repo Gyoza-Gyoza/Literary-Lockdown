@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class UpdateUsername : MonoBehaviour
 {
-    private TextMeshProUGUI text;
+    //private TextMeshProUGUI text;
     //public TextMeshProUGUI textPro;
 
     public TMP_InputField inputField;
@@ -13,8 +13,8 @@ public class UpdateUsername : MonoBehaviour
 
     void Start()
     {
-        text = GetComponent<TextMeshProUGUI>();
-        text.text = SaveLoadManager.PlayerData.playerName.ToString();
+        //text = GetComponent<TextMeshProUGUI>();
+        //text.text = SaveLoadManager.PlayerData.playerName.ToString();
 
         if (SaveLoadManager.PlayerData.playerName != "" /*&& SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(0)*/)
         {
@@ -30,7 +30,7 @@ public class UpdateUsername : MonoBehaviour
         {
             inputField.text = "";
             TMPInputUsername_Placeholder.text = "Saved as " + SaveLoadManager.PlayerData.playerName;
-            text.text = SaveLoadManager.PlayerData.playerName;
+            //text.text = SaveLoadManager.PlayerData.playerName;
         }
         else
         {
