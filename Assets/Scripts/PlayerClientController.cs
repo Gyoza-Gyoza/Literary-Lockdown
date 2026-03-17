@@ -35,6 +35,7 @@ public class PlayerClientController : NetworkBehaviour
     {
         currentTowers.OnValueChanged += OnCurrentTowersChangedRpc;
         m_GameObjectName.OnValueChanged += ChangeGameObjectNameRpc;
+        playerReady.OnValueChanged += UpdateReadyStatusRpc;
 
         if (IsOwner)
         {
@@ -113,6 +114,12 @@ public class PlayerClientController : NetworkBehaviour
     public void ChangeGameObjectNameRpc(FixedString512Bytes previousValue, FixedString512Bytes newValue)
     {
         gameObject.name = newValue.ToString();
+    }
+
+    public void UpdateReadyStatusRpc(bool oldValue, bool newValue)
+    {
+        playerReady.Value = newValue;
+        LobbyManager.Instance.ForceReadyUpdate();
     }
 
     [Rpc(SendTo.Server)]
