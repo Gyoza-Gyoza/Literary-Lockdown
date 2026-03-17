@@ -28,7 +28,7 @@ public class PlayerClientController : NetworkBehaviour
     public void Awake()
     {
         // Get the UI GameObject reference
-        towerSpawningUI = UIManager.Instance.TowerSpawner;
+        //towerSpawningUI = UIManager.Instance.TowerSpawner;
     }
 
     public override void OnNetworkSpawn()
@@ -47,8 +47,8 @@ public class PlayerClientController : NetworkBehaviour
             playerID = NetworkManager.Singleton.LocalClientId;
 
             // Enable TowerSpawning UI
-            towerSpawningUI.SetActive(true);
-            UIManager.Instance.ShowPlayerReadyUI();
+            //towerSpawningUI.SetActive(true);
+            //UIManager.Instance.ShowPlayerReadyUI();
         }
 
         ChangeGameObjectNameRpc("" , m_GameObjectName.Value);
