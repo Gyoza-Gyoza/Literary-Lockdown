@@ -83,14 +83,12 @@ public class Database : MonoBehaviour
     public static IEnumerator GetDatabase(string name, string sheetCode, Action<string> callback)
     {
         UnityWebRequest webRequest = UnityWebRequest.Get($"https://docs.google.com/spreadsheets/d/18vfbpEUDMCO6SDPVQl8QoMBk489zCTX43JtCtNc4mHE/export?gid={sheetCode}&format=csv");
-        LoadingManager.instance.StartLoading(name);
 
         yield return webRequest.SendWebRequest();
 
         if (webRequest.result == UnityWebRequest.Result.Success)
         {
             callback?.Invoke(webRequest.downloadHandler.text);
-            LoadingManager.instance.FinishLoading(name);
         }
         else
         {
