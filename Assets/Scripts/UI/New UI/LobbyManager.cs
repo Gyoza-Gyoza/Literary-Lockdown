@@ -15,7 +15,7 @@ public class LobbyManager : NetworkBehaviour
 
     private NetworkList<ulong> playerList = new NetworkList<ulong>();
     private GameObject playerList_GO;
-
+    private GameObject loadingScreen;
     public static LobbyManager Instance;
 
     public void Awake()
@@ -28,6 +28,8 @@ public class LobbyManager : NetworkBehaviour
         {
             Destroy(gameObject);
         }
+
+        loadingScreen = GameObject.Find("Loading Screen");
 
         // Hardcoding this...
         GameObject.Find("Btn Leave").GetComponent<Button>().onClick.AddListener(LeaveSession);
@@ -88,6 +90,9 @@ public class LobbyManager : NetworkBehaviour
                 playerName_TMPro.text = "Waiting..."; // Or clear it with ""
             }
         }
+
+        if (loadingScreen.activeSelf)
+            loadingScreen.SetActive(false);
     }
 
     private async void AddPlayer(ulong clientId)
@@ -192,8 +197,16 @@ public class LobbyManager : NetworkBehaviour
                 cilent.SetReadyStatusRpc(false);
             }
 
+            SetLoadingScreenRpc();
+
             NetworkManager.Singleton.SceneManager.LoadScene("Network Test", UnityEngine.SceneManagement.LoadSceneMode.Single);
         }
+    }
+
+    [Rpc(SendTo.Everyone)]
+    public void SetLoadingScreenRpc()
+    {
+        loadingScreen.SetActive(true);
     }
 
     #endregion

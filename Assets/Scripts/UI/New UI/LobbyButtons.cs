@@ -24,6 +24,7 @@ public class LobbyButtons : MonoBehaviour
     {
         await SceneManager.LoadSceneAsync("Game Lobby");
         
+        GameObject.Find("Loading Screen").SetActive(false);
         GameObject.FindFirstObjectByType<NetworkHandler>().joinLobbyModal.SetActive(true);
     }
 }
