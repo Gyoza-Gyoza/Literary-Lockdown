@@ -537,6 +537,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pages Held Rework
       objectReference: {fileID: 0}
+    - target: {fileID: 1028563869373851789, guid: 91f5463a5532dda4c931e5bdefc55c1b, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7249416410883074772, guid: 91f5463a5532dda4c931e5bdefc55c1b, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -639,6 +643,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7249416410883074772, guid: 91f5463a5532dda4c931e5bdefc55c1b, type: 3}
   m_PrefabInstance: {fileID: 261812404}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &261812406 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7554536153909085781, guid: 91f5463a5532dda4c931e5bdefc55c1b, type: 3}
+  m_PrefabInstance: {fileID: 261812404}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &262891630
 GameObject:
   m_ObjectHideFlags: 0
@@ -9498,6 +9513,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2198325584057511903, guid: f9d531e9ff9986e47bdb1e1a0cba8e0c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7249416410883074772, guid: f9d531e9ff9986e47bdb1e1a0cba8e0c, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -9600,6 +9619,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7249416410883074772, guid: f9d531e9ff9986e47bdb1e1a0cba8e0c, type: 3}
   m_PrefabInstance: {fileID: 1462576678}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1462576680 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7554536153909085781, guid: f9d531e9ff9986e47bdb1e1a0cba8e0c, type: 3}
+  m_PrefabInstance: {fileID: 1462576678}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &1479187911
 GameObject:
   m_ObjectHideFlags: 0
@@ -10410,6 +10440,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e05c398778fa1204ebf836150b86b998, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CompanionUpgradeManager
+  playerNameText: {fileID: 1462576680}
+  pagesText: {fileID: 261812406}
   nameText: {fileID: 734508646}
   descriptionText: {fileID: 83412249}
   levelText: {fileID: 757978729}

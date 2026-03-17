@@ -11,7 +11,6 @@ public class SaveLoadManager : MonoBehaviour
     {
         get
         {
-            m_playerData = LoadData();
             return m_playerData;
         }
     }

@@ -9,6 +9,8 @@ using Image = UnityEngine.UI.Image;
 
 public class CompanionUpgradeManager : MonoBehaviour
 {
+    [SerializeField] private TextMeshProUGUI playerNameText;
+    [SerializeField] private TextMeshProUGUI pagesText;
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI descriptionText;
     [SerializeField] private TextMeshProUGUI levelText;
@@ -53,32 +55,35 @@ public class CompanionUpgradeManager : MonoBehaviour
     }
     public void Upgrade()
     {
-        SaveLoadManager.PlayerData.pagesHeld -= int.Parse(costText.text);
-        SaveLoadManager.PlayerData.levels[currentTowerDisplayed.Name]++;
-        SaveLoadManager.SaveData();
-        UpdateUI();
+        Debug.Log("Upgrading...");
+        if (SaveLoadManager.PlayerData.pagesHeld >= currentTowerDisplayed.UpgradeCost)
+        {
+            SaveLoadManager.PlayerData.pagesHeld -= currentTowerDisplayed.UpgradeCost;
+            SaveLoadManager.PlayerData.GetLevelData(currentTowerDisplayed.Name).level++;
+            SaveLoadManager.SaveData();
+            UpdateUI();
+        }
     }
 
     private void UpdateUI()
     {
-        PlayerMetadata playerMetadata = SaveLoadManager.LoadData();
+        PlayerMetadata playerMetadata = SaveLoadManager.PlayerData;
+
+        playerNameText.text = playerMetadata.playerName;
+        pagesText.text = playerMetadata.pagesHeld.ToString();
 
         string towerName = currentTowerDisplayed.Name;
         nameText.text = towerName;
         descriptionText.text = currentTowerDisplayed.Description;
-        levelText.text = playerMetadata.levels[towerName].ToString();
-        nextLevelText.text = (playerMetadata.levels[towerName] + 1).ToString();
+        levelText.text = playerMetadata.GetLevelData(currentTowerDisplayed.Name).level.ToString();
+        nextLevelText.text = (playerMetadata.GetLevelData(currentTowerDisplayed.Name).level + 1).ToString();
         spriteUI.sprite = currentTowerDisplayed.Sprite;
-        damageText.text = (currentTowerDisplayed.Damage + currentTowerDisplayed.DamagePerLevel * playerMetadata.levels[towerName]).ToString();
+        damageText.text = (currentTowerDisplayed.Damage + currentTowerDisplayed.DamagePerLevel * playerMetadata.GetLevelData(currentTowerDisplayed.Name).level).ToString();
         damagePerLevelText.text = $"+{currentTowerDisplayed.DamagePerLevel.ToString()}";
-        attackSpeedText.text = (currentTowerDisplayed.AttackSpeed + currentTowerDisplayed.AttackSpeedPerLevel * playerMetadata.levels[towerName]).ToString();
+        attackSpeedText.text = (currentTowerDisplayed.AttackSpeed + currentTowerDisplayed.AttackSpeedPerLevel * playerMetadata.GetLevelData(currentTowerDisplayed.Name).level).ToString();
         attackSpeedPerLevelText.text = $"+{currentTowerDisplayed.AttackSpeedPerLevel.ToString()}";
         costText.text = currentTowerDisplayed.UpgradeCost.ToString();
-
-        for (int i = 0; i < layoutGroups.Length; i++)
-        {
-            LayoutRebuilder.ForceRebuildLayoutImmediate(layoutGroups[i]);
-        }
+        Debug.Log("Updating UI");
     }
 }
 [System.Serializable]
