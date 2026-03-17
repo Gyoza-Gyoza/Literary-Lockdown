@@ -12,11 +12,14 @@ EditorBuildSettings:
     path: Assets/Scenes/Network Test.unity
     guid: c05dd6571b2126e4aaf64648c4694744
   - enabled: 1
-    path: Assets/Scenes/Companions.unity
-    guid: baedf2070f448094da1a7b6f3e240084
+    path: Assets/Scenes/New UI/CompanionUpgrade.unity
+    guid: d0b56dc93a836934d859f661af505d25
   - enabled: 1
     path: Assets/Scenes/ShopOld.unity
     guid: a2f9453133b56e946b17122b24df3ddc
+  - enabled: 1
+    path: Assets/Scenes/Companions.unity
+    guid: baedf2070f448094da1a7b6f3e240084
   - enabled: 1
     path: Assets/Scenes/New UI/Raid Menu.unity
     guid: e359e8d37bc7b5340ad58e2fce806559
