@@ -110,7 +110,7 @@ public class NetworkThing : MonoBehaviour
 
     public void SetJoinCodeUI(string joinCode)
     {
-        TMP_joinCodeText.text = $"Join Code: {joinCode}";
+        TMP_joinCodeText.text = "joinCode";
     }
 
     public async void ClientJoin()
