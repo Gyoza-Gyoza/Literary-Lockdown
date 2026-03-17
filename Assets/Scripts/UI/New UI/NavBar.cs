@@ -7,13 +7,9 @@ public class NavBar : MonoBehaviour
 {
     [SerializeField] private NavBarScreen currentState;
 
-    public Image companion;
-    public Image raid;
-    public Image shop;
-
-    public Button companionButton;
-
-    
+    public Button companion;
+    public Button raid;
+    public Button shop;
 
     public Sprite companionSelected;
     public Sprite companionUnselected;
@@ -31,20 +27,35 @@ public class NavBar : MonoBehaviour
         switch (currentState) 
         {
             case NavBarScreen.Companion:
-                companion.sprite = companionSelected;
-                raid.sprite = raidUnselected;
-                shop.sprite = shopUnselected;
+                companion.image.sprite = companionSelected;
+                raid.image.sprite = raidUnselected;
+                shop.image.sprite = shopUnselected;
+
+                companion.interactable = false;
+                raid.interactable = true;
+                shop.interactable = true;
+
                 break;  
 
             case NavBarScreen.Raid:
-                raid.sprite = raidSelected;
-                companion.sprite = companionUnselected;
-                shop.sprite = shopUnselected;
+                raid.image.sprite = raidSelected;
+                companion.image.sprite = companionUnselected;
+                shop.image.sprite = shopUnselected;
+
+                companion.interactable = true;
+                raid.interactable = false;
+                shop.interactable = true;
+
                 break;
             case NavBarScreen.Shop:
-                shop.sprite = shopSelected;
-                companion.sprite = companionUnselected;
-                raid.sprite = raidUnselected;
+                shop.image.sprite = shopSelected;
+                companion.image.sprite = companionUnselected;
+                raid.image.sprite = raidUnselected;
+
+                companion.interactable = true;
+                raid.interactable = true;
+                shop.interactable = false;
+
                 break;
         }
     }

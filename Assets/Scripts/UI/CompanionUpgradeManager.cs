@@ -2,7 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Image = UnityEngine.UI.Image;
+//using Image = UnityEngine.UI.image.sprite;
 
 public class CompanionUpgradeManager : MonoBehaviour
 {
