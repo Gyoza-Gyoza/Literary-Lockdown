@@ -5,6 +5,9 @@ using TMPro;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using static UnityEngine.Rendering.RayTracingAccelerationStructure;
 
 
 public class LobbyManager : NetworkBehaviour
@@ -25,6 +28,9 @@ public class LobbyManager : NetworkBehaviour
         {
             Destroy(gameObject);
         }
+
+        // Hardcoding this...
+        GameObject.Find("Btn Leave").GetComponent<Button>().onClick.AddListener(LeaveSession);
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -103,6 +109,23 @@ public class LobbyManager : NetworkBehaviour
         playerList.Remove(clientId);
         OnPlayerListChange();
         OnReadyChangeRpc();
+    }
+
+    public void LeaveSession()
+    {
+        if (NetworkManager.Singleton != null)
+        {
+            NetworkManager.Singleton.Shutdown();
+        }
+
+        if (FindFirstObjectByType<LobbyDetails>() != null)
+        {
+            Destroy(FindFirstObjectByType<LobbyDetails>().gameObject);
+        }
+
+        Destroy(NetworkManager.Singleton.gameObject);
+
+        SceneManager.LoadScene("Raid Menu");
     }
     #endregion
 
