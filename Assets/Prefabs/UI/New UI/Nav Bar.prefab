@@ -370,6 +370,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1201528130567066118}
   - component: {fileID: 9201192488112566133}
+  - component: {fileID: 8941503700285644526}
   m_Layer: 5
   m_Name: Nav Bar
   m_TagString: Untagged
@@ -425,3 +426,25 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &8941503700285644526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5154171510208112413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f8cadce8c5a4364fa2c1cf5741fb284, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NavBar
+  currentState: 1
+  companion: {fileID: 1025519374104856747}
+  raid: {fileID: 7117292489248855685}
+  shop: {fileID: 4921716595241611772}
+  companionSelected: {fileID: 21300000, guid: bb687008e37df45289fc893f7cbf51c9, type: 3}
+  companionUnselected: {fileID: 21300000, guid: 240a2ef0df6b144df868aa3229968d52, type: 3}
+  raidSelected: {fileID: 21300000, guid: e57180d0adff24551bb813023e4d7a94, type: 3}
+  raidUnselected: {fileID: 21300000, guid: acf9be9dcda9b43b3b22cfd82b88ae07, type: 3}
+  shopSelected: {fileID: 21300000, guid: dcc7c4f9a61c8493c8f1d4f901e7f379, type: 3}
+  shopUnselected: {fileID: 21300000, guid: 03579f881cdda4f0896fc5d29c872581, type: 3}
