@@ -85,7 +85,7 @@ public class CharacterSelectUI : MonoBehaviour
         if (NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerClientController>().TrySpawnTower(towerIndex))
         {
             //ToggleUI();
-            ToggleButton(towerIndex, true);
+            //ToggleButton(towerIndex, true);
         }
     }
 
