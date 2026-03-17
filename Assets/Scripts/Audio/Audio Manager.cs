@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static AudioManager;
 
@@ -8,6 +9,7 @@ using static AudioManager;
 public class AudioManager : MonoBehaviour
 {
     [SerializeField] private AudioClip[] audioList;
+    [SerializeField] private AudioClip[] wolfAttackAudio;
     private static AudioManager instance;
     public AudioSource SFXSource;
     public AudioSource BGMSource;
@@ -34,6 +36,16 @@ public class AudioManager : MonoBehaviour
     private void Start()
     {
         SFXSource = GetComponent<AudioSource>();
+    }
+    public static void PlayWolfAttackSFX()
+    {
+        int randomIndex = UnityEngine.Random.Range(0, instance.wolfAttackAudio.Length);
+        AudioClip clip = instance.wolfAttackAudio[randomIndex];
+
+        float randomPitch = UnityEngine.Random.Range(instance.LowPitchRange, instance.HighPitchRange);
+        instance.SFXSource.pitch = randomPitch;
+
+        instance.SFXSource.PlayOneShot(clip);
     }
     public static void PlaySFX(AudioClip clip)
     {
