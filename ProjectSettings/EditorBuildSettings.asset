@@ -17,6 +17,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Shop.unity
     guid: a2f9453133b56e946b17122b24df3ddc
+  - enabled: 1
+    path: Assets/Scenes/New UI/Raid Menu.unity
+    guid: e359e8d37bc7b5340ad58e2fce806559
+  - enabled: 1
+    path: Assets/Scenes/New UI/Game Lobby.unity
+    guid: db8bf994ef50fa94fbffea4946b0146f
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 5e44f6103cde2724c8358082cd85f009, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
