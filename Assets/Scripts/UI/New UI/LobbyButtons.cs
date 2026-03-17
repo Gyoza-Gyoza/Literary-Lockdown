@@ -8,7 +8,7 @@ public class LobbyButtons : MonoBehaviour
     public GameObject joinLobbyModal;
 
     private string m_lobbyCode;
-    public TextMeshProUGUI lobbyCodeInputField;
+    public TMP_InputField lobbyCodeInputField;
 
     public void Update()
     {
