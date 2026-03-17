@@ -1,3 +1,4 @@
+using Mono.Cecil;
 using System.Collections.Generic;
 using System.Globalization;
 using TMPro;
@@ -22,6 +23,8 @@ public class Tower : NetworkBehaviour
 
     [SerializeField]
     private bool isMoving;
+    [SerializeField]
+    private string towerType;
     private Stats baseStats;
     private List<Stats> bonusStats = new();
     private float timer = 0f;
@@ -60,7 +63,6 @@ public class Tower : NetworkBehaviour
                 timer -= attackSpeed;
                 if (TryGetComponent<Animator>(out Animator animator))
                 {
-                    AudioManager.PlayWolfAttackSFX();
                     animator.SetTrigger("CanAttack");
                 }
                 //canAttack = true;
@@ -77,14 +79,29 @@ public class Tower : NetworkBehaviour
     public void CanAttack()
     {
         canAttack = true;
+        PlayAttackingSFX();
     }
 
+    public void PlayAttackingSFX()
+    {
+        switch (towerType)
+        {
+            case "Wolf":
+                AudioManager.PlayWolfAttackSFX();
+                break;
+            case "Rapu":
+                AudioManager.PlayRapAttackSFX();
+                break;
+            default:
+                break;
+        }
+    }
     public override void OnNetworkSpawn()
     {
         m_GameObjectName.OnValueChanged += OnGameObjectNameChangeRpc;
         m_Position.OnValueChanged += OnPositionChangedRpc;
         m_TowerName.OnValueChanged += OnTowerNameChangedRpc;
-
+        towerType = GetTowerData(this.gameObject.name);
 
         if (OwnerClientId == NetworkManager.Singleton.LocalClientId)
         {
@@ -135,6 +152,20 @@ public class Tower : NetworkBehaviour
     {
         rangeIndicator.SetActive(false);
         //rangeIndicator.transform.localScale = new Vector3(attackRange.Value, attackRange.Value, attackRange.Value);
+    }
+
+    public string GetTowerData(string thisTower)
+    {
+        if(thisTower.Length >= 4)
+        {
+            string firstFour = thisTower.Substring(0, 4);
+            thisTower = firstFour;
+        }
+        else
+        {
+            Debug.Log("Name has less than 4 characters");
+        }  
+        return thisTower;
     }
 
     [Rpc(SendTo.Owner)]
