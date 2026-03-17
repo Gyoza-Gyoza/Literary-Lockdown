@@ -148,6 +148,18 @@ public class LobbyManager : NetworkBehaviour
                 playerReadyStat_TMPro.text = ""; // Or clear it with ""
             }
         }
+
+        // Server Logic to check if all players are ready to start the game
+        foreach (NetworkClient playerClient in NetworkManager.ConnectedClientsList)
+        {
+            PlayerClientController cilent = playerClient.PlayerObject.GetComponent<PlayerClientController>();
+            if (cilent.playerReady.Value == false)
+            {
+                return;
+            }
+        }
+
+        NetworkManager.Singleton.SceneManager.LoadScene("Network Test", UnityEngine.SceneManagement.LoadSceneMode.Single);
     }
 
     #endregion

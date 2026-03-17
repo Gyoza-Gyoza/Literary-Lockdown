@@ -6,23 +6,17 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Main.unity
-    guid: efae0a5931c46714796ff9148b26e1d2
-  - enabled: 1
-    path: Assets/Scenes/Network Test.unity
-    guid: c05dd6571b2126e4aaf64648c4694744
-  - enabled: 1
-    path: Assets/Scenes/Companions.unity
-    guid: baedf2070f448094da1a7b6f3e240084
-  - enabled: 1
-    path: Assets/Scenes/ShopOld.unity
-    guid: a2f9453133b56e946b17122b24df3ddc
-  - enabled: 1
     path: Assets/Scenes/New UI/Raid Menu.unity
     guid: e359e8d37bc7b5340ad58e2fce806559
   - enabled: 1
+    path: Assets/Scenes/New UI/CompanionUpgrade.unity
+    guid: d0b56dc93a836934d859f661af505d25
+  - enabled: 1
     path: Assets/Scenes/New UI/Game Lobby.unity
     guid: db8bf994ef50fa94fbffea4946b0146f
+  - enabled: 1
+    path: Assets/Scenes/Network Test.unity
+    guid: c05dd6571b2126e4aaf64648c4694744
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 5e44f6103cde2724c8358082cd85f009, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
