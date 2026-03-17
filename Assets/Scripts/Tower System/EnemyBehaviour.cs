@@ -17,7 +17,9 @@ public class EnemyBehaviour : NetworkBehaviour
             transform.position = Vector3.MoveTowards(currentPos, targetPosition, move);
         else
         {
-            currentWaypointIndex.Value++;
+            if (IsHost)
+                currentWaypointIndex.Value++;
+
             if (currentWaypointIndex.Value >= WaypointManager.Instance.waypoints.Length)
             {
                 DestroyEnemyRpc();

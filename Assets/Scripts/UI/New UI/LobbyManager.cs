@@ -149,13 +149,24 @@ public class LobbyManager : NetworkBehaviour
             }
         }
 
-        // Server Logic to check if all players are ready to start the game
-        foreach (NetworkClient playerClient in NetworkManager.ConnectedClientsList)
+        if (IsHost)
         {
-            PlayerClientController cilent = playerClient.PlayerObject.GetComponent<PlayerClientController>();
-            if (cilent.playerReady.Value == false)
+            // Server Logic to check if all players are ready to start the game
+            foreach (NetworkClient playerClient in NetworkManager.ConnectedClientsList)
             {
-                return;
+                PlayerClientController cilent = playerClient.PlayerObject.GetComponent<PlayerClientController>();
+                if (cilent.playerReady.Value == false)
+                {
+                    return;
+                }
+            }
+
+            // What is the time complexity of this whole funcction? Its 2 for loops nested within another for loop...
+            foreach (NetworkClient playerClient in NetworkManager.ConnectedClientsList)
+            {
+                // Reset the ready status for the next scene
+                PlayerClientController cilent = playerClient.PlayerObject.GetComponent<PlayerClientController>();
+                cilent.playerReady.Value = false;
             }
         }
 

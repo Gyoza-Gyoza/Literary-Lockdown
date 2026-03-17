@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2160567483
+  GlobalObjectIdHash: 2922609092
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -76,24 +76,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectivesManager
   ShowTopMostFoldoutHeaderGroup: 1
-  rewardScreen: {fileID: 0}
-  networkScreen: {fileID: 0}
-  booksRewardsText: {fileID: 0}
-  pagesRewardsText: {fileID: 0}
-  currntPlayers: {fileID: 0}
-  totalPlayers: {fileID: 0}
-  difficultyDropdown: {fileID: 0}
-  timeText: {fileID: 0}
+  remainingTime:
+    m_InternalValue: 300
   startGame:
     m_InternalValue: 0
   booksCaptured:
     m_InternalValue: 0
-  booksCapturedText: {fileID: 0}
   playersInLobby:
     m_InternalValue: 0
   playersReadyInLobby:
     m_InternalValue: 0
   difficulty:
+    m_InternalValue: 0
+  timerValue:
     m_InternalValue: 0
 --- !u!114 &8273141567019221578
 MonoBehaviour:

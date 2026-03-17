@@ -1,10 +1,13 @@
 using System.Collections;
+using System.Threading.Tasks;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
+    private GameObject localPlayer;
 
     public GameObject TowerSpawner;
     public GameObject TowerSpawnerClosed;
@@ -31,12 +34,28 @@ public class UIManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+
+        // Check if client has spawned in
+        localPlayer = WaitForPlayerSpawn().Result;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        // Initialize network Objects
+        if (NetworkManager.Singleton.IsHost)
+        {
+            // Initialize network Objects
+            foreach (GameObject obj in GameplayInitializer.Instance.initPrefabs)
+            {
+                NetworkObject networkObject = Instantiate(obj).GetComponent<NetworkObject>();
+                networkObject.Spawn();
+            }
+        }
+
+
+        TowerSpawner.SetActive(true);
+        playerReadyUI.SetActive(true);
     }
 
     // Update is called once per frame
@@ -47,6 +66,17 @@ public class UIManager : MonoBehaviour
             Vector3 targetPosition = Camera.main.WorldToScreenPoint(seletedTower.transform.position);
             TowerControlPanel.transform.position = targetPosition;
         }
+    }
+
+    // Change the return type of WaitForPlayerSpawn from GameObject to Task<GameObject>
+    public async Task<GameObject> WaitForPlayerSpawn()
+    {
+        while (NetworkManager.Singleton.LocalClient == null)
+        {
+            await Task.Yield();
+        }
+        
+        return NetworkManager.Singleton.LocalClient.PlayerObject.gameObject;
     }
 
     public void ShowModalWindow(string title, string message)

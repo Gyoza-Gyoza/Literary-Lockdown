@@ -33,14 +33,6 @@ public class ObjectivesManager : NetworkBehaviour
             Destroy(this.gameObject);
         }
     }
-    private void Start()
-    {
-        NetworkManager.Singleton.OnServerStarted += () =>
-        {
-            // Only server sets the NetworkVariable; clients will enable UI via OnValueChanged
-            //startGame.Value = true;
-        };
-    }
 
     public override void OnNetworkSpawn()
     {
@@ -52,77 +44,8 @@ public class ObjectivesManager : NetworkBehaviour
             startGame.OnValueChanged += OnStartGameChanged;
             gameEnded.OnValueChanged += OnGameEndedChanged;
 
-            // Yes
-            difficulty.OnValueChanged += (oldValue, newValue) =>
-            {
-                ObjectiveUIController.Instance.difficultyDropdown.value = newValue;
-            };
-
-            ObjectiveUIController.Instance.difficultyDropdown.onValueChanged.AddListener((int value) => { OnDifficultyChanged(value); });
-
-            timerValue.OnValueChanged += (oldValue, newValue) =>
-            {
-                ObjectiveUIController.Instance.timerDropdown.value = newValue;
-            };
-
-            ObjectiveUIController.Instance.timerDropdown.onValueChanged.AddListener((int value) => { OnTimerDurationChange(value); });
-
             // Initialize UI from current networked values so late-joining clients see current state immediately
             ApplyAllNetworkValuesToUI();
-        }
-    }
-
-    public void OnDifficultyChanged(int value)
-    {
-        if (IsHost)
-        {
-            difficulty.Value = value;
-        }
-        else
-        {
-            Debug.LogWarning("Only host can change difficulty");
-            UIManager.Instance.ShowModalWindow("Permission Denied", "Only the host can change the difficulty setting.");
-            ObjectiveUIController.Instance.difficultyDropdown.value = difficulty.Value;
-        }
-    }
-
-    public void OnTimerDurationChange(int value)
-    {
-        if (IsHost)
-        {
-            switch (value)
-            {
-                case 0:
-                    remainingTime.Value = 300; // 5 minutes
-                    break;
-                case 1:
-                    remainingTime.Value = 600; // 10 minutes
-                    break;
-                case 2:
-                    remainingTime.Value = 900; // 15 minutes
-                    break;
-                case 3:
-                    remainingTime.Value = 1800; // 30 minutes
-                    break;
-                case 4:
-                    remainingTime.Value = 2700; // 45 minutes
-                    break;
-                case 5:
-                    remainingTime.Value = 3600; // 60 minutes
-                    break;
-                default:
-                    Debug.LogError("Invalid timer duration value");
-                    UIManager.Instance.ShowModalWindow("Error", "Invalid timer duration value.");
-                    break;
-            }
-
-            // Update the NetworkVariable to sync with clients
-            timerValue.Value = value; 
-        }
-        else
-        {
-            Debug.LogWarning("Only host can change timer duration");
-            UIManager.Instance.ShowModalWindow("Permission Denied", "Only the host can change the timer duration.");
         }
     }
 
