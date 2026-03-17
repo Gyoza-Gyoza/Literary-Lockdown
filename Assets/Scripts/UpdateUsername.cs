@@ -7,6 +7,8 @@ public class UpdateUsername : MonoBehaviour
     //private TextMeshProUGUI text;
     //public TextMeshProUGUI textPro;
 
+    public GameObject ChangeUsernameObject;
+
     public TMP_InputField inputField;
     //public TextMeshProUGUI TMPInputUsername;
     public TextMeshProUGUI TMPInputUsername_Placeholder;
@@ -31,10 +33,19 @@ public class UpdateUsername : MonoBehaviour
             inputField.text = "";
             TMPInputUsername_Placeholder.text = "Saved as " + SaveLoadManager.PlayerData.playerName;
             //text.text = SaveLoadManager.PlayerData.playerName;
+            ChangeUsernameObject.SetActive(false);
         }
         else
         {
             Debug.Log("Failed to save username");
+        }
+    }
+
+    public void OpenChangeUsername()
+    {
+        if (ChangeUsernameObject != null)
+        {
+            ChangeUsernameObject.SetActive(true);
         }
     }
 }
