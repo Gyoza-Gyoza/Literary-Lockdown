@@ -201,8 +201,8 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 0.718
+  m_PlayOnAwake: 0
+  m_Volume: 0.6
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -301,6 +301,15 @@ MonoBehaviour:
   audioList:
   - {fileID: 8300000, guid: 06f18f6c50a445449ba3a0904057b196, type: 3}
   - {fileID: 8300000, guid: ce8dc635b52997d4ba4cd3b883d12871, type: 3}
+  wolfAttackAudio:
+  - {fileID: 8300000, guid: 1df4d56eded1ce2438ffe5ea1eeea5ad, type: 3}
+  - {fileID: 8300000, guid: 9880ac355d185fc418968afa637bf0db, type: 3}
+  - {fileID: 8300000, guid: 6dbaa9b608931a24ebd6e13ef4270fd5, type: 3}
+  - {fileID: 8300000, guid: 3a4b35e00f1afbb468df4b33c5cc2048, type: 3}
+  rapAttackAudio:
+  - {fileID: 8300000, guid: 96fe8f9e1e7902c4fa5adfd47ed868b8, type: 3}
+  - {fileID: 8300000, guid: 583ac65353d041a49b0a0e085b035e75, type: 3}
+  - {fileID: 8300000, guid: c3c31640e41f87b4eb4ffa4797ca9b31, type: 3}
   SFXSource: {fileID: 5729740033774791311}
   BGMSource: {fileID: 7640169672862091391}
   BGMlowPassFilter: {fileID: 7987610836991102675}
