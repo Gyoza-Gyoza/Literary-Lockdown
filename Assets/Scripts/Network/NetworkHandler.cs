@@ -17,13 +17,12 @@ public class NetworkHandler : MonoBehaviour
 
     public string m_LobbyJoinCode;
 
+    [SerializeField]
     private TextMeshProUGUI TMPro_LobbyCode;
     private string m_PlayerName;
 
-    private void Awake()
+    private void Start()
     {
-        m_NetworkManager = GetComponent<NetworkManager>();
-
         NetworkManager.Singleton.OnServerStarted += () =>
         {
             foreach (GameObject obj in spawnOnStart)
@@ -58,7 +57,7 @@ public class NetworkHandler : MonoBehaviour
 
         // Get the lobby join code and display it to the user
         m_LobbyJoinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
-        //SetJoinCodeUI(m_LobbyJoinCode);
+        SetLobbyCode(m_LobbyJoinCode);
 
         return NetworkManager.Singleton.StartHost() ? m_LobbyJoinCode : null;
     }
