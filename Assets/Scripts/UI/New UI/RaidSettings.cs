@@ -7,6 +7,7 @@ public class RaidSettings : MonoBehaviour
 {
     public static RaidSettings instance;
     public GameObject lobbyDetailsGO;
+    private LobbyDetails lobbyDetails;
 
     [Header("Difficulty")]
     public TextMeshProUGUI diffcultyTxt;
@@ -34,13 +35,27 @@ public class RaidSettings : MonoBehaviour
 
     public void Start()
     {
+        if (FindFirstObjectByType<LobbyDetails>() != null)
+        {
+            lobbyDetails = GameObject.FindFirstObjectByType<LobbyDetails>();
+
+            // Try to extract existing settings from the lobby details script if it exists
+            var (raidDifficulty, raidTime) = lobbyDetails.GetRaidDetails();
+            difficultyIndex = raidDifficulty;
+            timerIndex = timerList.IndexOf(raidTime);
+        }
+
         UpdateDifficulty();
         UpdateTimer();
     }
 
     public void LockInSettings()
     {
-        LobbyDetails lobbyDetails = Instantiate(lobbyDetailsGO).GetComponent<LobbyDetails>();
+        if (lobbyDetails == null)
+        {
+             lobbyDetails = Instantiate(lobbyDetailsGO).GetComponent<LobbyDetails>();
+        }
+        
         lobbyDetails.SetRaidDetails(difficultyIndex, timerList[timerIndex]);
     }
 
@@ -73,6 +88,7 @@ public class RaidSettings : MonoBehaviour
     public void UpdateDifficulty()
     {
         diffcultyTxt.text = difficultyList[difficultyIndex];
+        LockInSettings();
     }
 
     #endregion
@@ -109,6 +125,8 @@ public class RaidSettings : MonoBehaviour
         int seconds = (int)(timerList[timerIndex] % 60);
         if (timerTxt != null)
             timerTxt.text = $"{minutes}:{seconds:00}";
+
+        LockInSettings();
     }
 
     #endregion

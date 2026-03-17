@@ -5,6 +5,9 @@ using TMPro;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using static UnityEngine.Rendering.RayTracingAccelerationStructure;
 
 
 public class LobbyManager : NetworkBehaviour
@@ -12,7 +15,7 @@ public class LobbyManager : NetworkBehaviour
 
     private NetworkList<ulong> playerList = new NetworkList<ulong>();
     private GameObject playerList_GO;
-
+    private GameObject loadingScreen;
     public static LobbyManager Instance;
 
     public void Awake()
@@ -25,6 +28,11 @@ public class LobbyManager : NetworkBehaviour
         {
             Destroy(gameObject);
         }
+
+        loadingScreen = GameObject.Find("Loading Screen");
+
+        // Hardcoding this...
+        GameObject.Find("Btn Leave").GetComponent<Button>().onClick.AddListener(LeaveSession);
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -82,6 +90,9 @@ public class LobbyManager : NetworkBehaviour
                 playerName_TMPro.text = "Waiting..."; // Or clear it with ""
             }
         }
+
+        if (loadingScreen.activeSelf)
+            loadingScreen.SetActive(false);
     }
 
     private async void AddPlayer(ulong clientId)
@@ -103,6 +114,23 @@ public class LobbyManager : NetworkBehaviour
         playerList.Remove(clientId);
         OnPlayerListChange();
         OnReadyChangeRpc();
+    }
+
+    public void LeaveSession()
+    {
+        if (NetworkManager.Singleton != null)
+        {
+            NetworkManager.Singleton.Shutdown();
+        }
+
+        if (FindFirstObjectByType<LobbyDetails>() != null)
+        {
+            Destroy(FindFirstObjectByType<LobbyDetails>().gameObject);
+        }
+
+        Destroy(NetworkManager.Singleton.gameObject);
+
+        SceneManager.LoadScene("Raid Menu");
     }
     #endregion
 
@@ -169,8 +197,16 @@ public class LobbyManager : NetworkBehaviour
                 cilent.SetReadyStatusRpc(false);
             }
 
+            SetLoadingScreenRpc();
+
             NetworkManager.Singleton.SceneManager.LoadScene("Network Test", UnityEngine.SceneManagement.LoadSceneMode.Single);
         }
+    }
+
+    [Rpc(SendTo.Everyone)]
+    public void SetLoadingScreenRpc()
+    {
+        loadingScreen.SetActive(true);
     }
 
     #endregion
