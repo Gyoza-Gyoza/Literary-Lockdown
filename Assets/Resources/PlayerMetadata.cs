@@ -7,10 +7,32 @@ public class PlayerMetadata
 {
     public string playerName = "";
     public int pagesHeld = 0;
-    public Dictionary<string, int> levels =  new Dictionary<string, int>()
+    public List<TowerLevelData> levels = new List<TowerLevelData>()
     {
-        { "Rapunzel",1 },
-        { "Wolf",1 },
-        { "Frog Prince",1 }
+        new TowerLevelData("Rapunzel"),
+        new TowerLevelData("Wolf"),
+        new TowerLevelData("Frog Prince")
     };
+
+    public TowerLevelData GetLevelData(string name)
+    {
+        foreach (TowerLevelData level in levels)
+        {
+            if (level.name == name) return level;
+        }
+
+        return null;
+    }
+}
+
+[System.Serializable]
+public class TowerLevelData
+{
+    public string name; 
+    public int level;
+    public TowerLevelData(string name)
+    {
+        this.name = name;
+        level = 1;
+    }
 }
