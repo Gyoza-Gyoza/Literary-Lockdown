@@ -137,4 +137,21 @@ public class NetworkHandler : MonoBehaviour
             }
         }
     }
+
+    public void LeaveSession()
+    {
+        if (NetworkManager.Singleton != null)
+        {
+            NetworkManager.Singleton.Shutdown();
+        }
+
+        if (FindFirstObjectByType<LobbyDetails>() != null)
+        {
+            Destroy(FindFirstObjectByType<LobbyDetails>().gameObject);
+        }
+
+        Destroy(NetworkManager.Singleton.gameObject);
+
+        SceneManager.LoadScene("Raid Menu");
+    }
 }

@@ -1068,6 +1068,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1202083890792846925, guid: 747dd79c3337d2244b0505e310c9df78, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1202083890792846925, guid: 747dd79c3337d2244b0505e310c9df78, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 89445110}
+    - target: {fileID: 1202083890792846925, guid: 747dd79c3337d2244b0505e310c9df78, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: LeaveSession
+      objectReference: {fileID: 0}
+    - target: {fileID: 1202083890792846925, guid: 747dd79c3337d2244b0505e310c9df78, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: NetworkHandler, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 2173648547891790095, guid: 747dd79c3337d2244b0505e310c9df78, type: 3}
       propertyPath: m_Name
       value: Join Lobby PopUp
@@ -1080,26 +1096,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 89445110}
-    - target: {fileID: 2959866793830003433, guid: 747dd79c3337d2244b0505e310c9df78, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: StartClient
-      objectReference: {fileID: 0}
-    - target: {fileID: 2959866793830003433, guid: 747dd79c3337d2244b0505e310c9df78, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: NetworkHandler, Assembly-CSharp
-      objectReference: {fileID: 0}
     - target: {fileID: 6568605077178684710, guid: 747dd79c3337d2244b0505e310c9df78, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 89445110}
-    - target: {fileID: 6568605077178684710, guid: 747dd79c3337d2244b0505e310c9df78, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: StartClient
-      objectReference: {fileID: 0}
-    - target: {fileID: 6568605077178684710, guid: 747dd79c3337d2244b0505e310c9df78, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: NetworkHandler, Assembly-CSharp
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
