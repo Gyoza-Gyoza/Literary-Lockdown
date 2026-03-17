@@ -22,7 +22,7 @@ public class EnemyBehaviour : NetworkBehaviour
 
             if (currentWaypointIndex.Value >= WaypointManager.Instance.waypoints.Length)
             {
-                DestroyEnemyRpc();
+                EscapeEnemyRpc();
             }
         }
     }
@@ -53,5 +53,20 @@ public class EnemyBehaviour : NetworkBehaviour
             Destroy(gameObject);
         }
         ObjectivesManager.Instance.CaptureBooks();
+    }
+
+    [Rpc(SendTo.Server)]
+    public void EscapeEnemyRpc()
+    {
+        NetworkObject networkObject = GetComponent<NetworkObject>();
+        if (networkObject != null && networkObject.IsSpawned)
+        {
+            networkObject.Despawn();
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+        //ObjectivesManager.Instance.CaptureBooks();
     }
 }

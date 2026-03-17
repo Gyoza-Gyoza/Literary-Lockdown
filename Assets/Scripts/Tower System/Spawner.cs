@@ -40,8 +40,8 @@ public class Spawner : NetworkBehaviour
             counter += Time.deltaTime;
             timer += Time.deltaTime;
 
-            Debug.Log("interval is at " + spawnInterval + ", extra freq per difficulty is at " + extraFreqPerDifficulty + ", difficulty value is " + ObjectivesManager.Instance.difficulty.Value);
-            Debug.Log("final calc " + (spawnInterval - (extraFreqPerDifficulty * (float)ObjectivesManager.Instance.difficulty.Value)));
+            //Debug.Log("interval is at " + spawnInterval + ", extra freq per difficulty is at " + extraFreqPerDifficulty + ", difficulty value is " + ObjectivesManager.Instance.difficulty.Value);
+            //Debug.Log("final calc " + (spawnInterval - (extraFreqPerDifficulty * (float)ObjectivesManager.Instance.difficulty.Value)));
 
             if (timer >= 60f)
             {

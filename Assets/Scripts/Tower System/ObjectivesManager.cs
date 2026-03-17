@@ -96,7 +96,7 @@ public class ObjectivesManager : NetworkBehaviour
                 if (remainingTime.Value <= 0 || Input.GetKeyDown(KeyCode.P))
                 {
                     remainingTime.Value = 0;
-                    //startGame.Value = false;
+                    startGame.Value = false;
                     gameEnded.Value = true;
                 }
 
@@ -130,12 +130,13 @@ public class ObjectivesManager : NetworkBehaviour
         FindFirstObjectByType<CharacterSelectUI>().gameObject.SetActive(false);
 
         // Show Objective UI
-        var timeParent = ObjectiveUIController.Instance.timeText.transform.parent.gameObject.transform.parent.gameObject;
-        var booksParent = ObjectiveUIController.Instance.booksCapturedText.transform.parent.gameObject;
-        if (timeParent != null) timeParent.SetActive(true);
-        if (booksParent != null) booksParent.SetActive(true);
+        //var timeParent = ObjectiveUIController.Instance.timeText.transform.parent.gameObject.transform.parent.gameObject;
+        //var booksParent = ObjectiveUIController.Instance.booksCapturedText.transform.parent.gameObject;
+        //if (timeParent != null) timeParent.SetActive(true);
+        //if (booksParent != null) booksParent.SetActive(true);
 
         TowerManager.Instance.HideRangeOfTowers();
+        ObjectiveUIController.Instance.raidingProgressScreen.SetActive(true);
 
         // Disable tower control panel UI
         UIManager.Instance.TowerControlPanel.SetActive(false);
@@ -194,7 +195,8 @@ public class ObjectivesManager : NetworkBehaviour
         {
             gameEnded.Value = false;
             startGame.Value = false;
-            
+
+            Debug.Log("GAME END VALUE IS TRUE");
 
             ObjectiveUIController.Instance.EndGame();
             GetComponent<NetworkObject>().Despawn();
@@ -202,6 +204,7 @@ public class ObjectivesManager : NetworkBehaviour
         }
         else if (ObjectiveUIController.Instance.rewardScreen != null)
         {
+            
             ObjectiveUIController.Instance.rewardScreen.SetActive(false);
         }
     }

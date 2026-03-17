@@ -3,10 +3,10 @@ using TMPro;
 
 public class ObjectiveUIController : MonoBehaviour
 {
-    [SerializeField] public GameObject rewardScreen, networkScreen, raidingProgressScreen;
+    [SerializeField] public GameObject rewardScreen, raidingProgressScreen;
     [SerializeField] private TextMeshProUGUI booksRewardsText, pagesRewardsText, currntPlayers, totalPlayers;
-    [SerializeField] public TMP_Dropdown difficultyDropdown;
-    [SerializeField] public TMP_Dropdown timerDropdown;
+    //[SerializeField] public TMP_Dropdown difficultyDropdown;
+    //[SerializeField] public TMP_Dropdown timerDropdown;
     private int pageAmount;
 
     public TextMeshProUGUI booksCapturedText;
@@ -51,15 +51,15 @@ public class ObjectiveUIController : MonoBehaviour
     {
         rewardScreen.SetActive(true);
         booksRewardsText.text = $"{ObjectivesManager.Instance.booksCaptured.Value}";
-        pageAmount = (int)(ObjectivesManager.Instance.booksCaptured.Value * Random.Range(1.5f, 2.3f));
+        pageAmount = (int)(ObjectivesManager.Instance.booksCaptured.Value * /*Random.Range(1.5f, */2.3f/*)*/);
         pagesRewardsText.text = $"{pageAmount}";
         SaveLoadManager.PlayerData.pagesHeld += pageAmount;
         SaveLoadManager.SaveData();
     }
 
-    public void SetDifficulty()
-    {
-        ObjectivesManager.Instance.difficulty.Value = difficultyDropdown.value;
-        Debug.Log("Current difficulty is " + ObjectivesManager.Instance.difficulty.Value);
-    }
+    //public void SetDifficulty()
+    //{
+    //    //ObjectivesManager.Instance.difficulty.Value = difficultyDropdown.value;
+    //    Debug.Log("Current difficulty is " + ObjectivesManager.Instance.difficulty.Value);
+    //}
 }
