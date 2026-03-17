@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -7,6 +8,10 @@ public class UpdateName : MonoBehaviour
     public void Awake()
     {
         text = GetComponent<TextMeshProUGUI>();
-        // text.text = SaveLoadManager.PlayerData.playerName.ToString();
+    }
+
+    private void Update()
+    {
+        text.text = SaveLoadManager.PlayerData.playerName.ToString();
     }
 }
