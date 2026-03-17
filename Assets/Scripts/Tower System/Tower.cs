@@ -60,6 +60,7 @@ public class Tower : NetworkBehaviour
                 timer -= attackSpeed;
                 if (TryGetComponent<Animator>(out Animator animator))
                 {
+                    AudioManager.PlayWolfAttackSFX();
                     animator.SetTrigger("CanAttack");
                 }
                 //canAttack = true;
