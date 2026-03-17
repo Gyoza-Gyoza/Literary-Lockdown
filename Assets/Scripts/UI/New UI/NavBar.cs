@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.U2D;
@@ -62,6 +63,11 @@ public class NavBar : MonoBehaviour
 
     public async void LoadScene(string sceneName)
     {
+        if (NetworkManager.Singleton != null)
+        {
+            Destroy(NetworkManager.Singleton.gameObject);
+        }
+
         await SceneManager.LoadSceneAsync(sceneName);
     }
 }
