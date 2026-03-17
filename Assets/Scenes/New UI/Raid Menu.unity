@@ -1956,8 +1956,8 @@ RectTransform:
   - {fileID: 1702253117}
   - {fileID: 321689145}
   - {fileID: 1072410155}
-  - {fileID: 683703366}
   - {fileID: 842355737}
+  - {fileID: 683703366}
   - {fileID: 1427189664}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2250,6 +2250,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0ad9e0439a1b014ea0ee29d5ab8c855, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpdateUsername
+  ChangeUsernameObject: {fileID: 0}
   inputField: {fileID: 1340334255}
   TMPInputUsername_Placeholder: {fileID: 106653436}
 --- !u!1 &1412243370
