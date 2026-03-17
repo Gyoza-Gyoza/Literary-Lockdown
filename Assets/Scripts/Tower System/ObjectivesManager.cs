@@ -193,7 +193,7 @@ public class ObjectivesManager : NetworkBehaviour
     {
         if (gameEnded.Value)
         {
-            gameEnded.Value = false;
+            //gameEnded.Value = false;
             startGame.Value = false;
 
             Debug.Log("GAME END VALUE IS TRUE");
@@ -207,7 +207,7 @@ public class ObjectivesManager : NetworkBehaviour
         else if (ObjectiveUIController.Instance.rewardScreen != null)
         {
             
-            ObjectiveUIController.Instance.rewardScreen.SetActive(false);
+            //ObjectiveUIController.Instance.rewardScreen.SetActive(false);
         }
     }
 }
