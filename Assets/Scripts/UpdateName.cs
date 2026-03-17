@@ -7,6 +7,6 @@ public class UpdateName : MonoBehaviour
     public void Awake()
     {
         text = GetComponent<TextMeshProUGUI>();
-        text.text = SaveLoadManager.PlayerData.playerName.ToString();
+        // text.text = SaveLoadManager.PlayerData.playerName.ToString();
     }
 }

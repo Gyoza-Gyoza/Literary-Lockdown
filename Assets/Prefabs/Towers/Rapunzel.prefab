@@ -835,7 +835,7 @@ GameObject:
   - component: {fileID: 7473356174981125094}
   - component: {fileID: 537405256090690072}
   m_Layer: 0
-  m_Name: Rapunzal
+  m_Name: Rapunzel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

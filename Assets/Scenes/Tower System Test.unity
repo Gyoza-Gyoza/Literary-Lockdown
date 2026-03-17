@@ -847,6 +847,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 708228c884f771e46a1d39a7247740c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkThing
+  NetworkScreen: {fileID: 0}
+  spawnOnStart: []
+  m_LobbyJoinCode: 
+  ipInput: {fileID: 0}
+  TMP_joinCodeText: {fileID: 0}
 --- !u!114 &1152971349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -948,6 +953,7 @@ GameObject:
   - component: {fileID: 2008535071}
   - component: {fileID: 2008535073}
   - component: {fileID: 2008535072}
+  - component: {fileID: 2008535075}
   m_Layer: 0
   m_Name: TowerManager
   m_TagString: Untagged
@@ -982,8 +988,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 078b48e5b94b3c14c87fc12d46e5b1f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerManager
-  towerTemplate: {fileID: 6819250409653878938, guid: 49d4fe7a3737bf94583b299fe570c82f, type: 3}
-  maxTowers: 0
+  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!114 &2008535072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1024,6 +1029,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 441020c330adc884c802dc96f2571e36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bootstrap
+--- !u!114 &2008535075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2008535069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 1298264038
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!1 &2013086391
 GameObject:
   m_ObjectHideFlags: 0

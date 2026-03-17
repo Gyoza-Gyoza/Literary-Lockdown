@@ -7,6 +7,6 @@ public class UpdatePages : MonoBehaviour
     public void Awake()
     {
         text = GetComponent<TextMeshProUGUI>();
-        text.text = SaveLoadManager.PlayerData.pagesHeld.ToString();
+        // text.text = SaveLoadManager.PlayerData.pagesHeld.ToString();
     }
 }
