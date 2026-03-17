@@ -52,7 +52,7 @@ public class EnemyBehaviour : NetworkBehaviour
         {
             Destroy(gameObject);
         }
-        ObjectivesManager.Instance.CaptureBooks();
+        if (!ObjectivesManager.Instance.gameEnded.Value) ObjectivesManager.Instance.CaptureBooks();
     }
 
     [Rpc(SendTo.Server)]

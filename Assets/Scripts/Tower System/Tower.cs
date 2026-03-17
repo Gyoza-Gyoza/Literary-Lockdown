@@ -54,6 +54,7 @@ public class Tower : NetworkBehaviour
     private void AttackCooldown()
     {
         if (!IsServer) return;
+        if (ObjectivesManager.Instance.gameEnded.Value) return;
         if (!canAttack)
         {
             timer += Time.deltaTime;

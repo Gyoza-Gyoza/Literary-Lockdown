@@ -50,6 +50,7 @@ public class ObjectiveUIController : MonoBehaviour
     public void EndGame()
     {
         Debug.Log("End Game Called");
+        ObjectivesManager.Instance.gameEnded.Value = true;
         rewardScreen.SetActive(true);
         booksRewardsText.text = $"{ObjectivesManager.Instance.booksCaptured.Value}";
         pageAmount = (int)(ObjectivesManager.Instance.booksCaptured.Value * /*Random.Range(1.5f, */2.3f/*)*/);
