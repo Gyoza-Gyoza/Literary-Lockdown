@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System;
+using System.Threading.Tasks;
 using TMPro;
 using Unity.Netcode;
 using Unity.VisualScripting;
@@ -11,6 +12,20 @@ public class LobbyManager : NetworkBehaviour
 
     private NetworkList<ulong> playerList = new NetworkList<ulong>();
     private GameObject playerList_GO;
+
+    public static LobbyManager Instance;
+
+    public void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -24,6 +39,8 @@ public class LobbyManager : NetworkBehaviour
         
     }
 
+    #region Player Connection
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -35,20 +52,15 @@ public class LobbyManager : NetworkBehaviour
 
         if (playerList_GO != null) 
             Debug.Log($"Found Player List GameObject: {playerList_GO.name}");
-
-        if (IsHost)
-        {
-            AddPlayer(NetworkManager.Singleton.LocalClientId);
-        }
     }
 
-    private void OnPlayerListChange()
+    private async void OnPlayerListChange()
     { 
         for (int i = 0; i < playerList_GO.transform.childCount; i++)
         {
             Transform child = playerList_GO.transform.GetChild(i);
 
-            TextMeshProUGUI playerName_TMPro = child.GetComponentInChildren<TextMeshProUGUI>();
+            TextMeshProUGUI playerName_TMPro = child.GetChild(0).GetComponentInChildren<TextMeshProUGUI>();
 
             // Check if we have a player for this UI slot index
             if (i < playerList.Count)
@@ -57,10 +69,12 @@ public class LobbyManager : NetworkBehaviour
                 GameObject playerObj = GameObject.Find($"Player_{clientId}");
                 Debug.Log($"Found player object: {playerObj.name} for client ID: {clientId}");
 
-                if (playerObj != null)
+                while (playerObj.GetComponent<PlayerClientController>().playerName.Value.ToString() == "Player Connected")
                 {
-                    playerName_TMPro.text = playerObj.GetComponent<PlayerClientController>().playerName.Value.ToString();
+                    await Task.Yield(); // Wait until the next frame
                 }
+                
+                playerName_TMPro.text = playerObj.GetComponent<PlayerClientController>().playerName.Value.ToString();
             }
             else
             {
@@ -70,17 +84,71 @@ public class LobbyManager : NetworkBehaviour
         }
     }
 
-    private void AddPlayer(ulong clientId)
+    private async void AddPlayer(ulong clientId)
     {
+        Debug.Log($"Adding player with client ID: {clientId} to the lobby.");
         playerList.Add(clientId);
+
+        while (GameObject.Find($"Player_{clientId}") == null)
+        {
+            await Task.Yield(); // Wait until the next frame
+        }
+
         OnPlayerListChange();
+        OnReadyChangeRpc();
     }
 
     private void RemovePlayer(ulong clientId)
     {
         playerList.Remove(clientId);
         OnPlayerListChange();
+        OnReadyChangeRpc();
+    }
+    #endregion
+
+    #region Ready Checker
+
+    public void ForceReadyUpdate()
+    {
+        OnReadyChangeRpc();
     }
 
+    [Rpc(SendTo.Everyone)]
+    public void OnReadyChangeRpc()
+    {
+        // Check if all players are ready
+        for (int i = 0; i < playerList_GO.transform.childCount; i++)
+        {
+            Transform child = playerList_GO.transform.GetChild(i);
 
+            TextMeshProUGUI playerReadyStat_TMPro = child.GetChild(1).GetComponentInChildren<TextMeshProUGUI>();
+
+            // Check if we have a player for this UI slot index
+            if (i < playerList.Count)
+            {
+                ulong clientId = playerList[i];
+                GameObject playerObj = GameObject.Find($"Player_{clientId}");
+                Debug.Log($"Found player object: {playerObj.name} for client ID: {clientId}");
+
+                switch(playerObj.GetComponent<PlayerClientController>().playerReady.Value)
+                {
+                    case true:
+                        playerReadyStat_TMPro.text = "Ready";
+                        playerReadyStat_TMPro.color = Color.green;
+                        break;
+                    case false:
+                        playerReadyStat_TMPro.text = "Waiting";
+                        playerReadyStat_TMPro.color = Color.red;
+                        break;
+                }
+            }
+            else
+            {
+                // Iteration is longer than the list, these are empty UI slots
+                playerReadyStat_TMPro.text = ""; // Or clear it with ""
+            }
+        }
+    }
+
+    #endregion
 }

@@ -15,6 +15,8 @@ public class NetworkHandler : MonoBehaviour
     private NetworkManager m_NetworkManager;
     [SerializeField] private GameObject[] spawnOnStart;
 
+    public GameObject joinLobbyModal;
+    public TMP_InputField lobbyCode_Input;
     public string m_LobbyJoinCode;
 
     [SerializeField]
@@ -43,6 +45,31 @@ public class NetworkHandler : MonoBehaviour
 
         // Use only dtls or wss, udp is unencrypted and not recommended for production
         await StartHostWithRelay(4, "dtls");
+    }
+
+    public async void StartClient()
+    {
+        try
+        {
+            m_LobbyJoinCode = lobbyCode_Input.text;
+            Debug.Log($"Attempting to join lobby with code: {m_LobbyJoinCode}");
+            bool connectionAttempt = await JoinLobbyWithRelay(m_LobbyJoinCode, "dtls");
+
+            if (connectionAttempt)
+            {
+                joinLobbyModal.SetActive(false);
+            }
+        }
+        catch (RelayServiceException e)
+        {
+            // Specifically catches Relay errors (e.g., Invalid code, lobby not found)
+            Debug.LogError($"Relay Service Error: {e.Message}");
+        }
+        catch (Exception e)
+        {
+            // Catches any other unexpected errors
+            Debug.LogError($"An unexpected error occurred: {e.Message}");
+        }
     }
 
     public async Task<string> StartHostWithRelay(int maxConnections, string connectionType)
@@ -79,55 +106,6 @@ public class NetworkHandler : MonoBehaviour
         return !string.IsNullOrEmpty(joinCode) && NetworkManager.Singleton.StartClient();
     }
 
-    public async void ClientJoin()
-    {
-        //Connect(ipInput.text);
-
-        // Use only dtls or wss, udp is unencrypted and not recommended for production
-        try
-        {
-            await JoinLobbyWithRelay(m_LobbyJoinCode, "dtls");
-        }
-        catch (ArgumentNullException e)
-        {
-            // Empty Join Code
-            Debug.Log($"Failed to join relay lobby: Code cannot be empty");
-            UIManager.Instance.ShowModalWindow("Join Failed", "Join code cannot be empty.");
-        }
-        catch (Exception e)
-        {
-            switch(e.Message)            
-            {
-                case string msg when msg.Contains("Bad Request"):
-                    // Error code 400, likely due to invalid join code format
-                    Debug.Log($"Failed to join relay lobby: Join code not found");
-                    UIManager.Instance.ShowModalWindow("Join Failed", "Invalid Join Code.");
-                    break;
-                case string msg when msg.Contains("Not Found"):
-                    Debug.Log($"Failed to join relay lobby: Join code not found");
-                    UIManager.Instance.ShowModalWindow("Join Failed", "Expired or Invalid Join Code.");
-                    break;
-                default:
-                    Debug.LogWarning($"Some other error");
-                    Debug.LogError($"{e.Message}");
-                    UIManager.Instance.ShowModalWindow("Error", $"{e.Message}");
-                    break;
-            }
-        }
-    }
-
-    public void LocalJoin()
-    {
-        Connect("localhost");
-    }
-
-    public void Connect(string enteredIP)
-    {
-        var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
-        transport.SetConnectionData(enteredIP, 7777);
-        m_NetworkManager.StartClient();
-        ObjectivesManager.Instance.playersInLobby.Value++;
-    }
 
     #endregion
 
@@ -153,7 +131,7 @@ public class NetworkHandler : MonoBehaviour
         else
         {
             // Another player disconnected
-            if (m_NetworkManager.IsServer)
+            if (NetworkManager.Singleton.IsServer)
             {
                 // Logic for the server handling a dropped player (e.g. decrease player count)
             }
