@@ -68,6 +68,11 @@ public class NavBar : MonoBehaviour
             Destroy(NetworkManager.Singleton.gameObject);
         }
 
+        if (FindFirstObjectByType<LobbyDetails>() != null)
+        {
+            Destroy(FindFirstObjectByType<LobbyDetails>().gameObject);
+        }
+
         await SceneManager.LoadSceneAsync(sceneName);
     }
 }

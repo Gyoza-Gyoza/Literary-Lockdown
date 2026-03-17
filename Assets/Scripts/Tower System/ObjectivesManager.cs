@@ -51,7 +51,11 @@ public class ObjectivesManager : NetworkBehaviour
         if (IsHost)
         {
             // Try find the GameObject with the timer and difficulty settings
+            var (raidDifficulty, raidTime) = FindFirstObjectByType<LobbyDetails>().GetRaidDetails();
 
+            // Assign the extracted values to the NetworkVariables
+            difficulty.Value = raidDifficulty;
+            remainingTime.Value = raidTime;
         }
     }
 

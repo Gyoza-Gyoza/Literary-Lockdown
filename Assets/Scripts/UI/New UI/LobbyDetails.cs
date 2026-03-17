@@ -10,4 +10,9 @@ public class LobbyDetails : MonoBehaviour
         this.difficultyIndex = difficultyIndex;
         this.durationSeconds = durationSeconds;
     }
+
+    public (int difficultyIndex, int durationSeconds) GetRaidDetails()
+    {
+        return (difficultyIndex, durationSeconds);
+    }
 }
