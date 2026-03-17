@@ -7,7 +7,9 @@ public class Bullet : NetworkBehaviour
     [SerializeField] private float lifetime = 1f;
     [SerializeField] private bool destroyOnHit;
     [HideInInspector] public NetworkVariable<float> speed;
-    [HideInInspector] public NetworkVariable<int> damage;
+
+    [HideInInspector]
+    public NetworkVariable<float> damage;
     private List<EnemyBehaviour> hitEnemies = new();
     private void Update()
     {
@@ -42,7 +44,7 @@ public class Bullet : NetworkBehaviour
         {
             if (!hitEnemies.Contains(enemy))
             {
-                enemy.TakeDamageRpc(damage.Value);
+                enemy.TakeDamageRpc((int)damage.Value);
                 Debug.Log("Hit enemy");
                 hitEnemies.Add(enemy);
                 if (destroyOnHit) DestroyBullet();

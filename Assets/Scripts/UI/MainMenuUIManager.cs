@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class MainMenuUIManager:MonoBehaviour
 {
+    public void LoadScene(int index) => SaveLoadManager.Instance.LoadScene(index);
     public void LoadCompanionScene()
     {
         SaveLoadManager.Instance.LoadScene(2);

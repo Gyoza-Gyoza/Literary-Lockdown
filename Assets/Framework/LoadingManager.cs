@@ -52,6 +52,8 @@ public class LoadingManager : MonoBehaviour
     }
     private void UpdateText()
     {
+        if (loadingText == null) return;
+            
         loadingText.text = "";
 
         foreach (string name in loadingList)
