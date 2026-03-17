@@ -24,18 +24,18 @@ public class Database : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(this);
-        Bootstrap.SingletonInitializations += () =>
+        if (Instance == null)
         {
-            if (Instance == null) Instance = this;
-            else Destroy(this);
-        };
-        Bootstrap.AcceptLoadRegistrations += CreateDatabases;
-        Bootstrap.PostDatabaseInitializations += () =>
+            Instance = this;
+            DontDestroyOnLoad(this);
+            CreateDatabases();
+        }
+        else
         {
-
-        };
+            Destroy(gameObject);
+        }
     }
+
     private void Update()
     {
         
