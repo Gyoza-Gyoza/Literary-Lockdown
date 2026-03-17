@@ -10,6 +10,7 @@ public class PlayerMetadata
     public Dictionary<string, int> levels =  new Dictionary<string, int>()
     {
         { "Rapunzel",1 },
-        { "Wolf",1 }
+        { "Wolf",1 },
+        { "Frog Prince",1 }
     };
 }
