@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.AddressableAssets;
+using Object = System.Object;
 
 public class Database : MonoBehaviour
 {
@@ -18,14 +19,15 @@ public class Database : MonoBehaviour
     [SerializeField]
     private DatabaseLink[] databaseLinks;
     [HideInInspector]
-    public Dictionary<string, List<object>> database = new();
-    public static Database instance;
+    public Dictionary<string, Dictionary<string, Object>> database = new();
+    public static Database Instance;
 
     private void Awake()
     {
+        DontDestroyOnLoad(this);
         Bootstrap.SingletonInitializations += () =>
         {
-            if (instance == null) instance = this;
+            if (Instance == null) Instance = this;
             else Destroy(this);
         };
         Bootstrap.AcceptLoadRegistrations += CreateDatabases;
@@ -36,15 +38,7 @@ public class Database : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            string input = "Tower data count is" + database["Towers"].Count + "\n";
-            foreach (TowerData item in database["Towers"])
-            {
-                input += $"Name: {item.Name}, Damage: {item.Stats.Damage}, Range: {item.Stats.Range}, Fire Rate: {item.Stats.AttackSpeed}\n";
-            }
-            Debug.Log(input);
-        }
+        
     }
     private void CreateDatabases()
     {
@@ -58,7 +52,7 @@ public class Database : MonoBehaviour
 
                 if (!database.ContainsKey(links.databaseName))
                 {
-                    database.Add(links.databaseName, new List<object>());
+                    database.Add(links.databaseName, new Dictionary<string, Object>());
                 }
 
                 for (int i = 1; i < data.Length; i++)
@@ -68,12 +62,14 @@ public class Database : MonoBehaviour
                     {
                         case "Towers":
                             string[] values = data[i].Split(',');
-                            database[links.databaseName].Add(
+                            database[links.databaseName].Add(values[0], 
                                 new TowerData(values[0], 
-                                values[1] == "" ? values[0] : values[1],
-                                int.Parse(values[2]), 
-                                float.Parse(values[3]), 
-                                float.Parse(values[4])));
+                                values[1],
+                                values[2] == "" ? values[0] : values[2],
+                                values[3], 
+                                values[4], 
+                                int.Parse(values[5])));
+                            Debug.Log("Intialized towers database");
                             break;
 
                         default:

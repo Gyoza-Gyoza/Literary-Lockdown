@@ -11,7 +11,7 @@ public class Tower : NetworkBehaviour
 {
     public NetworkVariable<float> projectileSpeed;
     public NetworkVariable<float> attackRange;
-    public NetworkVariable<int> damage;
+    public NetworkVariable<float> damage;
     public NetworkObject projectilePrefab;
     public bool canAttack;
     [SerializeField] private float attackSpeed = 0.2f;
@@ -67,6 +67,11 @@ public class Tower : NetworkBehaviour
 
             }
         }
+    }
+
+    public void InitializeStats(TowerData chosenTower)
+    {
+        this.damage.Value = chosenTower.Damage;
     }
 
     public void CanAttack()

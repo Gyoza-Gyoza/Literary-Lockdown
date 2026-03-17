@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
@@ -21,6 +22,7 @@ public class PlayerClientController : NetworkBehaviour
     public NetworkVariable<int> currentTowers = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     public List<NetworkObject> towerPrefabList;
+    public Dictionary<string, TowerData> towerDatabase = new();
 
     [Header("UI")]
     public GameObject towerSpawningUI;
@@ -31,6 +33,13 @@ public class PlayerClientController : NetworkBehaviour
         //towerSpawningUI = UIManager.Instance.TowerSpawner;
     }
 
+    public void Start()
+    {
+        foreach (var databaseEntry in Database.Instance.database["Towers"])
+        {
+            towerDatabase.Add(databaseEntry.Key, (TowerData)databaseEntry.Value);
+        }
+    }
     public override void OnNetworkSpawn()
     {
         currentTowers.OnValueChanged += OnCurrentTowersChangedRpc;
@@ -77,13 +86,16 @@ public class PlayerClientController : NetworkBehaviour
     [Rpc(SendTo.Server)]
     public void SpawnTowerServerRpc(int towerIndex, ulong clientID)
     {
-        //GameObject towerToSpawn = Instantiate(towerPrefabList[towerIndex]);
-        NetworkObject towerToSpawn = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(towerPrefabList[towerIndex], clientID);
+        NetworkObject towerToSpawn = Instantiate(towerPrefabList[towerIndex]);
+        //NetworkObject towerToSpawn = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(towerPrefabList[towerIndex], clientID);
 
         // Rename the tower
         Tower tower = towerToSpawn.GetComponent<Tower>(); 
         tower.m_TowerName.Value = GameObject.Find($"Player_{clientID}").GetComponent<PlayerClientController>().playerName.Value;
         TowerManager.Instance.AddTower(tower);
+
+        tower.InitializeStats(towerDatabase[towerPrefabList[towerIndex].name]);
+        towerToSpawn.SpawnWithOwnership(clientID, true);
         Debug.Log($"Tower spawned for player {clientID}. Current towers: {currentTowers.Value}");
     }
 
