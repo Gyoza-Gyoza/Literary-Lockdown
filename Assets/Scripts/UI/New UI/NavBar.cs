@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.U2D;
 using UnityEngine.UI;
 
 public class NavBar : MonoBehaviour
@@ -9,6 +11,9 @@ public class NavBar : MonoBehaviour
     public Image raid;
     public Image shop;
 
+    public Button companionButton;
+
+    
 
     public Sprite companionSelected;
     public Sprite companionUnselected;
@@ -22,18 +27,30 @@ public class NavBar : MonoBehaviour
 
     private void Start()
     {
+        //companionButton.imag
         switch (currentState) 
         {
             case NavBarScreen.Companion:
-
+                companion.sprite = companionSelected;
+                raid.sprite = raidUnselected;
+                shop.sprite = shopUnselected;
                 break;  
 
             case NavBarScreen.Raid:
-
+                raid.sprite = raidSelected;
+                companion.sprite = companionUnselected;
+                shop.sprite = shopUnselected;
                 break;
             case NavBarScreen.Shop:
-
+                shop.sprite = shopSelected;
+                companion.sprite = companionUnselected;
+                raid.sprite = raidUnselected;
                 break;
         }
+    }
+
+    public async void LoadScene(string sceneName)
+    {
+        await SceneManager.LoadSceneAsync(sceneName);
     }
 }
