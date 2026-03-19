@@ -155,15 +155,15 @@ public class ObjectivesManager : NetworkBehaviour
         }
     }
 
+    private void OnRemainingTimeChanged(float oldValue, float newValue)
+    {
+        ObjectiveUIController.Instance.UpdateTimeText(newValue);
+    }
+
     public void CaptureBooks()
     {
         if (!IsServer) return;
         booksCaptured.Value++;
-    }
-
-    private void OnRemainingTimeChanged(float oldValue, float newValue)
-    {
-        ObjectiveUIController.Instance.UpdateTimeText(newValue);
     }
 
     private void OnBooksCapturedChanged(int oldValue, int newValue)

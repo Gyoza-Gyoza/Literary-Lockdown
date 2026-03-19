@@ -874,7 +874,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1053780434
+  GlobalObjectIdHash: 2770866351
   InScenePlacedSourceGlobalObjectIdHash: 1053780434
   DeferredDespawnTick: 0
   Ownership: 1
@@ -1001,6 +1001,7 @@ MonoBehaviour:
   target: {fileID: 0}
   towerTargetStyle: 0
   isMoving: 0
+  towerType: 
   m_Position:
     m_InternalValue: {x: 0, y: 0, z: 0}
   m_TowerName:

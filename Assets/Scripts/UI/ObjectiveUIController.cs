@@ -14,7 +14,6 @@ public class ObjectiveUIController : MonoBehaviour
 
     public static ObjectiveUIController Instance;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         if (Instance == null)
@@ -26,8 +25,6 @@ public class ObjectiveUIController : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-
-    // Update is called once per frame
     void Update()
     {
         if (ObjectivesManager.Instance != null)
@@ -38,7 +35,6 @@ public class ObjectiveUIController : MonoBehaviour
             UpdateTimeText(ObjectivesManager.Instance.remainingTime.Value);
         }
     }
-
     public void UpdateTimeText(float secondsTotal)
     {
         int minutes = (int)(secondsTotal / 60);
@@ -46,7 +42,6 @@ public class ObjectiveUIController : MonoBehaviour
         if (timeText != null)
             timeText.text = $"{minutes}:{seconds:00}";
     }
-
     public void EndGame()
     {
         Debug.Log("End Game Called");
@@ -58,10 +53,4 @@ public class ObjectiveUIController : MonoBehaviour
         SaveLoadManager.PlayerData.pagesHeld += pageAmount;
         SaveLoadManager.SaveData();
     }
-
-    //public void SetDifficulty()
-    //{
-    //    //ObjectivesManager.Instance.difficulty.Value = difficultyDropdown.value;
-    //    Debug.Log("Current difficulty is " + ObjectivesManager.Instance.difficulty.Value);
-    //}
 }

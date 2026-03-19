@@ -38,6 +38,7 @@ public class Tower : NetworkBehaviour
 
     [Header("Components")]
     //protected SpriteRenderer m_Renderer;
+    private Animator animator;
     [SerializeField] protected GameObject rangeIndicator;
 
 
@@ -53,35 +54,54 @@ public class Tower : NetworkBehaviour
     }
     private void AttackCooldown()
     {
+        Debug.Log("Cooling down");
         if (!IsServer) return;
         if (ObjectivesManager.Instance.gameEnded.Value) return;
         if (!canAttack)
         {
+            Debug.Log("Attacking");
             timer += Time.deltaTime;
             if (timer >= attackSpeed)
             {
                 timer -= attackSpeed;
-                if (TryGetComponent<Animator>(out Animator animator))
-                {
-                    animator.SetTrigger("CanAttack");
-                }
-                //canAttack = true;
-
+                animator.SetTrigger("CanAttack");
             }
         }
     }
-
+    // Tower manager detects enemies in range and gives targets to towers 
+    // Tower holds the AttackCooldown() function which acts as a timer which decides when the tower can attack 
+    // When the tower attacks, it sets the animation trigger to true 
+    // The animation trigger plays through the windup, and the attack animation calls the Attack() function 
+    // 
     public void InitializeStats(TowerData chosenTower)
     {
+        animator = GetComponent<Animator>();
         this.damage.Value = chosenTower.Damage;
     }
-
-    public void CanAttack()
+    public virtual void Attack()
     {
+        if (target == null) return;
         canAttack = true;
         PlayAttackingSFX();
-    }
+        
+        //Should trigger animation instead
+        NetworkObject projectile = Instantiate(projectilePrefab);
+        projectile.transform.position = transform.position;
 
+        Vector2 direction = target.transform.position - transform.position;
+        direction.Normalize();
+
+        projectile.transform.rotation = Quaternion.FromToRotation(Vector2.up, direction);
+
+        var bullet = projectile.GetComponentInChildren<Bullet>();
+        if (bullet != null)
+        {
+            bullet.speed.Value = projectileSpeed.Value;
+            bullet.damage.Value = damage.Value;
+        }
+        projectile.Spawn();
+        canAttack = false;
+    }
     public void PlayAttackingSFX()
     {
         switch (towerType)
