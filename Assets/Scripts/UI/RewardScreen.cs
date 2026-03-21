@@ -31,7 +31,7 @@ public class RewardScreen : MonoBehaviour
         Destroy(GameObject.FindWithTag("NetworkManager").gameObject);
 
         Debug.Log("Exit to main called");
-        SceneManager.LoadScene("Main");
+        SceneManager.LoadScene("Raid Menu");
     }
 
     #region ############# Fades ##################
