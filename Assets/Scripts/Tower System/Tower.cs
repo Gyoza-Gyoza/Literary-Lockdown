@@ -13,7 +13,7 @@ public class Tower : NetworkBehaviour
     public NetworkVariable<float> attackRange;
     public NetworkVariable<float> damage;
     public NetworkObject projectilePrefab;
-    public bool canAttack;
+    public bool canAttack = false;
     [SerializeField] private float attackSpeed = 0.2f;
     public NetworkObject target;
 
@@ -57,7 +57,7 @@ public class Tower : NetworkBehaviour
         Debug.Log("Cooling down");
         if (!IsServer) return;
         if (ObjectivesManager.Instance.gameEnded.Value) return;
-        if (!canAttack)
+        if (!canAttack && target != null)
         {
             Debug.Log("Attacking");
             timer += Time.deltaTime;
