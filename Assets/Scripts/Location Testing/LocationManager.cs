@@ -165,6 +165,7 @@ public class LocationManager : MonoBehaviour
 
             foreach (var target in targetLocations)
             {
+                // Add check that checks for the closest location
                 float distance = GetDistanceMeters(
                     (float)currentLat, (float)currentLon,
                     target.latitude, target.longitude
