@@ -68,11 +68,6 @@ public class Tower : NetworkBehaviour
             }
         }
     }
-    // Tower manager detects enemies in range and gives targets to towers 
-    // Tower holds the AttackCooldown() function which acts as a timer which decides when the tower can attack 
-    // When the tower attacks, it sets the animation trigger to true 
-    // The animation trigger plays through the windup, and the attack animation calls the Attack() function 
-    // 
     public void InitializeStats(TowerData chosenTower)
     {
         animator = GetComponent<Animator>();
