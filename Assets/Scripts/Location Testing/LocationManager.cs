@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
@@ -24,8 +24,8 @@ public class LocationManager : MonoBehaviour
 
     public List<TargetLocation> targetLocations = new List<TargetLocation>();
 
-    private float currentLat = 0f;
-    private float currentLon = 0f;
+    private double currentLat = 0f;
+    private double currentLon = 0f;
     public float zoom = 10;
 
     public float forceLocControl_Speed = 100f;
@@ -33,6 +33,8 @@ public class LocationManager : MonoBehaviour
 
     public static LocationManager Instance;
 
+    public int pointsInCircle = 8;
+    public Color32 validLocCol = new Color32(); 
 
     private bool locationValid = false;
     public bool isLocationValid {  get { return locationValid; } }
@@ -89,12 +91,16 @@ public class LocationManager : MonoBehaviour
         {
             //Check input and adjust location based on input
 
-            currentLat += Time.fixedDeltaTime * Joystick.current.stick.x.value * forceLocControl_Speed;
-            currentLon += Time.fixedDeltaTime * Joystick.current.stick.y.value * forceLocControl_Speed;
+            currentLon += Time.fixedDeltaTime * Joystick.current.stick.x.value * forceLocControl_Speed;
+            currentLat += Time.fixedDeltaTime * Joystick.current.stick.y.value * forceLocControl_Speed;
 
-            StartCoroutine (GetOneMap());
-            //Debug.Log("Current stick value: " + Joystick.current.stick.x.value + ", " + Joystick.current.stick.y.value);
-            //Debug.Log("Lat calc: " + (Time.fixedDeltaTime * Joystick.current.stick.x.value * forceLocControl_Speed));
+            if (!mapIsLoading)
+            {
+                StartCoroutine(GetOneMap());
+            }
+            Debug.Log("Current stick value: " + Joystick.current.stick.x.value + ", " + Joystick.current.stick.y.value);
+            Debug.Log("Lon calc: " + (Time.fixedDeltaTime * Joystick.current.stick.x.value * forceLocControl_Speed));
+            Debug.Log("Lat calc: " + (Time.fixedDeltaTime * Joystick.current.stick.y.value * forceLocControl_Speed));
         }
 
     }
@@ -146,6 +152,7 @@ public class LocationManager : MonoBehaviour
         StartCoroutine(GetOneMap());
         while (updatingLoc)
         {
+
             if (!forceLoc)
             {
                 currentLat = Input.location.lastData.latitude;
@@ -159,7 +166,7 @@ public class LocationManager : MonoBehaviour
             foreach (var target in targetLocations)
             {
                 float distance = GetDistanceMeters(
-                    currentLat, currentLon,
+                    (float)currentLat, (float)currentLon,
                     target.latitude, target.longitude
                 );
 
@@ -179,29 +186,18 @@ public class LocationManager : MonoBehaviour
 
             locationText.text = result;
 
+            if (!mapIsLoading)
+            {
+                StartCoroutine(GetOneMap());
+            }
+
             yield return new WaitForSeconds(1f);
         }
         updatingLoc = false;
         yield break;
     }
 
-    // Haversine formula to calculate distance between two GPS points
-    float GetDistanceMeters(float lat1, float lon1, float lat2, float lon2)
-    {
-        float R = 6371000f; // Earth radius in meters
 
-        float dLat = Mathf.Deg2Rad * (lat2 - lat1);
-        float dLon = Mathf.Deg2Rad * (lon2 - lon1);
-
-        float a = Mathf.Sin(dLat / 2) * Mathf.Sin(dLat / 2) +
-                  Mathf.Cos(Mathf.Deg2Rad * lat1) *
-                  Mathf.Cos(Mathf.Deg2Rad * lat2) *
-                  Mathf.Sin(dLon / 2) * Mathf.Sin(dLon / 2);
-
-        float c = 2 * Mathf.Atan2(Mathf.Sqrt(a), Mathf.Sqrt(1 - a));
-
-        return R * c;
-    }
 
     private string url = "";
     private bool mapIsLoading = false;
@@ -211,7 +207,7 @@ public class LocationManager : MonoBehaviour
     {
         Debug.Log("Starting On Map");
         //url = "https://maps.googleapis.com/maps/api/staticmap?center=" + currentLat + "," + currentLon + "&zoom=" + zoom + "&size=" + 500 + "x" + 500 + "&scale=" + 600 + "&maptype=";// + mapType + "&key=" + apiKey;
-        url = "https://www.onemap.gov.sg/api/staticmap/getStaticImage?layerchosen=default&zoom=" + zoom + "&height=" + height + "&width=" + width + "&lat=" + currentLat + "&lng=" + currentLon;
+        url = "https://www.onemap.gov.sg/api/staticmap/getStaticImage?layerchosen=default&zoom=" + zoom + "&height=" + height + "&width=" + width + "&lat=" + currentLat + "&lng=" + currentLon + "&points=%5B" + 1.40868 + "%2C%20" + 103.905 + "%2C%20%22" + validLocCol.r + "%2C%20" + validLocCol.g + "%2C%20"+ validLocCol.b + "%22%5D";
         Debug.Log("url formed, " + url);
         mapIsLoading = true;
         UnityWebRequest www = UnityWebRequestTexture.GetTexture(url);
@@ -241,5 +237,73 @@ public class LocationManager : MonoBehaviour
             updateMap = true;
         }
     }
+    //########## Utils #######################
 
+    // Haversine formula to calculate distance between two GPS points
+    float GetDistanceMeters(float lat1, float lon1, float lat2, float lon2)
+    {
+        float R = 6371000f; // Earth radius in meters
+
+        float dLat = Mathf.Deg2Rad * (lat2 - lat1);
+        float dLon = Mathf.Deg2Rad * (lon2 - lon1);
+
+        float a = Mathf.Sin(dLat / 2) * Mathf.Sin(dLat / 2) +
+                  Mathf.Cos(Mathf.Deg2Rad * lat1) *
+                  Mathf.Cos(Mathf.Deg2Rad * lat2) *
+                  Mathf.Sin(dLon / 2) * Mathf.Sin(dLon / 2);
+
+        float c = 2 * Mathf.Atan2(Mathf.Sqrt(a), Mathf.Sqrt(1 - a));
+
+        return R * c;
+    }
+
+    public static double[,] GenerateCirclePoints(
+    double centerLat,
+    double centerLon,
+    double radiusMeters,
+    int numPoints)
+    {
+        double[,] points = new double[numPoints, 2];
+
+        // Convert to radians
+        double lat1 = DegreesToRadians(centerLat);
+        double lon1 = DegreesToRadians(centerLon);
+        double angularDistance = radiusMeters / 6371000f;
+
+        for (int i = 0; i < numPoints; i++)
+        {
+            double tetha = 2.0 * Mathf.PI * i / numPoints; // evenly spaced
+
+            double sinlat1 = Mathf.Sin((float)lat1);
+            double coslat1 = Mathf.Cos((float)lat1);
+            double sinAd = Mathf.Sin((float)angularDistance);
+            double cosAd = Mathf.Cos((float)angularDistance);
+
+            double lat2 = Mathf.Asin((float)(
+                sinlat1 * cosAd +
+                coslat1 * sinAd * Mathf.Cos((float)tetha))
+            );
+
+            double lon2 = lon1 + Mathf.Atan2(
+                (float)(Mathf.Sin((float)tetha) * sinAd * coslat1),
+                (float)(cosAd - sinlat1 * Mathf.Sin((float)lat2))
+            );
+
+            // Convert back to degrees
+            points[i, 0] = RadiansToDegrees(lat2); // latitude
+            points[i, 1] = RadiansToDegrees(lon2); // longitude
+        }
+
+        return points;
+    }
+
+    static double DegreesToRadians(double deg)
+    {
+        return deg * Mathf.PI / 180.0;
+    }
+
+    static double RadiansToDegrees(double rad)
+    {
+        return rad * 180.0 / Mathf.PI;
+    }
 }
