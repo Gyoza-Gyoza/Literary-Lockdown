@@ -18,8 +18,16 @@ public class PlayerToggleReady : MonoBehaviour
                 GetComponent<Image>().sprite = readyImg;
                 break;
             case false:
-                localPlayer.playerReady.Value = true;
-                GetComponent<Image>().sprite = cancelImg;
+                // Do a check on location
+                if (LocationManager.Instance.isLocationValid)
+                {
+                    localPlayer.playerReady.Value = true;
+                    GetComponent<Image>().sprite = cancelImg;
+                }
+                else
+                {
+                    Debug.Log("Not at a valid location");
+                }
                 break;
         }
 

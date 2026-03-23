@@ -19,30 +19,90 @@ public class TargetLocation
 
 public class LocationManager : MonoBehaviour
 {
+    public RawImage mapImageComp;
     public TMP_Text locationText;
-    private bool forceLoc = false;
 
     public List<TargetLocation> targetLocations = new List<TargetLocation>();
+    private TargetLocation closest;
+    public CanvasGroup popUpGroup;
 
     private double currentLat = 0f;
     private double currentLon = 0f;
     public float zoom = 10;
+    private float width = 0f;
+    private float height = 0f;
 
     public float forceLocControl_Speed = 100f;
-    private bool updatingLoc = false;
 
     public static LocationManager Instance;
 
     public int pointsInCircle = 8;
     public Color32 validLocCol = new Color32(); 
+    public Color32 validRadCol = new Color32();
 
+
+    private bool updatingLoc = false;
+    private bool forceLoc = false;
     private bool locationValid = false;
     public bool isLocationValid {  get { return locationValid; } }
 
-    public RawImage mapImageComp;
 
-    private float width = 0f;
-    private float height = 0f;
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(this);
+        }
+        else if (Instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+    }
+    private void Start()
+    {
+        width = (int)Mathf.Round(mapImageComp.rectTransform.rect.width);
+        if (width > 512) {width = 512;}
+        height = (int)Mathf.Round(mapImageComp.rectTransform.rect.height);
+        if (height > 512) { height = 512; }
+
+        // Start updating location
+        StartCoroutine(StartTimeOut());
+
+        CloseLocPopUp();
+    }
+
+    private void FixedUpdate()
+    {
+        if (forceLoc)
+        {
+            //Check input and adjust location based on input
+
+            currentLon += Time.fixedDeltaTime * Joystick.current.stick.x.value * forceLocControl_Speed;
+            currentLat += Time.fixedDeltaTime * Joystick.current.stick.y.value * forceLocControl_Speed;
+
+            if (!mapIsLoading)
+            {
+                StartCoroutine(GetOneMap());
+            }
+            //Debug.Log("Current stick value: " + Joystick.current.stick.x.value + ", " + Joystick.current.stick.y.value);
+            //Debug.Log("Lon calc: " + (Time.fixedDeltaTime * Joystick.current.stick.x.value * forceLocControl_Speed));
+            //Debug.Log("Lat calc: " + (Time.fixedDeltaTime * Joystick.current.stick.y.value * forceLocControl_Speed));
+        }
+
+    }
+
+
+    public void OpenLocPopUp()
+    {
+        popUpGroup.alpha = 1.0f;
+    }
+
+
+    public void CloseLocPopUp()
+    {
+        popUpGroup.alpha = 0f;
+    }
 
     public void ToggleForceLoc()
     {
@@ -59,50 +119,6 @@ public class LocationManager : MonoBehaviour
         {
             updatingLoc = false;
         }
-    }
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else if (Instance != this)
-        {
-            Destroy(this.gameObject);
-        }
-    }
-
-    private void Start()
-    {
-        width = (int)Mathf.Round(mapImageComp.rectTransform.rect.width);
-        if (width > 512)
-        {   width = 512;}
-        height = (int)Mathf.Round(mapImageComp.rectTransform.rect.height);
-        if (height > 512)
-        { height = 512; }
-
-        // Start updating location
-        StartCoroutine(StartTimeOut());
-    }
-
-    private void FixedUpdate()
-    {
-        if (forceLoc)
-        {
-            //Check input and adjust location based on input
-
-            currentLon += Time.fixedDeltaTime * Joystick.current.stick.x.value * forceLocControl_Speed;
-            currentLat += Time.fixedDeltaTime * Joystick.current.stick.y.value * forceLocControl_Speed;
-
-            if (!mapIsLoading)
-            {
-                StartCoroutine(GetOneMap());
-            }
-            Debug.Log("Current stick value: " + Joystick.current.stick.x.value + ", " + Joystick.current.stick.y.value);
-            Debug.Log("Lon calc: " + (Time.fixedDeltaTime * Joystick.current.stick.x.value * forceLocControl_Speed));
-            Debug.Log("Lat calc: " + (Time.fixedDeltaTime * Joystick.current.stick.y.value * forceLocControl_Speed));
-        }
-
     }
 
     public void StartLocationTracking()
@@ -163,7 +179,10 @@ public class LocationManager : MonoBehaviour
 
             bool insideAny = false;
 
-            foreach (var target in targetLocations)
+
+            float currClosest = 999999f;
+
+            foreach (TargetLocation target in targetLocations)
             {
                 // Add check that checks for the closest location
                 float distance = GetDistanceMeters(
@@ -171,12 +190,19 @@ public class LocationManager : MonoBehaviour
                     target.latitude, target.longitude
                 );
 
+                if (distance < currClosest)
+                {
+                    currClosest = distance;
+                    closest = target;
+                }
+
                 if (distance <= target.radiusMeters)
                 {
                     result += $"Inside: {target.name}\n";
                     insideAny = true;
                     locationValid = true;
                 }
+
             }
 
             if (!insideAny)
@@ -198,8 +224,6 @@ public class LocationManager : MonoBehaviour
         yield break;
     }
 
-
-
     private string url = "";
     private bool mapIsLoading = false;
     private bool updateMap = false;
@@ -208,8 +232,14 @@ public class LocationManager : MonoBehaviour
     {
         Debug.Log("Starting On Map");
         //url = "https://maps.googleapis.com/maps/api/staticmap?center=" + currentLat + "," + currentLon + "&zoom=" + zoom + "&size=" + 500 + "x" + 500 + "&scale=" + 600 + "&maptype=";// + mapType + "&key=" + apiKey;
-        url = "https://www.onemap.gov.sg/api/staticmap/getStaticImage?layerchosen=default&zoom=" + zoom + "&height=" + height + "&width=" + width + "&lat=" + currentLat + "&lng=" + currentLon + "&points=%5B" + 1.40868 + "%2C%20" + 103.905 + "%2C%20%22" + validLocCol.r + "%2C%20" + validLocCol.g + "%2C%20"+ validLocCol.b + "%22%5D";
+        url = "https://www.onemap.gov.sg/api/staticmap/getStaticImage?layerchosen=default&zoom=" + zoom + "&height=" + height + "&width=" + width + "&lat=" + currentLat + "&lng=" + currentLon + "&points=%5B" + closest.latitude + "%2C%20" + closest.longitude + "%2C%20%22" + validLocCol.r + "%2C%20" + validLocCol.g + "%2C%20"+ validLocCol.b + "%22%5D";
+        
+
+       /* string polygonURL*/  url += "&polygons=" + GenerateCirclePointsASCIIString(closest.latitude, closest.longitude, closest.radiusMeters, pointsInCircle) + "%3A" + validRadCol.r + "%2C" + validRadCol.g + "%2C" + validRadCol.b;
         Debug.Log("url formed, " + url);
+
+        //Debug.Log("Polygon section: " + polygonURL);
+
         mapIsLoading = true;
         UnityWebRequest www = UnityWebRequestTexture.GetTexture(url);
 
@@ -258,11 +288,7 @@ public class LocationManager : MonoBehaviour
         return R * c;
     }
 
-    public static double[,] GenerateCirclePoints(
-    double centerLat,
-    double centerLon,
-    double radiusMeters,
-    int numPoints)
+    public static double[,] GenerateCirclePoints(double centerLat, double centerLon, double radiusMeters, int numPoints)
     {
         double[,] points = new double[numPoints, 2];
 
@@ -296,6 +322,59 @@ public class LocationManager : MonoBehaviour
         }
 
         return points;
+    }
+
+    public static string GenerateCirclePointsASCIIString(double centerLat, double centerLon, double radiusMeters, int numPoints)
+    {
+        string toReturn = "%5B";
+
+        double[,] points = new double[numPoints, 2];
+
+        // Convert to radians
+        double lat1 = DegreesToRadians(centerLat);
+        double lon1 = DegreesToRadians(centerLon);
+        double angularDistance = radiusMeters / 6371000f;
+
+        string first = "";
+
+        for (int i = 0; i < numPoints; i++)
+        {
+            if (i != 0)
+            {
+                toReturn += "%2C";
+            }
+            double tetha = 2.0 * Mathf.PI * i / numPoints; // evenly spaced
+
+            double sinlat1 = Mathf.Sin((float)lat1);
+            double coslat1 = Mathf.Cos((float)lat1);
+            double sinAd = Mathf.Sin((float)angularDistance);
+            double cosAd = Mathf.Cos((float)angularDistance);
+
+            double lat2 = Mathf.Asin((float)(
+                sinlat1 * cosAd +
+                coslat1 * sinAd * Mathf.Cos((float)tetha))
+            );
+
+            double lon2 = lon1 + Mathf.Atan2(
+                (float)(Mathf.Sin((float)tetha) * sinAd * coslat1),
+                (float)(cosAd - sinlat1 * Mathf.Sin((float)lat2))
+            );
+
+            // Convert back to degrees
+            points[i, 0] = RadiansToDegrees(lat2); // latitude
+            points[i, 1] = RadiansToDegrees(lon2); // longitude
+
+            if(i == 0)
+            {
+                first = "%5B" + RadiansToDegrees(lat2) + "%2C" + RadiansToDegrees(lon2) + "%5D";
+            }
+
+            toReturn += "%5B" + RadiansToDegrees(lat2) + "%2C" + RadiansToDegrees(lon2) + "%5D";
+        }
+        toReturn += "%2C";
+        toReturn += first;
+        toReturn += "%5D";
+        return toReturn;
     }
 
     static double DegreesToRadians(double deg)
