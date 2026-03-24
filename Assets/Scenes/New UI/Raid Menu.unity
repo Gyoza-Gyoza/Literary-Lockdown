@@ -1307,6 +1307,8 @@ MonoBehaviour:
   databaseLinks:
   - databaseName: Towers
     sheetCode: 0
+  - databaseName: ShopItems
+    sheetCode: 1990059760
 --- !u!4 &1206927868
 Transform:
   m_ObjectHideFlags: 0
