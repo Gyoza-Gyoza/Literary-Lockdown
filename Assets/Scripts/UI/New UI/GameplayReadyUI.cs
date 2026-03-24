@@ -44,6 +44,8 @@ public class GameplayReadyUI : NetworkBehaviour
 
     private async void OnPlayerListChange()
     {
+        playerList.Clear();
+
         NetworkManager.Singleton.ConnectedClientsList.ToList().ForEach(client => {
             if (!playerList.Contains(client.ClientId))
             {
@@ -85,6 +87,15 @@ public class GameplayReadyUI : NetworkBehaviour
     [Rpc(SendTo.Everyone)]
     public void OnReadyChangeRpc()
     {
+        playerList.Clear();
+
+        NetworkManager.Singleton.ConnectedClientsList.ToList().ForEach(client => {
+            if (!playerList.Contains(client.ClientId))
+            {
+                playerList.Add(client.ClientId);
+            }
+        });
+
         // Check if all players are ready
         for (int i = 0; i < playerList_GO.transform.childCount; i++)
         {
@@ -130,12 +141,7 @@ public class GameplayReadyUI : NetworkBehaviour
             if (playerList_GO != null)
             {
                 OnPlayerListChange();
-
-                // Only the Server/Host should fire this RPC on a loop to prevent network spam
-                if (IsHost)
-                {
-                    OnReadyChangeRpc();
-                }
+                OnReadyChangeRpc();
             }
         }
     }
