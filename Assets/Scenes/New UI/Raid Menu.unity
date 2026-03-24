@@ -1305,6 +1305,8 @@ MonoBehaviour:
   databaseLinks:
   - databaseName: Towers
     sheetCode: 0
+  - databaseName: ShopItems
+    sheetCode: 1990059760
 --- !u!4 &1206927868
 Transform:
   m_ObjectHideFlags: 0
@@ -1572,22 +1574,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1202125738}
     m_Modifications:
-    - target: {fileID: 150500171559290159, guid: 50e16f0dd6067104abaa918369fce204, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 150500171559290159, guid: 50e16f0dd6067104abaa918369fce204, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 150500171559290159, guid: 50e16f0dd6067104abaa918369fce204, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 150500171559290159, guid: 50e16f0dd6067104abaa918369fce204, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1201528130567066118, guid: 50e16f0dd6067104abaa918369fce204, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1668,41 +1654,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1471465316482064009, guid: 50e16f0dd6067104abaa918369fce204, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1471465316482064009, guid: 50e16f0dd6067104abaa918369fce204, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1471465316482064009, guid: 50e16f0dd6067104abaa918369fce204, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1471465316482064009, guid: 50e16f0dd6067104abaa918369fce204, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5154171510208112413, guid: 50e16f0dd6067104abaa918369fce204, type: 3}
       propertyPath: m_Name
       value: Nav Bar
-      objectReference: {fileID: 0}
-    - target: {fileID: 6068738023780543073, guid: 50e16f0dd6067104abaa918369fce204, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6068738023780543073, guid: 50e16f0dd6067104abaa918369fce204, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6068738023780543073, guid: 50e16f0dd6067104abaa918369fce204, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6068738023780543073, guid: 50e16f0dd6067104abaa918369fce204, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
