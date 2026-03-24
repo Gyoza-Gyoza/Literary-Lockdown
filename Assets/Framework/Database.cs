@@ -57,11 +57,11 @@ public class Database : MonoBehaviour
 
                 for (int i = 1; i < data.Length; i++)
                 {
+                    string[] values = data[i].Split(',');
                     // Add more database types here as needed
                     switch (links.databaseName)
                     {
-                        case "Towers":
-                            string[] values = data[i].Split(',');
+                        case "Towers": 
                             database[links.databaseName].Add(values[0], 
                                 new TowerData(values[0], 
                                 values[1],
@@ -70,6 +70,14 @@ public class Database : MonoBehaviour
                                 values[4], 
                                 int.Parse(values[5])));
                             Debug.Log("Intialized towers database");
+                            break;
+                        
+                        case "ShopItems":
+                            database[links.databaseName].Add(values[0],
+                                new ShopItemData(values[1],
+                                    values[2],
+                                    int.Parse(values[3])));
+                            Debug.Log("Intialized shop items database");
                             break;
 
                         default:

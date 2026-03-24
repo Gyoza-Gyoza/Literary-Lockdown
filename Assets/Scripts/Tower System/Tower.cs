@@ -13,7 +13,7 @@ public class Tower : NetworkBehaviour
     public NetworkVariable<float> attackRange;
     public NetworkVariable<float> damage;
     public NetworkObject projectilePrefab;
-    public bool canAttack;
+    public bool canAttack = false;
     [SerializeField] private float attackSpeed = 0.2f;
     public NetworkObject target;
 
@@ -57,7 +57,7 @@ public class Tower : NetworkBehaviour
         Debug.Log("Cooling down");
         if (!IsServer) return;
         if (ObjectivesManager.Instance.gameEnded.Value) return;
-        if (!canAttack)
+        if (!canAttack && target != null)
         {
             Debug.Log("Attacking");
             timer += Time.deltaTime;
@@ -68,11 +68,6 @@ public class Tower : NetworkBehaviour
             }
         }
     }
-    // Tower manager detects enemies in range and gives targets to towers 
-    // Tower holds the AttackCooldown() function which acts as a timer which decides when the tower can attack 
-    // When the tower attacks, it sets the animation trigger to true 
-    // The animation trigger plays through the windup, and the attack animation calls the Attack() function 
-    // 
     public void InitializeStats(TowerData chosenTower)
     {
         animator = GetComponent<Animator>();
