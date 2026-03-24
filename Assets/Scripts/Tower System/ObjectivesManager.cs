@@ -166,6 +166,8 @@ public class ObjectivesManager : NetworkBehaviour
         booksCaptured.Value++;
     }
 
+
+
     private void OnBooksCapturedChanged(int oldValue, int newValue)
     {
         if (ObjectiveUIController.Instance.booksCapturedText != null)
