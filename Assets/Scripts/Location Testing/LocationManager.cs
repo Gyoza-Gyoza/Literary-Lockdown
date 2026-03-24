@@ -52,11 +52,11 @@ public class LocationManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(this);
+            //DontDestroyOnLoad(this);
         }
         else if (Instance != this)
         {
-            Destroy(this.gameObject);
+            //Destroy(this.gameObject);
         }
     }
     private void Start()
@@ -69,7 +69,7 @@ public class LocationManager : MonoBehaviour
         // Start updating location
         StartCoroutine(StartTimeOut());
 
-        CloseLocPopUp();
+        //CloseLocPopUp();
     }
 
     private void FixedUpdate()
@@ -175,7 +175,7 @@ public class LocationManager : MonoBehaviour
                 currentLon = Input.location.lastData.longitude;
             }
 
-            string result = $"Lat: {currentLat}\nLon: {currentLon}\n";
+            string result = "";//$"Lat: {currentLat}\nLon: {currentLon}\n";
 
             bool insideAny = false;
 
