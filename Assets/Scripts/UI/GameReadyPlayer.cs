@@ -43,7 +43,7 @@ public class GameReadyPlayer : MonoBehaviour
 
     public void Awake()
     {
-        gameObject.SetActive(false);
+        // gameObject.SetActive(false);
     }
 
     public void GameStarted()

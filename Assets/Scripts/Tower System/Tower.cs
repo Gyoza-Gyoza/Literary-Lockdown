@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using TMPro;
@@ -27,6 +28,7 @@ public class Tower : NetworkBehaviour
     private Stats baseStats;
     private List<Stats> bonusStats = new();
     private float timer = 0f;
+    private float initialXScale;
 
     [Header("Synced Variables")]
     private NetworkVariable<FixedString512Bytes> m_GameObjectName = new NetworkVariable<FixedString512Bytes>("Default Tower Name", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -52,6 +54,12 @@ public class Tower : NetworkBehaviour
             return totalBonus;
         }
     }
+
+    private void Awake()
+    {
+        initialXScale = transform.localScale.x;
+    }
+
     private void AttackCooldown()
     {
         Debug.Log("Cooling down");
@@ -78,6 +86,10 @@ public class Tower : NetworkBehaviour
         if (target == null) return;
         canAttack = true;
         PlayAttackingSFX();
+
+        bool isFlipped = transform.position.x < target.transform.position.x; 
+        transform.localScale = new Vector3(isFlipped? initialXScale : -initialXScale, transform.localScale.y, transform.localScale.z);
+
         
         //Should trigger animation instead
         NetworkObject projectile = Instantiate(projectilePrefab);
