@@ -1309,6 +1309,8 @@ MonoBehaviour:
     sheetCode: 0
   - databaseName: ShopItems
     sheetCode: 1990059760
+  - databaseName: LocationData
+    sheetCode: 237921587
 --- !u!4 &1206927868
 Transform:
   m_ObjectHideFlags: 0
@@ -1566,6 +1568,10 @@ PrefabInstance:
     - target: {fileID: 9199540375297044903, guid: 6a0bfc30783a83c49a6616d411b857cb, type: 3}
       propertyPath: m_Name
       value: PopUpLocationBG
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208389218245660318, guid: 6a0bfc30783a83c49a6616d411b857cb, type: 3}
+      propertyPath: targetLocations.Array.size
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

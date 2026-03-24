@@ -9,12 +9,28 @@ using UnityEngine.UI;
 using static Unity.Netcode.NetworkSceneManager;
 
 [System.Serializable]
-public class TargetLocation
+public class TargetLocationData
 {
-    public string name;
-    public float latitude;
-    public float longitude;
-    public float radiusMeters;
+    private string name;
+    private float latitude;
+    private float longitude;
+    private float radiusMeters;
+
+    public string Name => name;
+
+    public float Latitude => latitude;
+
+    public float Longitude => longitude;
+
+    public float RadiusMeters => radiusMeters;
+
+    public TargetLocationData(string name, float latitude, float longitude, float radiusMeters)
+    {
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.radiusMeters = radiusMeters;
+    }
 }
 
 public class LocationManager : MonoBehaviour
@@ -22,8 +38,8 @@ public class LocationManager : MonoBehaviour
     public RawImage mapImageComp;
     public TMP_Text locationText;
 
-    public List<TargetLocation> targetLocations = new List<TargetLocation>();
-    private TargetLocation closest;
+    public List<TargetLocationData> targetLocations = new List<TargetLocationData>();
+    private TargetLocationData closest;
     public CanvasGroup popUpGroup;
 
     private double currentLat = 0f;
@@ -110,8 +126,8 @@ public class LocationManager : MonoBehaviour
 
         if (forceLoc && targetLocations.Count != 0)
         {
-            currentLat = targetLocations[0].latitude;
-            currentLon = targetLocations[0].longitude;
+            currentLat = targetLocations[0].Latitude;
+            currentLon = targetLocations[0].Longitude;
 
             StartCoroutine(UpdateLocation());
         }
@@ -182,12 +198,12 @@ public class LocationManager : MonoBehaviour
 
             float currClosest = 999999f;
 
-            foreach (TargetLocation target in targetLocations)
+            foreach (TargetLocationData target in targetLocations)
             {
                 // Add check that checks for the closest location
                 float distance = GetDistanceMeters(
                     (float)currentLat, (float)currentLon,
-                    target.latitude, target.longitude
+                    target.Latitude, target.Longitude
                 );
 
                 if (distance < currClosest)
@@ -196,9 +212,9 @@ public class LocationManager : MonoBehaviour
                     closest = target;
                 }
 
-                if (distance <= target.radiusMeters)
+                if (distance <= target.RadiusMeters)
                 {
-                    result += $"Inside: {target.name}\n";
+                    result += $"Inside: {target.Name}\n";
                     insideAny = true;
                     locationValid = true;
                 }
@@ -232,10 +248,10 @@ public class LocationManager : MonoBehaviour
     {
         Debug.Log("Starting On Map");
         //url = "https://maps.googleapis.com/maps/api/staticmap?center=" + currentLat + "," + currentLon + "&zoom=" + zoom + "&size=" + 500 + "x" + 500 + "&scale=" + 600 + "&maptype=";// + mapType + "&key=" + apiKey;
-        url = "https://www.onemap.gov.sg/api/staticmap/getStaticImage?layerchosen=default&zoom=" + zoom + "&height=" + height + "&width=" + width + "&lat=" + currentLat + "&lng=" + currentLon + "&points=%5B" + closest.latitude + "%2C%20" + closest.longitude + "%2C%20%22" + validLocCol.r + "%2C%20" + validLocCol.g + "%2C%20"+ validLocCol.b + "%22%5D";
+        url = "https://www.onemap.gov.sg/api/staticmap/getStaticImage?layerchosen=default&zoom=" + zoom + "&height=" + height + "&width=" + width + "&lat=" + currentLat + "&lng=" + currentLon + "&points=%5B" + closest.Latitude + "%2C%20" + closest.Longitude + "%2C%20%22" + validLocCol.r + "%2C%20" + validLocCol.g + "%2C%20"+ validLocCol.b + "%22%5D";
         
 
-       /* string polygonURL*/  url += "&polygons=" + GenerateCirclePointsASCIIString(closest.latitude, closest.longitude, closest.radiusMeters, pointsInCircle) + "%3A" + validRadCol.r + "%2C" + validRadCol.g + "%2C" + validRadCol.b;
+       /* string polygonURL*/  url += "&polygons=" + GenerateCirclePointsASCIIString(closest.Latitude, closest.Longitude, closest.RadiusMeters, pointsInCircle) + "%3A" + validRadCol.r + "%2C" + validRadCol.g + "%2C" + validRadCol.b;
         Debug.Log("url formed, " + url);
 
         //Debug.Log("Polygon section: " + polygonURL);
