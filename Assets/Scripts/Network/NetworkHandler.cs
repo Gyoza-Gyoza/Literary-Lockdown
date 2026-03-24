@@ -126,7 +126,7 @@ public class NetworkHandler : MonoBehaviour
 
             // The local player was disconnected (e.g. Server shut down, lost connection)
             Debug.Log("You have been disconnected from the server.");
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene("Raid Menu");
         }
         else
         {
@@ -144,14 +144,14 @@ public class NetworkHandler : MonoBehaviour
         {
             NetworkManager.Singleton.Shutdown();
         }
-
+        
         if (FindFirstObjectByType<LobbyDetails>() != null)
         {
             Destroy(FindFirstObjectByType<LobbyDetails>().gameObject);
         }
-
+        
         Destroy(NetworkManager.Singleton.gameObject);
-
+        
         SceneManager.LoadScene("Raid Menu");
     }
 }
