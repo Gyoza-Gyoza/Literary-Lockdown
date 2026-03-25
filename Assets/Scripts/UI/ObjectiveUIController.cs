@@ -9,6 +9,7 @@ public class ObjectiveUIController : MonoBehaviour
     //[SerializeField] public TMP_Dropdown timerDropdown;
     private int pageAmount;
 
+    public TextMeshProUGUI booksEscapedText;
     public TextMeshProUGUI booksCapturedText;
     public TextMeshProUGUI timeText;
 

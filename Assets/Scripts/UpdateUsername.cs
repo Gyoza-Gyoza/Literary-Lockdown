@@ -33,7 +33,7 @@ public class UpdateUsername : MonoBehaviour
             inputField.text = "";
             TMPInputUsername_Placeholder.text = "Saved as " + SaveLoadManager.PlayerData.playerName;
             //text.text = SaveLoadManager.PlayerData.playerName;
-            ChangeUsernameObject.SetActive(false);
+            //ChangeUsernameObject.SetActive(false);
         }
         else
         {
@@ -46,6 +46,14 @@ public class UpdateUsername : MonoBehaviour
         if (ChangeUsernameObject != null)
         {
             ChangeUsernameObject.SetActive(true);
+        }
+    }
+
+    public void CloseChangeUsername()
+    {
+        if (ChangeUsernameObject != null)
+        {
+            ChangeUsernameObject.SetActive(false);
         }
     }
 }

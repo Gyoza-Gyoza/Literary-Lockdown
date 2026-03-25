@@ -10,9 +10,10 @@ public class ObjectivesManager : NetworkBehaviour
     private NetworkVariable<bool> startGame = new NetworkVariable<bool>(false);
     public bool isGameStart() { return startGame.Value;}
     public NetworkVariable<bool> gameEnded = new NetworkVariable<bool>(false);
-    private int pageAmount; 
+    //private int pageAmount; 
 
     public NetworkVariable<int> booksCaptured = new NetworkVariable<int>(0);
+    public NetworkVariable<int> booksEscaped = new NetworkVariable<int>(0);
 
     public NetworkVariable<int> playersInLobby = new NetworkVariable<int>(0);
     public NetworkVariable<int> playersReadyInLobby = new NetworkVariable<int>(0);
@@ -41,6 +42,7 @@ public class ObjectivesManager : NetworkBehaviour
         {
             remainingTime.OnValueChanged += OnRemainingTimeChanged;
             booksCaptured.OnValueChanged += OnBooksCapturedChanged;
+            booksEscaped.OnValueChanged += OnBooksEscapedChanged;
             startGame.OnValueChanged += OnStartGameChanged;
             gameEnded.OnValueChanged += OnGameEndedChanged;
 
@@ -166,12 +168,22 @@ public class ObjectivesManager : NetworkBehaviour
         booksCaptured.Value++;
     }
 
-
+    public void EscapeBooks()
+    {
+        if (!IsServer) return;
+        booksEscaped.Value++;
+    }
 
     private void OnBooksCapturedChanged(int oldValue, int newValue)
     {
         if (ObjectiveUIController.Instance.booksCapturedText != null)
             ObjectiveUIController.Instance.booksCapturedText.text = $"{newValue}";
+    }
+
+    private void OnBooksEscapedChanged(int oldValue, int newValue)
+    {
+        if (ObjectiveUIController.Instance.booksEscapedText != null)
+            ObjectiveUIController.Instance.booksEscapedText.text = $"{newValue}";
     }
 
     private void OnStartGameChanged(bool oldValue, bool newValue)

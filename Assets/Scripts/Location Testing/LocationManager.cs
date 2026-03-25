@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using static Unity.Netcode.NetworkSceneManager;
+using static UnityEngine.GraphicsBuffer;
 
 [System.Serializable]
 public class TargetLocation
@@ -19,30 +20,28 @@ public class TargetLocation
 
 public class LocationManager : MonoBehaviour
 {
-    public RawImage mapImageComp;
-    public TMP_Text locationText;
-
     public List<TargetLocation> targetLocations = new List<TargetLocation>();
-    private TargetLocation closest;
-    public CanvasGroup popUpGroup;
+    public TargetLocation closest { get; private set; }
+    //public TargetLocation closest { get; private set; }
 
-    private double currentLat = 0f;
-    private double currentLon = 0f;
-    public float zoom = 10;
-    private float width = 0f;
-    private float height = 0f;
+
+    public double currentLat { get; private set; } = 0f;
+    public void ForceEditLat(double input) { currentLat += input; }
+    public double currentLon { get; private set; } = 0f;
+    public void ForceEditLon(double input) { currentLon += input; }
+
 
     public float forceLocControl_Speed = 100f;
 
     public static LocationManager Instance;
 
-    public int pointsInCircle = 8;
-    public Color32 validLocCol = new Color32(); 
-    public Color32 validRadCol = new Color32();
-
 
     private bool updatingLoc = false;
+    public bool isUpdatingLoc { get { return updatingLoc; } }
+    
     private bool forceLoc = false;
+    public bool isForceLoc {  get { return forceLoc; } }
+
     private bool locationValid = false;
     public bool isLocationValid {  get { return locationValid; } }
 
@@ -52,24 +51,18 @@ public class LocationManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            //DontDestroyOnLoad(this);
+            DontDestroyOnLoad(this);
         }
         else if (Instance != this)
         {
-            //Destroy(this.gameObject);
+            Destroy(this.gameObject);
         }
     }
     private void Start()
     {
-        width = (int)Mathf.Round(mapImageComp.rectTransform.rect.width);
-        if (width > 512) {width = 512;}
-        height = (int)Mathf.Round(mapImageComp.rectTransform.rect.height);
-        if (height > 512) { height = 512; }
 
         // Start updating location
         StartCoroutine(StartTimeOut());
-
-        //CloseLocPopUp();
     }
 
     private void FixedUpdate()
@@ -81,27 +74,11 @@ public class LocationManager : MonoBehaviour
             currentLon += Time.fixedDeltaTime * Joystick.current.stick.x.value * forceLocControl_Speed;
             currentLat += Time.fixedDeltaTime * Joystick.current.stick.y.value * forceLocControl_Speed;
 
-            if (!mapIsLoading)
-            {
-                StartCoroutine(GetOneMap());
-            }
             //Debug.Log("Current stick value: " + Joystick.current.stick.x.value + ", " + Joystick.current.stick.y.value);
             //Debug.Log("Lon calc: " + (Time.fixedDeltaTime * Joystick.current.stick.x.value * forceLocControl_Speed));
             //Debug.Log("Lat calc: " + (Time.fixedDeltaTime * Joystick.current.stick.y.value * forceLocControl_Speed));
         }
 
-    }
-
-
-    public void OpenLocPopUp()
-    {
-        popUpGroup.alpha = 1.0f;
-    }
-
-
-    public void CloseLocPopUp()
-    {
-        popUpGroup.alpha = 0f;
     }
 
     public void ToggleForceLoc()
@@ -130,8 +107,7 @@ public class LocationManager : MonoBehaviour
     {
         // Check if location service is enabled
         if (!Input.location.isEnabledByUser)
-        {
-            locationText.text = "Location not enabled";
+        { 
             yield break;
         }
 
@@ -141,20 +117,20 @@ public class LocationManager : MonoBehaviour
         int maxWait = 10;
         while (Input.location.status == LocationServiceStatus.Initializing && maxWait > 0)
         {
-            locationText.text = "Initializing...";
+            //nearestLocText.text = "Initializing...";
             yield return new WaitForSeconds(1);
             maxWait--;
         }
 
         if (maxWait <= 0)
         {
-            locationText.text = "Location timeout";
+            //nearestLocText.text = "Location timeout";
             yield break;
         }
 
         if (Input.location.status == LocationServiceStatus.Failed)
         {
-            locationText.text = "Location failed";
+            //nearestLocText.text = "Location failed";
             yield break;
         }
 
@@ -165,7 +141,6 @@ public class LocationManager : MonoBehaviour
     IEnumerator UpdateLocation()
     {
         updatingLoc = true;
-        StartCoroutine(GetOneMap());
         while (updatingLoc)
         {
 
@@ -175,7 +150,7 @@ public class LocationManager : MonoBehaviour
                 currentLon = Input.location.lastData.longitude;
             }
 
-            string result = "";//$"Lat: {currentLat}\nLon: {currentLon}\n";
+            //string result = "";//$"Lat: {currentLat}\nLon: {currentLon}\n";
 
             bool insideAny = false;
 
@@ -198,76 +173,33 @@ public class LocationManager : MonoBehaviour
 
                 if (distance <= target.radiusMeters)
                 {
-                    result += $"Inside: {target.name}\n";
+
+                    //Change sprite
                     insideAny = true;
                     locationValid = true;
+                    closest = target;
                 }
 
             }
 
             if (!insideAny)
             {
-                result += "Not in any target area";
+                //Change sprite
                 locationValid = false;
             }
 
-            locationText.text = result;
-
-            if (!mapIsLoading)
-            {
-                StartCoroutine(GetOneMap());
-            }
+            //nearestLocText.text = result;
 
             yield return new WaitForSeconds(1f);
         }
+
+
+
         updatingLoc = false;
         yield break;
     }
-
-    private string url = "";
-    private bool mapIsLoading = false;
     private bool updateMap = false;
 
-    IEnumerator GetOneMap()
-    {
-        Debug.Log("Starting On Map");
-        //url = "https://maps.googleapis.com/maps/api/staticmap?center=" + currentLat + "," + currentLon + "&zoom=" + zoom + "&size=" + 500 + "x" + 500 + "&scale=" + 600 + "&maptype=";// + mapType + "&key=" + apiKey;
-        url = "https://www.onemap.gov.sg/api/staticmap/getStaticImage?layerchosen=default&zoom=" + zoom + "&height=" + height + "&width=" + width + "&lat=" + currentLat + "&lng=" + currentLon + "&points=%5B" + closest.latitude + "%2C%20" + closest.longitude + "%2C%20%22" + validLocCol.r + "%2C%20" + validLocCol.g + "%2C%20"+ validLocCol.b + "%22%5D";
-        
-
-       /* string polygonURL*/  url += "&polygons=" + GenerateCirclePointsASCIIString(closest.latitude, closest.longitude, closest.radiusMeters, pointsInCircle) + "%3A" + validRadCol.r + "%2C" + validRadCol.g + "%2C" + validRadCol.b;
-        Debug.Log("url formed, " + url);
-
-        //Debug.Log("Polygon section: " + polygonURL);
-
-        mapIsLoading = true;
-        UnityWebRequest www = UnityWebRequestTexture.GetTexture(url);
-
-        Debug.Log("Startied Yield");
-
-        yield return www.SendWebRequest();
-
-        Debug.Log("yield failed");
-
-        if (www.result != UnityWebRequest.Result.Success)
-        {
-            Debug.Log("WWW ERROR: " + www.error);
-        }
-        else
-        {
-            Debug.Log("result not success");
-            mapIsLoading = false;
-            mapImageComp.texture = ((DownloadHandlerTexture)www.downloadHandler).texture;
-
-            //apiKeyLast = apiKey;
-            //latLast = lat;
-            //lonLast = lon;
-            //zoomLast = zoom;
-            //mapResolutionLast = mapResolution;
-            //mapTypeLast = mapType;
-            updateMap = true;
-        }
-    }
     //########## Utils #######################
 
     // Haversine formula to calculate distance between two GPS points
@@ -286,104 +218,5 @@ public class LocationManager : MonoBehaviour
         float c = 2 * Mathf.Atan2(Mathf.Sqrt(a), Mathf.Sqrt(1 - a));
 
         return R * c;
-    }
-
-    public static double[,] GenerateCirclePoints(double centerLat, double centerLon, double radiusMeters, int numPoints)
-    {
-        double[,] points = new double[numPoints, 2];
-
-        // Convert to radians
-        double lat1 = DegreesToRadians(centerLat);
-        double lon1 = DegreesToRadians(centerLon);
-        double angularDistance = radiusMeters / 6371000f;
-
-        for (int i = 0; i < numPoints; i++)
-        {
-            double tetha = 2.0 * Mathf.PI * i / numPoints; // evenly spaced
-
-            double sinlat1 = Mathf.Sin((float)lat1);
-            double coslat1 = Mathf.Cos((float)lat1);
-            double sinAd = Mathf.Sin((float)angularDistance);
-            double cosAd = Mathf.Cos((float)angularDistance);
-
-            double lat2 = Mathf.Asin((float)(
-                sinlat1 * cosAd +
-                coslat1 * sinAd * Mathf.Cos((float)tetha))
-            );
-
-            double lon2 = lon1 + Mathf.Atan2(
-                (float)(Mathf.Sin((float)tetha) * sinAd * coslat1),
-                (float)(cosAd - sinlat1 * Mathf.Sin((float)lat2))
-            );
-
-            // Convert back to degrees
-            points[i, 0] = RadiansToDegrees(lat2); // latitude
-            points[i, 1] = RadiansToDegrees(lon2); // longitude
-        }
-
-        return points;
-    }
-
-    public static string GenerateCirclePointsASCIIString(double centerLat, double centerLon, double radiusMeters, int numPoints)
-    {
-        string toReturn = "%5B";
-
-        double[,] points = new double[numPoints, 2];
-
-        // Convert to radians
-        double lat1 = DegreesToRadians(centerLat);
-        double lon1 = DegreesToRadians(centerLon);
-        double angularDistance = radiusMeters / 6371000f;
-
-        string first = "";
-
-        for (int i = 0; i < numPoints; i++)
-        {
-            if (i != 0)
-            {
-                toReturn += "%2C";
-            }
-            double tetha = 2.0 * Mathf.PI * i / numPoints; // evenly spaced
-
-            double sinlat1 = Mathf.Sin((float)lat1);
-            double coslat1 = Mathf.Cos((float)lat1);
-            double sinAd = Mathf.Sin((float)angularDistance);
-            double cosAd = Mathf.Cos((float)angularDistance);
-
-            double lat2 = Mathf.Asin((float)(
-                sinlat1 * cosAd +
-                coslat1 * sinAd * Mathf.Cos((float)tetha))
-            );
-
-            double lon2 = lon1 + Mathf.Atan2(
-                (float)(Mathf.Sin((float)tetha) * sinAd * coslat1),
-                (float)(cosAd - sinlat1 * Mathf.Sin((float)lat2))
-            );
-
-            // Convert back to degrees
-            points[i, 0] = RadiansToDegrees(lat2); // latitude
-            points[i, 1] = RadiansToDegrees(lon2); // longitude
-
-            if(i == 0)
-            {
-                first = "%5B" + RadiansToDegrees(lat2) + "%2C" + RadiansToDegrees(lon2) + "%5D";
-            }
-
-            toReturn += "%5B" + RadiansToDegrees(lat2) + "%2C" + RadiansToDegrees(lon2) + "%5D";
-        }
-        toReturn += "%2C";
-        toReturn += first;
-        toReturn += "%5D";
-        return toReturn;
-    }
-
-    static double DegreesToRadians(double deg)
-    {
-        return deg * Mathf.PI / 180.0;
-    }
-
-    static double RadiansToDegrees(double rad)
-    {
-        return rad * 180.0 / Mathf.PI;
     }
 }
