@@ -8,31 +8,6 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using static Unity.Netcode.NetworkSceneManager;
 
-[System.Serializable]
-public class TargetLocationData
-{
-    private string name;
-    private float latitude;
-    private float longitude;
-    private float radiusMeters;
-
-    public string Name => name;
-
-    public float Latitude => latitude;
-
-    public float Longitude => longitude;
-
-    public float RadiusMeters => radiusMeters;
-
-    public TargetLocationData(string name, float latitude, float longitude, float radiusMeters)
-    {
-        this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.radiusMeters = radiusMeters;
-    }
-}
-
 public class LocationManager : MonoBehaviour
 {
     public RawImage mapImageComp;
@@ -62,17 +37,37 @@ public class LocationManager : MonoBehaviour
     private bool locationValid = false;
     public bool isLocationValid {  get { return locationValid; } }
 
+    public Vector2 Location
+    {
+        get { return new Vector2((float)currentLat, (float)currentLon); }
+    }
+
+    public string LibraryBranch
+    {
+        get
+        {
+            foreach (var data in Database.Instance.database["LocationData"])
+            {
+                TargetLocationData locationData = (TargetLocationData)data.Value;
+                if (Vector2.Distance(Location, locationData.Location) <= locationData.RadiusMeters)
+                {
+                    return locationData.Name;
+                }
+            }
+            return "Invalid Branch";
+        }
+    }
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            //DontDestroyOnLoad(this);
+            // DontDestroyOnLoad(this);
         }
         else if (Instance != this)
         {
-            //Destroy(this.gameObject);
+            // Destroy(this.gameObject);
         }
     }
     private void Start()
