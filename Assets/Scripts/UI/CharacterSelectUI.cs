@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System.Collections;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,6 +20,14 @@ public class CharacterSelectUI : MonoBehaviour
     public float rate = 1f;
 
     private bool opened = true;
+
+    public TMP_Text leftTabText;
+    public TMP_Text towersSpawnedCount;
+    public TMP_Text maxTowerCount;
+    public Image rightTabImage;
+    public Sprite maxTowerTabSprite;
+    public Sprite notMaxTowerTabSprite;
+
 
     public Sprite rapuUnspawned;
     public Sprite rapuSpawned;
@@ -40,7 +49,8 @@ public class CharacterSelectUI : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        //closeUI.SetActive(false);
+
+        maxTowerCount.text = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerClientController>().maxTowers.ToString();
     }
 
     public void Update()
@@ -51,39 +61,37 @@ public class CharacterSelectUI : MonoBehaviour
         }
     }
 
-    public void ToggleButton(int towerIndex, bool spawned)
+    public void SpawningAvailable()
     {
-        switch (towerIndex)
-        {
-            case 0:
-                if (spawned)
-                {
-                    rapButton.sprite = rapuSpawned;
-                }
-                else
-                {
-                    rapButton.sprite = rapuUnspawned;
-                }
-                    break;
-            case 1:
-                if (spawned)
-                {
-                    wolfButton.sprite = wolfSpawned;
-                }
-                else
-                {
-                    wolfButton.sprite = wolfUnspawned;
-                }
-                break;
-            default:
-                break;
-        }
+        rapButton.sprite = rapuUnspawned;
+        rapButton.enabled = true;
+        wolfButton.sprite = wolfUnspawned;
+        wolfButton.enabled = true;
+
+        leftTabText.text = "Place Companion";
+    }
+
+    public void SpawningUnavailable()
+    {
+        rapButton.sprite = rapuSpawned;
+        rapButton.enabled = false;
+        wolfButton.sprite = wolfSpawned;
+        wolfButton.enabled = false;
+
+        leftTabText.text = "Max Companion Placed";
     }
 
     public void TrySpawnTower(int towerIndex)
     {
         if (NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerClientController>().TrySpawnTower(towerIndex))
         {
+            towersSpawnedCount.text = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerClientController>().currentTowers.Value.ToString();
+
+            if (NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerClientController>().currentTowers.Value >= NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerClientController>().maxTowers)
+            {
+                SpawningUnavailable();
+            }
+
             //ToggleUI();
             //ToggleButton(towerIndex, true);
         }

@@ -115,9 +115,11 @@ public class GameplayReadyUI : NetworkBehaviour
                 {
                     case true:
                         playerReadyStat.sprite = ready;
+                        playerReadyStat.SetNativeSize();
                         break;
                     case false:
                         playerReadyStat.sprite = notReady;
+                        playerReadyStat.SetNativeSize();
                         break;
                 }
             }

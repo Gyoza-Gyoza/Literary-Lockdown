@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2530206148
+  GlobalObjectIdHash: 1617385922
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -72,5 +72,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameplayReadyUI
   ShowTopMostFoldoutHeaderGroup: 1
   playerList_GO: {fileID: 0}
-  ready: {fileID: 21300000, guid: 4cf17bbecd981944f995a98eaf2877cc, type: 3}
-  notReady: {fileID: 21300000, guid: 652962e45e12fdb4aaccffb7199e377d, type: 3}
+  ready: {fileID: 21300000, guid: a3d34eb45129c1e4faef76cb561027c4, type: 3}
+  notReady: {fileID: 21300000, guid: fa2f6c1ba22c45543b679177a8ac3e7e, type: 3}
