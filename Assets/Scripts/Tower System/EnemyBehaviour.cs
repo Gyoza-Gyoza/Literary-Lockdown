@@ -1,9 +1,19 @@
 using UnityEngine;
 using Unity.Netcode;
+using System.Collections;
+using System;
 
 public class EnemyBehaviour : NetworkBehaviour
 {
     [SerializeField] private float movementSpeed = 1.0f;
+    [SerializeField] private float jiggleTime = 1.0f;
+    [SerializeField] private float jiggleAmount = .3f;
+    [SerializeField] private float jiggleFreq = 30f;
+
+    private bool jiggling = false;
+    private float jiggleCount = 0f;
+
+    public SpriteRenderer renderer;
     public NetworkVariable<int> health = new NetworkVariable<int> (5);
     private NetworkVariable<int> currentWaypointIndex = new NetworkVariable<int>(0);
     private Vector2 targetPosition
@@ -32,12 +42,24 @@ public class EnemyBehaviour : NetworkBehaviour
     {
         health.Value -= damage;
 
-        //Take damage polish
+        StartCoroutine(Flicker());
 
+        //Take damage polish
         if (health.Value <= 0)
         {
+            jiggling = false;
             DestroyEnemyRpc();
         }
+
+        if (!jiggling)
+        {
+            StartCoroutine(Jiggle());
+        }
+        else
+        {
+            jiggleCount = 0f;
+        }
+
     }
 
     [Rpc(SendTo.Server)]
@@ -69,5 +91,45 @@ public class EnemyBehaviour : NetworkBehaviour
         }
         //ObjectivesManager.Instance.CaptureBooks();
         if (!ObjectivesManager.Instance.gameEnded.Value) ObjectivesManager.Instance.EscapeBooks();
+    }
+
+
+    IEnumerator Flicker()
+    {
+
+        renderer.color = new Color(255, 0, 98);
+
+        yield return new WaitForSeconds(.1f);
+
+        renderer.color = new Color(255,255,255);
+
+        yield break;
+    }
+
+    IEnumerator Jiggle()
+    {
+        jiggling = true;
+
+        while (jiggling)
+        {
+            jiggleCount += Time.deltaTime;
+
+            if (jiggleCount >= jiggleTime)
+            {
+                jiggling = false;
+            }
+
+            float amt = Mathf.Lerp(jiggleAmount, 0, jiggleCount / jiggleTime) * Mathf.Sin(jiggleCount * jiggleFreq);
+
+            renderer.transform.localScale = new Vector3(1 + amt, 1 - amt, 1);
+
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+
+        renderer.transform.localScale = new Vector3(1, 1, 1);
+        jiggling = false;
+        jiggleCount = 0;
+
+        yield break;
     }
 }
