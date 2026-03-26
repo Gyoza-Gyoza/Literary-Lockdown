@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unity.Mathematics;
 
 [System.Serializable]
 public class TargetLocationData
@@ -14,9 +15,9 @@ public class TargetLocationData
 
     public float Longitude => longitude;
 
-    public Vector2 Location
+    public double2 Location
     {
-        get { return new Vector2(latitude, longitude); }
+        get { return new double2(latitude, longitude); }
     }
 
     public float RadiusMeters => radiusMeters;

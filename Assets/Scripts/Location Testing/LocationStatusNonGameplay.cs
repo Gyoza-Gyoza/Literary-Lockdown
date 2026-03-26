@@ -25,33 +25,36 @@ public class LocationStatusNonGameplay : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(LocationManager.Instance.isUpdatingLoc)
+        if (DebugMode.Instance.debugMode)
         {
-            if (LocationManager.Instance.isLocationValid)
+            if (LocationManager.Instance.isUpdatingLoc)
             {
-                //nearestHeaderText.text = "Currently In:";
-                //nearestLocText.text = $"{LocationManager.Instance.closest.name}";
-                locText.text = $"{LocationManager.Instance.closest.name}";
-                validMarker.sprite = validSprite;
+                if (LocationManager.Instance.isLocationValid)
+                {
+                    //nearestHeaderText.text = "Currently In:";
+                    //nearestLocText.text = $"{LocationManager.Instance.closest.name}";
+                    locText.text = $"{LocationManager.Instance.closest.Name}";
+                    validMarker.sprite = validSprite;
+                }
+                else
+                {
+                    //nearestHeaderText.text = "Nearest Location Is:";
+                    //nearestLocText.text = $"{LocationManager.Instance.closest.name}";
+                    locText.text = $"Please Proceed to {LocationManager.Instance.closest.Name}";
+                    validMarker.sprite = invalidSprite;
+                }
             }
-            else
+
+            // Check if location service is enabled
+            else if (!Input.location.isEnabledByUser)
             {
-                //nearestHeaderText.text = "Nearest Location Is:";
-                //nearestLocText.text = $"{LocationManager.Instance.closest.name}";
-                locText.text = $"Please Proceed to {LocationManager.Instance.closest.name}";
+                //nearestHeaderText.text = "Error";
+                //nearestLocText.text = "Location not enabled";
+                locText.text = "Location not enabled";
                 validMarker.sprite = invalidSprite;
+
+                return;
             }
-        }
-
-        // Check if location service is enabled
-        else if (!Input.location.isEnabledByUser)
-        {
-            //nearestHeaderText.text = "Error";
-            //nearestLocText.text = "Location not enabled";
-            locText.text = "Location not enabled";
-            validMarker.sprite = invalidSprite;
-
-           return;
         }
     }
 

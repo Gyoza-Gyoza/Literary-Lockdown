@@ -4,28 +4,22 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Networking;
-using UnityEngine.UI;
-using static Unity.Netcode.NetworkSceneManager;
-using static UnityEngine.GraphicsBuffer;
+using Unity.Mathematics;
 
 public class LocationManager : MonoBehaviour
 {
-    List<TargetLocation> targetLocations = new List<TargetLocation>();
-    public TargetLocation closest { get; private set; }
+    List<TargetLocationData> targetLocations = new List<TargetLocationData>();
+    public TargetLocationData closest { get; private set; }
     //public TargetLocation closest { get; private set; }
-
 
     public double currentLat { get; private set; } = 0f;
     public void ForceEditLat(double input) { currentLat += input; }
     public double currentLon { get; private set; } = 0f;
     public void ForceEditLon(double input) { currentLon += input; }
 
-
     public float forceLocControl_Speed = 100f;
 
     public static LocationManager Instance;
-
 
     private bool updatingLoc = false;
     public bool isUpdatingLoc { get { return updatingLoc; } }
@@ -36,11 +30,23 @@ public class LocationManager : MonoBehaviour
     private bool locationValid = false;
     public bool isLocationValid {  get { return locationValid; } }
 
-    public Vector2 Location
+    public double2 Location
     {
-        get { return new Vector2((float)currentLat, (float)currentLon); }
+        get { return new double2(currentLat, currentLon); }
     }
 
+    private int locationIndex;
+
+    private int LocationIndex
+    {
+        get { return locationIndex; }
+        set
+        {
+            locationIndex = value;
+            if (locationIndex >= Database.Instance.database["LocationData"].Count) locationIndex = 0; 
+            else if (locationIndex < 0) locationIndex = Database.Instance.database["LocationData"].Count - 1;
+        }
+    }
     public string LibraryBranch
     {
         get
@@ -48,7 +54,7 @@ public class LocationManager : MonoBehaviour
             foreach (var data in Database.Instance.database["LocationData"])
             {
                 TargetLocationData locationData = (TargetLocationData)data.Value;
-                if (Vector2.Distance(Location, locationData.Location) <= locationData.RadiusMeters)
+                if (math.distance(Location, locationData.Location) <= locationData.RadiusMeters)
                 {
                     return locationData.Name;
                 }
@@ -109,6 +115,8 @@ public class LocationManager : MonoBehaviour
         }
     }
 
+    public void NextLocation() => LocationIndex++; 
+    public void PreviousLocation() => LocationIndex--;
     public void StartLocationTracking()
     {
         StartCoroutine(StartTimeOut());
