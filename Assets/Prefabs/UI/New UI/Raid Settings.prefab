@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3810a5970660d0949961eed24bb3f1cf, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4d13982aff73dff4dbddc6e1ebddb38c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -335,7 +335,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: a01e3eba01bb4bc42928a37b7a9ce8fb, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 96cc085410c6aba46b47e5aa3c637a54, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -467,7 +467,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: fce907aa20bd0bc488304232461991bc, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 094ef8f64054f4a219fc02462d4a0a02, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -599,7 +599,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e173242662d92e64ea0db169bcf02fda, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 39e6074a6b06842be95a47c1602eea1c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1237,5 +1237,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8966f5d5b7463b4da5cea5ef6c6b8cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RaidSettings
+  lobbyDetailsGO: {fileID: 0}
   diffcultyTxt: {fileID: 8595354546810341460}
+  decreaseDiff_Button: {fileID: 1541291277709478672}
+  increaseDiff_Button: {fileID: 7064765891196744422}
+  decreaseDiffActive_Sprite: {fileID: 21300000, guid: 148075a60cbdc4fc2aa3d5eda1ff7525, type: 3}
+  decreaseDiffInactive_Sprite: {fileID: 21300000, guid: 39e6074a6b06842be95a47c1602eea1c, type: 3}
+  increaseDiffActive_Sprite: {fileID: 21300000, guid: 094ef8f64054f4a219fc02462d4a0a02, type: 3}
+  increaseDiffInactive_Sprite: {fileID: 21300000, guid: 20bfa00d84ca44c27ab0bdc140076f53, type: 3}
   timerTxt: {fileID: 4521859725704190718}
+  increaseTime_Button: {fileID: 9065665530964396492}
+  decreaseTime_Button: {fileID: 3612506790621698379}
+  decreaseTimeActive_Sprite: {fileID: 21300000, guid: 5d35c1eb8dabff04483bbe6b9c34132f, type: 3}
+  decreaseTimeInactive_Sprite: {fileID: 21300000, guid: 4d13982aff73dff4dbddc6e1ebddb38c, type: 3}
+  increaseTimeActive_Sprite: {fileID: 21300000, guid: 96cc085410c6aba46b47e5aa3c637a54, type: 3}
+  increaseTimeInactive_Sprite: {fileID: 21300000, guid: 419543be91aac0c4a8e516892f85eb45, type: 3}
