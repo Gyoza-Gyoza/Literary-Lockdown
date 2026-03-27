@@ -17,18 +17,26 @@ public class LobbyButtons : MonoBehaviour
 
     private void Update()
     {
+        if (DebugMode.Instance.debugMode)
+        {
+            SetButtonsActive(true);
+            return;
+        }
         if (LocationManager.Instance == null || !LocationManager.Instance.isLocationValid)
         {
-            hostButton.sprite = hostUnavailSprite;
-            joinButton.sprite = joinUnavailSprite;
-            locked = true;
+            SetButtonsActive(false);
         }
         else
         {
-            hostButton.sprite = hostAvailSprite;
-            joinButton.sprite = joinAvailSprite;
-            locked = false;
+            SetButtonsActive(true);
         }
+    }
+
+    private void SetButtonsActive(bool active)
+    {
+        hostButton.sprite = active ? hostAvailSprite : hostUnavailSprite;
+        joinButton.sprite = active ? joinAvailSprite : joinUnavailSprite;
+        locked = !active;
     }
 
     public async void HostLobby()

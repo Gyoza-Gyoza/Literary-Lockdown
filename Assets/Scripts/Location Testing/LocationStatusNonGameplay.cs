@@ -25,7 +25,7 @@ public class LocationStatusNonGameplay : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (DebugMode.Instance.debugMode)
+        if (!DebugMode.Instance.debugMode)
         {
             if (LocationManager.Instance.isUpdatingLoc)
             {
@@ -33,14 +33,14 @@ public class LocationStatusNonGameplay : MonoBehaviour
                 {
                     //nearestHeaderText.text = "Currently In:";
                     //nearestLocText.text = $"{LocationManager.Instance.closest.name}";
-                    locText.text = $"{LocationManager.Instance.closest.Name}";
+                    locText.text = $"{LocationManager.Instance.Closest.Name}";
                     validMarker.sprite = validSprite;
                 }
                 else
                 {
                     //nearestHeaderText.text = "Nearest Location Is:";
                     //nearestLocText.text = $"{LocationManager.Instance.closest.name}";
-                    locText.text = $"Please Proceed to {LocationManager.Instance.closest.Name}";
+                    locText.text = $"Please Proceed to {LocationManager.Instance.Closest.Name}";
                     validMarker.sprite = invalidSprite;
                 }
             }
@@ -55,6 +55,11 @@ public class LocationStatusNonGameplay : MonoBehaviour
 
                 return;
             }
+        }
+        else
+        {
+            locText.text = $"{LocationManager.Instance.Closest.Name}";
+            validMarker.sprite = validSprite;
         }
     }
 

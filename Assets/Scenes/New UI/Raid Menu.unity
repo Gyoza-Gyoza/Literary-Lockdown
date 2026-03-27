@@ -1599,6 +1599,7 @@ GameObject:
   - component: {fileID: 1762775771}
   - component: {fileID: 1762775770}
   - component: {fileID: 1762775774}
+  - component: {fileID: 1762775775}
   m_Layer: 5
   m_Name: Debug Mode
   m_TagString: Untagged
@@ -1701,6 +1702,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad11f8cc892b425cb817fc8953a0b7db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DebugMode
+--- !u!225 &1762775775
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1762775769}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &1769123687
 GameObject:
   m_ObjectHideFlags: 0
@@ -1735,8 +1748,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 145, y: -159}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 300, y: -225.6}
+  m_SizeDelta: {x: 500, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1769123689
 MonoBehaviour:
@@ -1758,7 +1771,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Debug Mode : On \nPress CTRL + Q to toggle"
+  m_text: "Debug Mode : On \nPress CTRL + Q to toggle\nLocation Navigation \nO/P
+    Previous/Next"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

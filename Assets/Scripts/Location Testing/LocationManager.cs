@@ -9,7 +9,19 @@ using Unity.Mathematics;
 public class LocationManager : MonoBehaviour
 {
     List<TargetLocationData> targetLocations = new List<TargetLocationData>();
-    public TargetLocationData closest { get; private set; }
+    private TargetLocationData closest;
+
+    public TargetLocationData Closest
+    {
+        get
+        {
+            if (DebugMode.Instance.debugMode)
+            {
+                return DebugMode.Instance.CurrentLocationData;
+            }
+            else return closest;
+        }
+    }
     //public TargetLocation closest { get; private set; }
 
     public double currentLat { get; private set; } = 0f;
@@ -28,26 +40,29 @@ public class LocationManager : MonoBehaviour
     public bool isForceLoc {  get { return forceLoc; } }
 
     private bool locationValid = false;
-    public bool isLocationValid {  get { return locationValid; } }
+
+    public bool isLocationValid
+    {
+        get
+        {
+            if (DebugMode.Instance.debugMode) return true;
+            foreach (var data in Database.Instance.database["LocationData"])
+            {
+                TargetLocationData locationData = (TargetLocationData)data.Value;
+                if (math.distance(Location, locationData.Location) <= locationData.RadiusMeters)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
 
     public double2 Location
     {
         get { return new double2(currentLat, currentLon); }
     }
-
-    private int locationIndex;
-
-    private int LocationIndex
-    {
-        get { return locationIndex; }
-        set
-        {
-            locationIndex = value;
-            if (locationIndex >= Database.Instance.database["LocationData"].Count) locationIndex = 0; 
-            else if (locationIndex < 0) locationIndex = Database.Instance.database["LocationData"].Count - 1;
-        }
-    }
-    public string LibraryBranch
+    public TargetLocationData ClosestLibraryBranch
     {
         get
         {
@@ -56,10 +71,10 @@ public class LocationManager : MonoBehaviour
                 TargetLocationData locationData = (TargetLocationData)data.Value;
                 if (math.distance(Location, locationData.Location) <= locationData.RadiusMeters)
                 {
-                    return locationData.Name;
+                    return locationData;
                 }
             }
-            return "Invalid Branch";
+            return null;
         }
     }
 
@@ -95,7 +110,12 @@ public class LocationManager : MonoBehaviour
             //Debug.Log("Lon calc: " + (Time.fixedDeltaTime * Joystick.current.stick.x.value * forceLocControl_Speed));
             //Debug.Log("Lat calc: " + (Time.fixedDeltaTime * Joystick.current.stick.y.value * forceLocControl_Speed));
         }
+    }
 
+    public void SetLocation(double2 location)
+    {
+        currentLat = location.x;
+        currentLon = location.y;
     }
 
     public void ToggleForceLoc()
@@ -114,9 +134,6 @@ public class LocationManager : MonoBehaviour
             updatingLoc = false;
         }
     }
-
-    public void NextLocation() => LocationIndex++; 
-    public void PreviousLocation() => LocationIndex--;
     public void StartLocationTracking()
     {
         StartCoroutine(StartTimeOut());
@@ -209,9 +226,6 @@ public class LocationManager : MonoBehaviour
 
             yield return new WaitForSeconds(1f);
         }
-
-
-
         updatingLoc = false;
         yield break;
     }
