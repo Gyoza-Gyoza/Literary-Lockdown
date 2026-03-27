@@ -67,7 +67,7 @@ public class LocationManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (forceLoc)
+        if (forceLoc && Joystick.current != null)
         {
             //Check input and adjust location based on input
 

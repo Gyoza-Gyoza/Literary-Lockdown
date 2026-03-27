@@ -6,13 +6,31 @@ using UnityEngine;
 
 public class PopUpManager: MonoBehaviour
 {
-    private bool displaying = false;
+    public bool displaying = false;
+
+
     private bool cooling = false;
     private float count = 0;
     private float maxDisplayTime = 120f;
     private float maxCoolingTime = 20f;
 
     private List<PopUpWindow> popUpWindows = new List<PopUpWindow>();
+
+
+    public static PopUpManager Instance;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(this);
+        }
+        else if (Instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+    }
 
     private void Start()
     {
@@ -27,15 +45,16 @@ public class PopUpManager: MonoBehaviour
         //{
 
         //}
-        //else if (cooling) 
-        //{
-
-        //}
+        //else
+        if (!displaying && !cooling) 
+        {
+            StartCooling();
+        }
     }
 
     public void StartCooling()
     {
-
+        StartCoroutine(Cooling());
     }
 
 
@@ -44,14 +63,18 @@ public class PopUpManager: MonoBehaviour
 
         cooling = true;
 
-        count += Time.deltaTime;
 
         while (count <= maxCoolingTime) 
         {
-
+            count += Time.deltaTime;
+            yield return new WaitForSeconds(Time.deltaTime);
         }
+
+        popUpWindows[Random.Range(0, popUpWindows.Count)].OpenPopUp();
+        //displaying = true;
 
         yield break;
     }
+
 
 }

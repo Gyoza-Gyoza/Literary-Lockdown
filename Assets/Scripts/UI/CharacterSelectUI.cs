@@ -34,8 +34,8 @@ public class CharacterSelectUI : MonoBehaviour
     public Sprite wolfUnspawned;
     public Sprite wolfSpawned;
 
-    public Image rapButton;
-    public Image wolfButton;
+    public Button rapButton;
+    public Button wolfButton;
 
     public void Awake()
     {
@@ -63,20 +63,24 @@ public class CharacterSelectUI : MonoBehaviour
 
     public void SpawningAvailable()
     {
-        rapButton.sprite = rapuUnspawned;
-        rapButton.enabled = true;
-        wolfButton.sprite = wolfUnspawned;
-        wolfButton.enabled = true;
+        rapButton.image.sprite = rapuUnspawned;
+        rapButton.interactable = true;
+        wolfButton.image.sprite = wolfUnspawned;
+        wolfButton.interactable = true;
+
+        rightTabImage.sprite = notMaxTowerTabSprite;
 
         leftTabText.text = "Place Companion";
     }
 
     public void SpawningUnavailable()
     {
-        rapButton.sprite = rapuSpawned;
-        rapButton.enabled = false;
-        wolfButton.sprite = wolfSpawned;
-        wolfButton.enabled = false;
+        rapButton.image.sprite = rapuSpawned;
+        rapButton.interactable = false;
+        wolfButton.image.sprite = wolfSpawned;
+        wolfButton.interactable = false;
+
+        rightTabImage.sprite = maxTowerTabSprite;
 
         leftTabText.text = "Max Companion Placed";
     }

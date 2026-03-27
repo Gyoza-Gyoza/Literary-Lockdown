@@ -127,6 +127,10 @@ public class GameplayReadyUI : NetworkBehaviour
             {
                 // Iteration is longer than the list, these are empty UI slots
                 // TODO: Hide objects???
+
+                // Eze did this
+                child.gameObject.SetActive(false);
+
                 playerReadyStat.sprite = null;
             }
         }
