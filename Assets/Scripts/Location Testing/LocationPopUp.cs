@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using Unity.Mathematics;
 using UnityEngine.InputSystem;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -91,14 +92,14 @@ public class LocationPopUp : MonoBehaviour
             if (LocationManager.Instance.isLocationValid)
             {
                 nearestHeaderText.text = "Currently In:";
-                nearestLocText.text = $"{LocationManager.Instance.closest.name}";
+                nearestLocText.text = $"{LocationManager.Instance.Closest.Name}";
                 //locText.text = $"{LocationManager.Instance.closest.name}";
                 //validMarker.sprite = validSprite;
             }
             else
             {
                 nearestHeaderText.text = "Nearest Location Is:";
-                nearestLocText.text = $"{LocationManager.Instance.closest.name}";
+                nearestLocText.text = $"{LocationManager.Instance.Closest.Name}";
                 //locText.text = $"Please Proceed to {closest.name}";
                 //validMarker.sprite = invalidSprite;
             }
@@ -129,11 +130,11 @@ public class LocationPopUp : MonoBehaviour
     IEnumerator GetOneMap()
     {
         Debug.Log("Starting On Map");
-        TargetLocation closest = LocationManager.Instance.closest;
-        url = "https://www.onemap.gov.sg/api/staticmap/getStaticImage?layerchosen=default&zoom=" + zoom + "&height=" + height + "&width=" + width + "&lat=" + LocationManager.Instance.currentLat + "&lng=" + LocationManager.Instance.currentLon + "&points=%5B" + closest.latitude + "%2C%20" + closest.longitude + "%2C%20%22" + validLocCol.r + "%2C%20" + validLocCol.g + "%2C%20"+ validLocCol.b + "%22%5D";
+        TargetLocationData closest = LocationManager.Instance.Closest;
+        url = "https://www.onemap.gov.sg/api/staticmap/getStaticImage?layerchosen=default&zoom=" + zoom + "&height=" + height + "&width=" + width + "&lat=" + LocationManager.Instance.currentLat + "&lng=" + LocationManager.Instance.currentLon + "&points=%5B" + closest.Latitude + "%2C%20" + closest.Longitude + "%2C%20%22" + validLocCol.r + "%2C%20" + validLocCol.g + "%2C%20"+ validLocCol.b + "%22%5D";
 
 
-       /* string polygonURL*/  url += "&polygons=" + GenerateCirclePointsASCIIString(closest.latitude, closest.longitude, closest.radiusMeters, pointsInCircle) + "%3A" + validRadCol.r + "%2C" + validRadCol.g + "%2C" + validRadCol.b;
+       /* string polygonURL*/  url += "&polygons=" + GenerateCirclePointsASCIIString(closest.Latitude, closest.Longitude, closest.RadiusMeters, pointsInCircle) + "%3A" + validRadCol.r + "%2C" + validRadCol.g + "%2C" + validRadCol.b;
         Debug.Log("url formed, " + url);
 
         //Debug.Log("Polygon section: " + polygonURL);

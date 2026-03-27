@@ -79,7 +79,15 @@ public class Database : MonoBehaviour
                                     int.Parse(values[3])));
                             Debug.Log("Intialized shop items database");
                             break;
-
+                        
+                        case "LocationData":
+                            database[links.databaseName].Add(values[0], 
+                                    new TargetLocationData(values[1],
+                                        float.Parse(values[2]),
+                                        float.Parse(values[3]),
+                                        float.Parse(values[4])));
+                            break;
+                        
                         default:
                             Debug.Log($"No database type defined for {links.databaseName}");
                             break;

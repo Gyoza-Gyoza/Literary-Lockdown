@@ -4,37 +4,34 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Networking;
-using UnityEngine.UI;
-using static Unity.Netcode.NetworkSceneManager;
-using static UnityEngine.GraphicsBuffer;
-
-[System.Serializable]
-public class TargetLocation
-{
-    public string name;
-    public float latitude;
-    public float longitude;
-    public float radiusMeters;
-}
+using Unity.Mathematics;
 
 public class LocationManager : MonoBehaviour
 {
-    public List<TargetLocation> targetLocations = new List<TargetLocation>();
-    public TargetLocation closest { get; private set; }
-    //public TargetLocation closest { get; private set; }
+    List<TargetLocationData> targetLocations = new List<TargetLocationData>();
+    private TargetLocationData closest;
 
+    public TargetLocationData Closest
+    {
+        get
+        {
+            if (DebugMode.Instance.debugMode)
+            {
+                return DebugMode.Instance.CurrentLocationData;
+            }
+            else return closest;
+        }
+    }
+    //public TargetLocation closest { get; private set; }
 
     public double currentLat { get; private set; } = 0f;
     public void ForceEditLat(double input) { currentLat += input; }
     public double currentLon { get; private set; } = 0f;
     public void ForceEditLon(double input) { currentLon += input; }
 
-
     public float forceLocControl_Speed = 100f;
 
     public static LocationManager Instance;
-
 
     private bool updatingLoc = false;
     public bool isUpdatingLoc { get { return updatingLoc; } }
@@ -43,8 +40,43 @@ public class LocationManager : MonoBehaviour
     public bool isForceLoc {  get { return forceLoc; } }
 
     private bool locationValid = false;
-    public bool isLocationValid {  get { return locationValid; } }
 
+    public bool isLocationValid
+    {
+        get
+        {
+            if (DebugMode.Instance.debugMode) return true;
+            foreach (var data in Database.Instance.database["LocationData"])
+            {
+                TargetLocationData locationData = (TargetLocationData)data.Value;
+                if (math.distance(Location, locationData.Location) <= locationData.RadiusMeters)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    public double2 Location
+    {
+        get { return new double2(currentLat, currentLon); }
+    }
+    public TargetLocationData ClosestLibraryBranch
+    {
+        get
+        {
+            foreach (var data in Database.Instance.database["LocationData"])
+            {
+                TargetLocationData locationData = (TargetLocationData)data.Value;
+                if (math.distance(Location, locationData.Location) <= locationData.RadiusMeters)
+                {
+                    return locationData;
+                }
+            }
+            return null;
+        }
+    }
 
     private void Awake()
     {
@@ -78,7 +110,12 @@ public class LocationManager : MonoBehaviour
             //Debug.Log("Lon calc: " + (Time.fixedDeltaTime * Joystick.current.stick.x.value * forceLocControl_Speed));
             //Debug.Log("Lat calc: " + (Time.fixedDeltaTime * Joystick.current.stick.y.value * forceLocControl_Speed));
         }
+    }
 
+    public void SetLocation(double2 location)
+    {
+        currentLat = location.x;
+        currentLon = location.y;
     }
 
     public void ToggleForceLoc()
@@ -87,8 +124,8 @@ public class LocationManager : MonoBehaviour
 
         if (forceLoc && targetLocations.Count != 0)
         {
-            currentLat = targetLocations[0].latitude;
-            currentLon = targetLocations[0].longitude;
+            currentLat = targetLocations[0].Latitude;
+            currentLon = targetLocations[0].Longitude;
 
             StartCoroutine(UpdateLocation());
         }
@@ -97,7 +134,6 @@ public class LocationManager : MonoBehaviour
             updatingLoc = false;
         }
     }
-
     public void StartLocationTracking()
     {
         StartCoroutine(StartTimeOut());
@@ -157,12 +193,12 @@ public class LocationManager : MonoBehaviour
 
             float currClosest = 999999f;
 
-            foreach (TargetLocation target in targetLocations)
+            foreach (TargetLocationData target in targetLocations)
             {
                 // Add check that checks for the closest location
                 float distance = GetDistanceMeters(
                     (float)currentLat, (float)currentLon,
-                    target.latitude, target.longitude
+                    target.Latitude, target.Longitude
                 );
 
                 if (distance < currClosest)
@@ -171,10 +207,8 @@ public class LocationManager : MonoBehaviour
                     closest = target;
                 }
 
-                if (distance <= target.radiusMeters)
+                if (distance <= target.RadiusMeters)
                 {
-
-                    //Change sprite
                     insideAny = true;
                     locationValid = true;
                     closest = target;
@@ -192,9 +226,6 @@ public class LocationManager : MonoBehaviour
 
             yield return new WaitForSeconds(1f);
         }
-
-
-
         updatingLoc = false;
         yield break;
     }
