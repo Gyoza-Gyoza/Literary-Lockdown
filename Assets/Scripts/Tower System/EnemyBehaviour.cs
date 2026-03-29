@@ -9,6 +9,8 @@ public class EnemyBehaviour : NetworkBehaviour
     [SerializeField] private float jiggleTime = 1.0f;
     [SerializeField] private float jiggleAmount = .3f;
     [SerializeField] private float jiggleFreq = 30f;
+    [SerializeField] private Color flickerCol;
+
 
     private bool jiggling = false;
     private float jiggleCount = 0f;
@@ -97,11 +99,19 @@ public class EnemyBehaviour : NetworkBehaviour
     IEnumerator Flicker()
     {
 
-        renderer.color = new Color(255, 0, 98);
+        Color origianl = renderer.color;
+
+        renderer.color = flickerCol;
 
         yield return new WaitForSeconds(.1f);
 
         renderer.color = new Color(255,255,255);
+
+        yield return new WaitForSeconds(.1f);
+
+        renderer.color = Color.white;
+
+        //renderer.color = origianl;
 
         yield break;
     }
