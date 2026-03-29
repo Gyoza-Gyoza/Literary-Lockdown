@@ -18,7 +18,8 @@ public class DebugMode : MonoBehaviour
             locationIndex = value;
             if (locationIndex >= Database.Instance.database["LocationData"].Count) locationIndex = 0; 
             else if (locationIndex < 0) locationIndex = Database.Instance.database["LocationData"].Count - 1;
-            LocationManager.Instance.SetLocation();
+            // Jia Le was working till here
+            //LocationManager.Instance.SetLocation();
         }
     }
     public TargetLocationData CurrentLocationData
