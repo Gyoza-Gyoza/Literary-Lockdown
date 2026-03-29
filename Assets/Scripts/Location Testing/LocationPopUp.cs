@@ -68,21 +68,19 @@ public class LocationPopUp : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (LocationManager.Instance.isForceLoc)
-        {
-            //Check input and adjust location based on input
-
-            LocationManager.Instance.ForceEditLon(Time.fixedDeltaTime * Joystick.current.stick.x.value * forceLocControl_Speed);
-            LocationManager.Instance.ForceEditLat(Time.fixedDeltaTime * Joystick.current.stick.y.value * forceLocControl_Speed);
-
-
-            //Debug.Log("Current stick value: " + Joystick.current.stick.x.value + ", " + Joystick.current.stick.y.value);
-            //Debug.Log("Lon calc: " + (Time.fixedDeltaTime * Joystick.current.stick.x.value * forceLocControl_Speed));
-            //Debug.Log("Lat calc: " + (Time.fixedDeltaTime * Joystick.current.stick.y.value * forceLocControl_Speed));
-        }
-
-
-        if(LocationManager.Instance.isUpdatingLoc)
+        // if (LocationManager.Instance.isForceLoc)
+        // {
+        //     //Check input and adjust location based on input
+        //
+        //     LocationManager.Instance.ForceEditLon(Time.fixedDeltaTime * Joystick.current.stick.x.value * forceLocControl_Speed);
+        //     LocationManager.Instance.ForceEditLat(Time.fixedDeltaTime * Joystick.current.stick.y.value * forceLocControl_Speed);
+        //
+        //
+        //     //Debug.Log("Current stick value: " + Joystick.current.stick.x.value + ", " + Joystick.current.stick.y.value);
+        //     //Debug.Log("Lon calc: " + (Time.fixedDeltaTime * Joystick.current.stick.x.value * forceLocControl_Speed));
+        //     //Debug.Log("Lat calc: " + (Time.fixedDeltaTime * Joystick.current.stick.y.value * forceLocControl_Speed));
+        // }
+        if(DebugMode.Instance.locationMode)
         {
             if (!mapIsLoading)
             {
@@ -104,7 +102,6 @@ public class LocationPopUp : MonoBehaviour
                 //validMarker.sprite = invalidSprite;
             }
         }
-
         // Check if location service is enabled
         else if (!Input.location.isEnabledByUser)
         {

@@ -7,6 +7,7 @@ public class DebugMode : MonoBehaviour
     private CanvasGroup mainWindow;
     [SerializeField] private CanvasGroup mapWindow;
     public bool debugMode { get; private set; } = true;
+    public bool locationMode  { get; private set; } = true;
     public static DebugMode Instance;
     
     private int locationIndex;
@@ -18,8 +19,9 @@ public class DebugMode : MonoBehaviour
             locationIndex = value;
             if (locationIndex >= Database.Instance.database["LocationData"].Count) locationIndex = 0; 
             else if (locationIndex < 0) locationIndex = Database.Instance.database["LocationData"].Count - 1;
-            // Jia Le was working till here
-            //LocationManager.Instance.SetLocation();
+            
+            TargetLocationData locationData = (TargetLocationData)Database.Instance.database["LocationData"].ElementAt(locationIndex).Value;
+            LocationManager.Instance.SetLocation(locationData.Location);
         }
     }
     public TargetLocationData CurrentLocationData
@@ -51,29 +53,38 @@ public class DebugMode : MonoBehaviour
 
         if (debugMode)
         {
-            if (Input.GetKeyDown(KeyCode.P))
+            if (Input.GetKeyDown(KeyCode.E))
             {
                 LocationIndex++;
                 Debug.Log("Getting next location");
             }
 
-            if (Input.GetKeyDown(KeyCode.O))
+            if (Input.GetKeyDown(KeyCode.W))
             {
                 LocationIndex--;
                 Debug.Log("Getting previous location");
             }
             
-            if (Input.GetKeyDown(KeyCode.L)) ToggleMapWindow();
+            if (Input.GetKeyDown(KeyCode.R)) ToggleMapWindow();
         }
     }
 
     private void ToggleDebugMode()
     {
         debugMode = !debugMode;
+        
         mainWindow.alpha =  debugMode ? 1 : 0;
+        mainWindow.interactable = debugMode;
+        mainWindow.blocksRaycasts = debugMode;
+        
+        if (!debugMode) locationMode = false;
     }
-    private void ToggleMapWindow()
+    public void ToggleMapWindow()
     {
-        mapWindow.alpha = mapWindow.alpha == 0 ? 1 : 0;
+        locationMode = !locationMode;
+        
+        mapWindow.alpha = locationMode ? 1 : 0;
+        mapWindow.interactable = locationMode;
+        mapWindow.blocksRaycasts = locationMode;
     }
 }

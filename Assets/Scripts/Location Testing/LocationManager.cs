@@ -15,15 +15,23 @@ public class LocationManager : MonoBehaviour
     {
         get
         {
-            if (DebugMode.Instance.debugMode)
+            TargetLocationData result = null;
+            double closestDistance = math.INFINITY;
+            foreach (var data in Database.Instance.database["LocationData"])
             {
-                return DebugMode.Instance.CurrentLocationData;
+                TargetLocationData locationData = (TargetLocationData)data.Value;
+                if (result == null) result = locationData;
+                
+                double currentBranchDistance = math.distance(Location, locationData.Location);
+                if (currentBranchDistance <= closestDistance)
+                {
+                    result = locationData;
+                    closestDistance = currentBranchDistance;
+                }
             }
-            else return closest;
+            return result;
         }
     }
-    //public TargetLocation closest { get; private set; }
-
     public double currentLat { get; private set; } = 0f;
     public void ForceEditLat(double input) { currentLat += input; }
     public double currentLon { get; private set; } = 0f;
@@ -62,21 +70,6 @@ public class LocationManager : MonoBehaviour
     {
         get { return new double2(currentLat, currentLon); }
     }
-    public TargetLocationData ClosestLibraryBranch
-    {
-        get
-        {
-            foreach (var data in Database.Instance.database["LocationData"])
-            {
-                TargetLocationData locationData = (TargetLocationData)data.Value;
-                if (math.distance(Location, locationData.Location) <= locationData.RadiusMeters)
-                {
-                    return locationData;
-                }
-            }
-            return null;
-        }
-    }
 
     private void Awake()
     {
@@ -99,7 +92,7 @@ public class LocationManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (forceLoc && Joystick.current != null)
+        if (DebugMode.Instance.debugMode && DebugMode.Instance.locationMode)
         {
             //Check input and adjust location based on input
 
