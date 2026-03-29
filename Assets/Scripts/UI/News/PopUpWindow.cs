@@ -33,7 +33,7 @@ public class PopUpWindow: MonoBehaviour
             yield return new WaitForSeconds(Time.deltaTime);
         }
 
-        //CloseButton.gameObject.SetActive(true);
+        CloseButton.gameObject.SetActive(true);
 
         yield break;
     }
