@@ -53,11 +53,10 @@ public class LocationManager : MonoBehaviour
     {
         get
         {
-            if (DebugMode.Instance.debugMode) return true;
             foreach (var data in Database.Instance.database["LocationData"])
             {
                 TargetLocationData locationData = (TargetLocationData)data.Value;
-                if (math.distance(Location, locationData.Location) <= locationData.RadiusMeters)
+                if (GetDistanceMeters((float)Location.x, (float)Location.y, locationData.Latitude, locationData.Longitude) < locationData.RadiusMeters)
                 {
                     return true;
                 }
@@ -87,7 +86,7 @@ public class LocationManager : MonoBehaviour
     {
 
         // Start updating location
-        StartCoroutine(StartTimeOut());
+        // StartCoroutine(StartTimeOut());
     }
 
     private void FixedUpdate()

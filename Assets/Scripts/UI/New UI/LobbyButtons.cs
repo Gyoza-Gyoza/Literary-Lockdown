@@ -17,11 +17,6 @@ public class LobbyButtons : MonoBehaviour
 
     private void Update()
     {
-        if (DebugMode.Instance.debugMode)
-        {
-            SetButtonsActive(true);
-            return;
-        }
         if (LocationManager.Instance == null || !LocationManager.Instance.isLocationValid)
         {
             SetButtonsActive(false);

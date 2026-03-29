@@ -66,6 +66,7 @@ public class DebugMode : MonoBehaviour
             }
             
             if (Input.GetKeyDown(KeyCode.R)) ToggleMapWindow();
+            if (Input.GetKeyDown(KeyCode.P)) SaveLoadManager.PlayerData.pagesHeld += 100000;
         }
     }
 
@@ -74,10 +75,15 @@ public class DebugMode : MonoBehaviour
         debugMode = !debugMode;
         
         mainWindow.alpha =  debugMode ? 1 : 0;
-        mainWindow.interactable = debugMode;
-        mainWindow.blocksRaycasts = debugMode;
-        
-        if (!debugMode) locationMode = false;
+
+        if (debugMode)
+        {
+            LocationIndex = 0;
+        }
+        else
+        {
+            if (locationMode) ToggleMapWindow();
+        }
     }
     public void ToggleMapWindow()
     {
