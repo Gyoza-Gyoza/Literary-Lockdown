@@ -113,7 +113,13 @@ public class PlayerClientController : NetworkBehaviour
             gameObject.GetComponent<Tower>().DestroyTowerRpc();
             TowerManager.Instance.RemoveTower(gameObject.GetComponent<Tower>());
             currentTowers.Value -= 1;
-            //CharacterSelectUI.instance.
+
+            CharacterSelectUI.instance.towersSpawnedCount.text = currentTowers.Value.ToString();
+
+            if (currentTowers.Value < maxTowers)
+            {
+                CharacterSelectUI.instance.SpawningAvailable();
+            }
         }
     }
     #endregion

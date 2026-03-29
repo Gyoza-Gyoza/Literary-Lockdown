@@ -6,11 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/New UI/Location Test.unity
-    guid: 773355e8eac9c1f488b0f3830622a079
-  - enabled: 1
     path: Assets/Scenes/New UI/Raid Menu.unity
     guid: e359e8d37bc7b5340ad58e2fce806559
+  - enabled: 1
+    path: Assets/Scenes/New UI/Location Test.unity
+    guid: 773355e8eac9c1f488b0f3830622a079
   - enabled: 1
     path: Assets/Scenes/New UI/CompanionUpgrade.unity
     guid: d0b56dc93a836934d859f661af505d25
