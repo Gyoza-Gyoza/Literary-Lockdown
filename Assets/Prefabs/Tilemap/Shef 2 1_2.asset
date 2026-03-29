@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b460c676bb776c24ca52988d825d04bb, type: 3}
-  m_Name: PaperPath 2_2
+  m_Name: Shef 2 1_2
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefenseTiles
-  m_Sprite: {fileID: 335299416, guid: 2e44df051c7a86b4cb934ce99f907572, type: 3}
+  m_Sprite: {fileID: -1066410535, guid: 5afcf9fdf1bbcf14cbe6767326cc6236, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
