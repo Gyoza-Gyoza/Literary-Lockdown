@@ -51,7 +51,13 @@ public class Bullet : NetworkBehaviour
                 //Debug.Log("Hit enemy");
                 hitEnemies.Add(enemy);
                 if (destroyOnHit) DestroyBulletRpc();
+                OnDamage(enemy);
             }
         }
+    }
+
+    protected virtual void OnDamage(EnemyBehaviour enemy)
+    {
+        
     }
 }

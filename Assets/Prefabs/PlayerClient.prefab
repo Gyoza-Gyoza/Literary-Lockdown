@@ -1169,4 +1169,5 @@ MonoBehaviour:
   towerPrefabList:
   - {fileID: -2508984615027846413, guid: e6ca100678957874c81bfd00503fbf9a, type: 3}
   - {fileID: -2508984615027846413, guid: f02c4add31ef1c54da83142784e820b4, type: 3}
+  - {fileID: -2508984615027846413, guid: 40c61fc554056ec46b46226e3c3f8deb, type: 3}
   towerSpawningUI: {fileID: 0}

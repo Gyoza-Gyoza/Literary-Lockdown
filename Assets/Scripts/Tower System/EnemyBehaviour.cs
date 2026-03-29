@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using Unity.Netcode;
 using System.Collections;
@@ -14,6 +15,7 @@ public class EnemyBehaviour : NetworkBehaviour
     private float jiggleCount = 0f;
 
     public SpriteRenderer renderer;
+    private float initialMovementSpeed;
     public NetworkVariable<int> health = new NetworkVariable<int> (5);
     private NetworkVariable<int> currentWaypointIndex = new NetworkVariable<int>(0);
     private Vector2 targetPosition
@@ -60,6 +62,20 @@ public class EnemyBehaviour : NetworkBehaviour
             jiggleCount = 0f;
         }
 
+    }
+
+    [Rpc(SendTo.Server)]
+    public void SlowDownRPC(float slowAmount, float duration)
+    {
+        initialMovementSpeed = movementSpeed;
+        movementSpeed = movementSpeed * slowAmount;
+        StartCoroutine(SlowDownRoutine(duration));
+    }
+
+    private IEnumerator SlowDownRoutine(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        movementSpeed = initialMovementSpeed;
     }
 
     [Rpc(SendTo.Server)]
