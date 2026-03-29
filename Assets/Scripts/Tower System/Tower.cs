@@ -69,9 +69,10 @@ public class Tower : NetworkBehaviour
         {
             Debug.Log("Attacking");
             timer += Time.deltaTime;
-            if (timer >= attackSpeed)
+            float interval = 1f / attackSpeed;
+            if (timer >= interval)
             {
-                timer -= attackSpeed;
+                timer -= interval;
                 animator.SetTrigger("CanAttack");
             }
         }
@@ -80,6 +81,7 @@ public class Tower : NetworkBehaviour
     {
         animator = GetComponent<Animator>();
         this.damage.Value = chosenTower.Damage;
+        this.attackSpeed = chosenTower.AttackSpeed;
     }
     public virtual void Attack()
     {
