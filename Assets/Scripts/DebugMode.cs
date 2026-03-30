@@ -9,7 +9,7 @@ public class DebugMode : MonoBehaviour
     public bool debugMode { get; private set; } = true;
     public bool locationMode  { get; private set; } = true;
     public static DebugMode Instance;
-    
+    private GameObject[] ads;
     private int locationIndex;
     private int LocationIndex
     {
@@ -41,7 +41,7 @@ public class DebugMode : MonoBehaviour
     {
         ToggleDebugMode();
     }
-
+    
     private void Update()
     {
         if ((Input.GetKey(KeyCode.LeftControl)
@@ -67,6 +67,11 @@ public class DebugMode : MonoBehaviour
             
             if (Input.GetKeyDown(KeyCode.R)) ToggleMapWindow();
             if (Input.GetKeyDown(KeyCode.P)) SaveLoadManager.PlayerData.pagesHeld += 100000;
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                if (ads == null) ads = GameObject.FindGameObjectsWithTag("Ads");
+                foreach (GameObject ad in ads) ad.SetActive(!ad.activeSelf);
+            }
         }
     }
 

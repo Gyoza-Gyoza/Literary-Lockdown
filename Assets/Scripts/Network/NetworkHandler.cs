@@ -23,6 +23,14 @@ public class NetworkHandler : MonoBehaviour
     private TextMeshProUGUI TMPro_LobbyCode;
     private string m_PlayerName;
 
+    public static NetworkHandler Instance;
+
+    private void Awake()
+    {
+        if (Instance == null) Instance = this; 
+        else Destroy(gameObject);
+    }
+
     private void Start()
     {
         NetworkManager.Singleton.OnServerStarted += () =>
