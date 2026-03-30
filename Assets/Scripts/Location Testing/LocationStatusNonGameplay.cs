@@ -24,43 +24,58 @@ public class LocationStatusNonGameplay : MonoBehaviour
     }
 
     private void FixedUpdate()
-    {
-        if (!DebugMode.Instance.debugMode)
+    { 
+        if (Input.location.isEnabledByUser || DebugMode.Instance.debugMode)
         {
-            if (LocationManager.Instance.isUpdatingLoc)
+            if (LocationManager.Instance.isLocationValid)
             {
-                if (LocationManager.Instance.isLocationValid)
-                {
-                    //nearestHeaderText.text = "Currently In:";
-                    //nearestLocText.text = $"{LocationManager.Instance.closest.name}";
-                    locText.text = $"{LocationManager.Instance.Closest.Name}";
-                    validMarker.sprite = validSprite;
-                }
-                else
-                {
-                    //nearestHeaderText.text = "Nearest Location Is:";
-                    //nearestLocText.text = $"{LocationManager.Instance.closest.name}";
-                    locText.text = $"Please Proceed to {LocationManager.Instance.Closest.Name}";
-                    validMarker.sprite = invalidSprite;
-                }
+                locText.text = $"{LocationManager.Instance.Closest.Name}";
+                validMarker.sprite = validSprite;
             }
-
-            // Check if location service is enabled
-            else if (!Input.location.isEnabledByUser)
+            else
             {
-                //nearestHeaderText.text = "Error";
-                //nearestLocText.text = "Location not enabled";
-                locText.text = "Location not enabled";
+                locText.text = $"Please Proceed to {LocationManager.Instance.Closest.Name}";
                 validMarker.sprite = invalidSprite;
-
-                return;
             }
         }
         else
         {
-            locText.text = $"{LocationManager.Instance.Closest.Name}";
-            validMarker.sprite = validSprite;
+            locText.text = " Location not enabled"; 
+            validMarker.sprite = invalidSprite;
         }
+        
+        // if (LocationManager.Instance.isUpdatingLoc)
+        // {
+        //     if (LocationManager.Instance.isLocationValid)
+        //     {
+        //         //nearestHeaderText.text = "Currently In:";
+        //         //nearestLocText.text = $"{LocationManager.Instance.closest.name}";
+        //         locText.text = $"{LocationManager.Instance.Closest.Name}";
+        //     }
+        //     else
+        //     {
+        //         //nearestHeaderText.text = "Nearest Location Is:";
+        //         //nearestLocText.text = $"{LocationManager.Instance.closest.name}";
+        //         locText.text = $"Please Proceed to {LocationManager.Instance.Closest.Name}";
+        //         validMarker.sprite = invalidSprite;
+        //     }
+        // }
+        //
+        // // Check if location service is enabled
+        // else if (!Input.location.isEnabledByUser)
+        // {
+        //     //nearestHeaderText.text = "Error";
+        //     //nearestLocText.text = "Location not enabled";
+        //     locText.text = "Location not enabled";
+        //     validMarker.sprite = invalidSprite;
+        //
+        //     return;
+        // }
+        // else
+        // {
+        //     locText.text = $"{LocationManager.Instance.Closest.Name}";
+        //     validMarker.sprite = validSprite;
+        // }
     }
 
 }
