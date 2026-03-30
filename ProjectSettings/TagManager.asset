@@ -8,6 +8,7 @@ TagManager:
   - NetworkManager
   - TowerSpawner
   - TileMap
+  - Ads
   layers:
   - Default
   - TransparentFX
