@@ -79,7 +79,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 40ba2afee2b990b4c921bedd96bf1e24, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -261,7 +261,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 1f3d22789de8b2043b548b6861901aef, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -533,7 +533,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 3a3b5e49d59c226489e00487f064d85b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -627,9 +627,20 @@ MonoBehaviour:
   NetworkAnimatorExpanded: 0
   AuthorityMode: 0
   m_Animator: {fileID: 4121326571265556422}
-  TransitionStateInfoList: []
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 2081823275
+    DestinationState: 1764188512
+    TransitionDuration: 0.05
+    TriggerNameHash: 930100575
+    TransitionIndex: 0
   AnimatorParameterEntries:
-    ParameterEntries: []
+    ParameterEntries:
+    - name: CanAttack
+      NameHash: 930100575
+      Synchronize: 1
+      ParameterType: 9
   AnimatorParametersExpanded: 0
 --- !u!95 &4121326571265556422
 Animator:
@@ -705,12 +716,12 @@ MonoBehaviour:
   projectileSpeed:
     m_InternalValue: 0
   attackRange:
-    m_InternalValue: 0
+    m_InternalValue: 1
   damage:
     m_InternalValue: 0
   projectilePrefab: {fileID: 3516673801502512669, guid: 1f5d686d892c35b4195e75bf3bb8ab96, type: 3}
   canAttack: 0
-  attackSpeed: 0.2
+  attackSpeed: 0.4
   target: {fileID: 0}
   towerTargetStyle: 1
   isMoving: 0

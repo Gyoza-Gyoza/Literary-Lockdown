@@ -132,6 +132,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Spawner
   ShowTopMostFoldoutHeaderGroup: 1
   enemyPrefab: {fileID: 645391306997490861, guid: e356c027064c33142b82d2ebbd78e60b, type: 3}
-  spawnInterval: 1
-  extraFreqPerDifficulty: 0.5
-  frequencyChangePerMin: 0.02
+  spawnInterval: 2
+  extraFreqPerDifficulty: 0.3
+  frequencyChangePerMin: 0.04
+  minInterval: 0.25

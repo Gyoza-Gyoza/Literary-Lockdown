@@ -65,15 +65,17 @@ public class Tower : NetworkBehaviour
         Debug.Log("Cooling down");
         if (!IsServer) return;
         if (ObjectivesManager.Instance.gameEnded.Value) return;
-        if (!canAttack && target != null)
+        if (!canAttack)
         {
-            Debug.Log("Attacking");
             timer += Time.deltaTime;
             float interval = 1f / attackSpeed;
-            if (timer >= interval)
+
+            if (timer >= interval && target != null)
             {
-                timer -= interval;
+                Debug.Log("Attacking");
                 animator.SetTrigger("CanAttack");
+                timer -= interval;
+                
             }
         }
     }
@@ -174,7 +176,7 @@ public class Tower : NetworkBehaviour
     public void DisplayRange()
     {
         rangeIndicator.SetActive(true);
-        rangeIndicator.transform.localScale = new Vector3(attackRange.Value, attackRange.Value, attackRange.Value);
+        rangeIndicator.transform.localScale = new Vector3(attackRange.Value * 2, attackRange.Value* 2, attackRange.Value*2);
     }
 
     public void HideRange()

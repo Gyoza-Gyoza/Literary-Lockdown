@@ -16,6 +16,9 @@ public class EnemyBehaviour : NetworkBehaviour
     private bool jiggling = false;
     private float jiggleCount = 0f;
 
+    private bool slowed = false;
+
+
     public SpriteRenderer renderer;
     private float initialMovementSpeed;
     public NetworkVariable<int> health = new NetworkVariable<int> (5);
@@ -25,7 +28,17 @@ public class EnemyBehaviour : NetworkBehaviour
 
     private void Update()
     {
-        Vector3 currentPos = transform.position;
+
+        if (slowed)
+        {
+            renderer.color = Color.greenYellow;
+        }
+        else
+        {
+            renderer.color = Color.white;
+        }
+
+            Vector3 currentPos = transform.position;
         float move = movementSpeed * Time.deltaTime;
         if (Vector2.Distance(transform.position, targetPosition) >= 0.05f)
             transform.position = Vector3.MoveTowards(currentPos, targetPosition, move);
@@ -76,7 +89,9 @@ public class EnemyBehaviour : NetworkBehaviour
 
     private IEnumerator SlowDownRoutine(float duration)
     {
+        slowed = true;
         yield return new WaitForSeconds(duration);
+        slowed = false;
         movementSpeed = initialMovementSpeed;
     }
 

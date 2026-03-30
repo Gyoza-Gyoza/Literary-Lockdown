@@ -444,7 +444,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 3
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: a39c82fac0c2d604abffe91f87e178e9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1268,12 +1268,12 @@ MonoBehaviour:
   projectileSpeed:
     m_InternalValue: 0
   attackRange:
-    m_InternalValue: 1
+    m_InternalValue: 0.4
   damage:
     m_InternalValue: 1
   projectilePrefab: {fileID: 3516673801502512669, guid: e964e860dba1c0e478b19aead583b36f, type: 3}
   canAttack: 0
-  attackSpeed: 0.02
+  attackSpeed: 5
   target: {fileID: 0}
   towerTargetStyle: 1
   isMoving: 0

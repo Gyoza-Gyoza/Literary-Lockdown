@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2553801995
+  GlobalObjectIdHash: 3058844296
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -262,8 +262,8 @@ MonoBehaviour:
     m_InternalValue: 0
   damage:
     m_InternalValue: 0
-  slowDuration: 1
-  slowAmount: 0.6
+  slowDuration: 2
+  slowAmount: 0.5
 --- !u!58 &2451069411535777757
 CircleCollider2D:
   m_ObjectHideFlags: 0

@@ -11,6 +11,8 @@ public class Spawner : NetworkBehaviour
     public float extraFreqPerDifficulty = 0.5f;
     public float frequencyChangePerMin = 0.02f;
 
+    public float minInterval = .1f;
+
     private float counter;
     private float timer;
     public static Spawner Instance { get; private set; }
@@ -46,7 +48,10 @@ public class Spawner : NetworkBehaviour
             if (timer >= 60f)
             {
                 timer -= 60f;
-                spawnInterval -= frequencyChangePerMin;
+                if ((spawnInterval - frequencyChangePerMin) > minInterval)
+                {
+                    spawnInterval -= frequencyChangePerMin;
+                }
             }
 
             float finalcalc = (spawnInterval - (extraFreqPerDifficulty * (float)ObjectivesManager.Instance.difficulty.Value));

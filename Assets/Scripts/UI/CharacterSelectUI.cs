@@ -33,9 +33,13 @@ public class CharacterSelectUI : MonoBehaviour
     public Sprite rapuSpawned;
     public Sprite wolfUnspawned;
     public Sprite wolfSpawned;
+    public Sprite frogUnspawned;
+    public Sprite frogSpawned;
+
 
     public Button rapButton;
     public Button wolfButton;
+    public Button frogButton;
 
     public void Awake()
     {
@@ -67,6 +71,9 @@ public class CharacterSelectUI : MonoBehaviour
         rapButton.interactable = true;
         wolfButton.image.sprite = wolfUnspawned;
         wolfButton.interactable = true;
+        frogButton.image.sprite = frogUnspawned;
+        frogButton.interactable = true;
+
 
         rightTabImage.sprite = notMaxTowerTabSprite;
 
@@ -79,6 +86,8 @@ public class CharacterSelectUI : MonoBehaviour
         rapButton.interactable = false;
         wolfButton.image.sprite = wolfSpawned;
         wolfButton.interactable = false;
+        frogButton.image.sprite = frogSpawned;
+        frogButton.interactable = false;
 
         rightTabImage.sprite = maxTowerTabSprite;
 
