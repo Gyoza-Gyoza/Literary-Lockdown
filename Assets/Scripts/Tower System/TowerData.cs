@@ -33,9 +33,10 @@ public struct TowerData
         string[] damageArray = damage.Split('+');
         this.damage = float.Parse(damageArray[0]);
         this.damagePerLevel = float.Parse(damageArray[1]);
-        string[] attackSpeedArray = damage.Split('+');
+        string[] attackSpeedArray = attackSpeed.Split('+');
         this.attackSpeed = float.Parse(attackSpeedArray[0]);
         this.attackSpeedPerLevel = float.Parse(attackSpeedArray[1]);
         this.upgradeCost = upgradeCost;
+        Debug.Log(name + "'s speed is stored as " + this.attackSpeed + " with increments as " + this.attackSpeedPerLevel + ". Input String is " + attackSpeed);
     }
 }

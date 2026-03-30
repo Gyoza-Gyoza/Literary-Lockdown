@@ -162,10 +162,10 @@ public class ObjectivesManager : NetworkBehaviour
         ObjectiveUIController.Instance.UpdateTimeText(newValue);
     }
 
-    public void CaptureBooks()
+    public void CaptureBooks(int value)
     {
         if (!IsServer) return;
-        booksCaptured.Value++;
+        booksCaptured.Value += value ;
     }
 
     public void EscapeBooks()
@@ -178,12 +178,16 @@ public class ObjectivesManager : NetworkBehaviour
     {
         if (ObjectiveUIController.Instance.booksCapturedText != null)
             ObjectiveUIController.Instance.booksCapturedText.text = $"{newValue}";
+
+        //Spawn pages effect;
     }
 
     private void OnBooksEscapedChanged(int oldValue, int newValue)
     {
         if (ObjectiveUIController.Instance.booksEscapedText != null)
             ObjectiveUIController.Instance.booksEscapedText.text = $"{newValue}";
+
+        //Spawn escape effect;
     }
 
     private void OnStartGameChanged(bool oldValue, bool newValue)

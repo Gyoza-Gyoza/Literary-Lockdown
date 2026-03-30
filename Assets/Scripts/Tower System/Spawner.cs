@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class Spawner : NetworkBehaviour
 {
-    [SerializeField] private NetworkObject enemyPrefab;
+    [SerializeField] private NetworkObject basicEnemyPrefab;
+    [SerializeField] private int[] basicEnemyRates = new int[3];
+    [SerializeField] private NetworkObject biggerEnemyPrefab;
+    [SerializeField] private int[] biggerEnemyRates = new int[3];
     [SerializeField] private float spawnInterval = 1f;
 
+    public List<Dictionary<NetworkObject, int[]>> test;
 
     public float extraFreqPerDifficulty = 0.5f;
     public float frequencyChangePerMin = 0.02f;
@@ -65,7 +69,29 @@ public class Spawner : NetworkBehaviour
     }
     private void SpawnEnemy()
     {
-        NetworkObject enemy = Instantiate(enemyPrefab);
+
+        //Random
+        int totalWeight = basicEnemyRates[ObjectivesManager.Instance.difficulty.Value] + biggerEnemyRates[ObjectivesManager.Instance.difficulty.Value];
+
+        int rand = Random.Range(1, totalWeight + 1);
+
+        NetworkObject enemy;
+
+        if (rand <= basicEnemyRates[ObjectivesManager.Instance.difficulty.Value])
+        {
+            enemy = Instantiate(basicEnemyPrefab);
+        }
+        else if((rand - basicEnemyRates[ObjectivesManager.Instance.difficulty.Value]) <= biggerEnemyRates[ObjectivesManager.Instance.difficulty.Value])
+        {
+            enemy = Instantiate(biggerEnemyPrefab);
+        }
+        else
+        {
+            enemy = Instantiate(basicEnemyPrefab);
+        }
+
+
+        //NetworkObject enemy = Instantiate(basicEnemyPrefab);
         enemy.transform.position = transform.position;
         enemy.transform.rotation = transform.rotation;
         enemy.Spawn();
