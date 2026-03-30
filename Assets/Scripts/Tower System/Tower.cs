@@ -11,7 +11,7 @@ using UnityEngine.Tilemaps;
 public class Tower : NetworkBehaviour
 {
     public NetworkVariable<float> projectileSpeed;
-    public NetworkVariable<float> attackRange;
+    public NetworkVariable<float> attackRange = new NetworkVariable<float>(5);
     public NetworkVariable<float> damage;
     public NetworkObject projectilePrefab;
     public bool canAttack = false;
@@ -62,7 +62,7 @@ public class Tower : NetworkBehaviour
 
     private void AttackCooldown()
     {
-        Debug.Log("Cooling down");
+        //Debug.Log("Cooling down");
         if (!IsServer) return;
         if (ObjectivesManager.Instance.gameEnded.Value) return;
 
@@ -71,15 +71,15 @@ public class Tower : NetworkBehaviour
         {
             float interval = 1f / attackSpeed;
 
-            if (timer < interval)
+            if (timer <= interval)
             {
-                timer += Time.fixedDeltaTime;
+                timer += Time.deltaTime;
             }
             
 
             if (timer >= interval && target != null)
             {
-                Debug.Log("Attacking");
+                //Debug.Log("Attacking");
                 animator.SetTrigger("CanAttack");
                 timer -= interval;
                 

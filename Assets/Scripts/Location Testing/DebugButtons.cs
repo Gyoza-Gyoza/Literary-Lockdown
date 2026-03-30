@@ -8,11 +8,16 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 
 //[System.Serializable]
-public class AdjustLocationButton : MonoBehaviour
+public class DebugButtons : MonoBehaviour
 {
-    public void OpenDebugModeLocation()
+    public void TriggerToggleDebugMode()
     {
-        DebugMode.Instance.ToggleStraightIntoMapWindow();
+        DebugMode.Instance.ToggleDebugMode();
+    }
+
+    public void TriggerToggleLocationMode()
+    {
+        DebugMode.Instance.ToggleMapWindow();
     }
 
 }

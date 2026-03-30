@@ -70,7 +70,7 @@ public class DebugMode : MonoBehaviour
         }
     }
 
-    private void ToggleDebugMode()
+    public void ToggleDebugMode()
     {
         debugMode = !debugMode;
         

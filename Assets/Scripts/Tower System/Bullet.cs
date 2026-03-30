@@ -47,7 +47,7 @@ public class Bullet : NetworkBehaviour
         {
             if (!hitEnemies.Contains(enemy))
             {
-                enemy.TakeDamageRpc((int)damage.Value);
+                enemy.TakeDamageRpc(damage.Value);
                 //Debug.Log("Hit enemy");
                 hitEnemies.Add(enemy);
                 if (destroyOnHit) DestroyBulletRpc();

@@ -1268,7 +1268,7 @@ MonoBehaviour:
   projectileSpeed:
     m_InternalValue: 0
   attackRange:
-    m_InternalValue: 0.4
+    m_InternalValue: 0.6
   damage:
     m_InternalValue: 1
   projectilePrefab: {fileID: 3516673801502512669, guid: e964e860dba1c0e478b19aead583b36f, type: 3}

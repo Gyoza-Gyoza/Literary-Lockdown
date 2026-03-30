@@ -26,7 +26,7 @@ public class EnemyBehaviour : NetworkBehaviour
 
 
     //public NetworkVariable<float> movementSpeed = new NetworkVariable<float>(0);
-    public NetworkVariable<int> health = new NetworkVariable<int> (5);
+    public NetworkVariable<float> health = new NetworkVariable<float> (5);
     private NetworkVariable<int> currentWaypointIndex = new NetworkVariable<int>(0);
     private Vector2 targetPosition
     { get { return WaypointManager.Instance.waypoints[currentWaypointIndex.Value].position; } }
@@ -60,7 +60,7 @@ public class EnemyBehaviour : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server)]
-    public void TakeDamageRpc(int damage)
+    public void TakeDamageRpc(float damage)
     {
         health.Value -= damage;
 
@@ -110,7 +110,10 @@ public class EnemyBehaviour : NetworkBehaviour
         }
         else
         {
-            GameObject.Instantiate(deathFX, this.transform.position, this.transform.rotation);
+            //GameObject GO = Instantiate(deathFX);
+
+            //GO.transform.position = this.gameObject.transform.position;
+
             Destroy(gameObject);
         }
         if (!ObjectivesManager.Instance.gameEnded.Value) ObjectivesManager.Instance.CaptureBooks(pages);
