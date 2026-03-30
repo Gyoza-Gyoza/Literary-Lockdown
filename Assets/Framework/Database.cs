@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,11 +35,6 @@ public class Database : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
-
-    private void Update()
-    {
-        
     }
     private void CreateDatabases()
     {
@@ -105,10 +101,27 @@ public class Database : MonoBehaviour
         if (webRequest.result == UnityWebRequest.Result.Success)
         {
             callback?.Invoke(webRequest.downloadHandler.text);
+            SaveData(name, webRequest.downloadHandler.text);
         }
         else
         {
-            Debug.LogError($"Failed to download CSV: {webRequest.error}");
+            Debug.LogError($"Failed to download CSV: {webRequest.error}, using backup database");
+            callback?.Invoke(LoadData(name));
         }
+    }
+    public static void SaveData(string tableName, string data)
+    {
+        // Define the file path using Application.persistentDataPath for cross-platform compatibility
+        string path = Path.Combine(Application.persistentDataPath, $"{tableName}.csv");
+
+        // Write the JSON string to a file
+        File.WriteAllText(path, data);
+
+        Debug.Log("Data saved to: " + path);
+    }
+
+    public static string LoadData(string tableName)
+    {
+        return File.ReadAllText(Path.Combine(Application.persistentDataPath, $"{tableName}.csv"));
     }
 }
