@@ -136,6 +136,6 @@ MonoBehaviour:
   biggerEnemyPrefab: {fileID: 645391306997490861, guid: 4333c492c48cb724280ab357f11d30d0, type: 3}
   biggerEnemyRates: 000000000100000001000000
   spawnInterval: 2
-  extraFreqPerDifficulty: 0.3
-  frequencyChangePerMin: 0.04
+  extraFreqPerDifficulty: 0.35
+  frequencyChangePerMin: 0.025
   minInterval: 0.25
