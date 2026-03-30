@@ -12,7 +12,7 @@ public class AdjustLocationButton : MonoBehaviour
 {
     public void OpenDebugModeLocation()
     {
-        //DebugMode.Instance.
+        DebugMode.Instance.ToggleStraightIntoMapWindow();
     }
 
 }

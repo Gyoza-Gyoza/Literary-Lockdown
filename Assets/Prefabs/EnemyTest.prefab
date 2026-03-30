@@ -79,6 +79,8 @@ MonoBehaviour:
   jiggleAmount: 0.3
   jiggleFreq: 30
   flickerCol: {r: 0.997324, g: 0.75, b: 1, a: 0}
+  pages: 1
+  deathFX: {fileID: 4080735714122291924, guid: eeb4341419b9a184797e2706a46cf774, type: 3}
   renderer: {fileID: 5977204414604643623}
   health:
     m_InternalValue: 5
@@ -153,7 +155,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.72, y: 0.54}
   m_EdgeRadius: 0
 --- !u!1 &7135101353343141833
 GameObject:

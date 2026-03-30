@@ -74,14 +74,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TestMovement
   ShowTopMostFoldoutHeaderGroup: 1
+  movementSpeed: 0.6
   jiggleTime: 1
   jiggleAmount: 0.3
   jiggleFreq: 30
   flickerCol: {r: 0.997324, g: 0.75, b: 1, a: 0}
   pages: 2
+  deathFX: {fileID: 4080735714122291924, guid: eeb4341419b9a184797e2706a46cf774, type: 3}
   renderer: {fileID: 5977204414604643623}
-  movementSpeed:
-    m_InternalValue: 0
   health:
     m_InternalValue: 10
 --- !u!50 &-1803207503481378299

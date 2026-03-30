@@ -1295,6 +1295,7 @@ GameObject:
   - component: {fileID: 8567368339004934718}
   - component: {fileID: 8585839836862815817}
   - component: {fileID: 6621174420664980214}
+  - component: {fileID: 8981347833538107080}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -1403,9 +1404,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 9137071548265386442}
-        m_TargetAssemblyTypeName: LocationPopUp, Assembly-CSharp
-        m_MethodName: OpenLocPopUp
+      - m_Target: {fileID: 8981347833538107080}
+        m_TargetAssemblyTypeName: AdjustLocationButton, Assembly-CSharp
+        m_MethodName: OpenDebugModeLocation
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1415,6 +1416,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &8981347833538107080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4052031178606830666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fb172f05eae99a42beab6492468861a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AdjustLocationButton
 --- !u!1 &5038573785607979840
 GameObject:
   m_ObjectHideFlags: 0
@@ -2101,14 +2114,3 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5917960201082149547, guid: 6a0bfc30783a83c49a6616d411b857cb, type: 3}
   m_PrefabInstance: {fileID: 6846075767395846081}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &9137071548265386442 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2436240187117131275, guid: 6a0bfc30783a83c49a6616d411b857cb, type: 3}
-  m_PrefabInstance: {fileID: 6846075767395846081}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 546ed15daf0209b4aa4ff62faff036d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LocationPopUp

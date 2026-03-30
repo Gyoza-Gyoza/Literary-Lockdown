@@ -93,4 +93,10 @@ public class DebugMode : MonoBehaviour
         mapWindow.interactable = locationMode;
         mapWindow.blocksRaycasts = locationMode;
     }
+
+    public void ToggleStraightIntoMapWindow()
+    {
+        ToggleDebugMode();
+        ToggleMapWindow();
+    }
 }

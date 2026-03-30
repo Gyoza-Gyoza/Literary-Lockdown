@@ -65,10 +65,17 @@ public class Tower : NetworkBehaviour
         Debug.Log("Cooling down");
         if (!IsServer) return;
         if (ObjectivesManager.Instance.gameEnded.Value) return;
+
+
         if (!canAttack)
         {
-            timer += Time.deltaTime;
             float interval = 1f / attackSpeed;
+
+            if (timer < interval)
+            {
+                timer += Time.fixedDeltaTime;
+            }
+            
 
             if (timer >= interval && target != null)
             {

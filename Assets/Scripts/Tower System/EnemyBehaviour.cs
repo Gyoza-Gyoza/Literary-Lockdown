@@ -6,7 +6,7 @@ using System;
 
 public class EnemyBehaviour : NetworkBehaviour
 {
-    //[SerializeField] private float movementSpeed = 1.0f;
+    [SerializeField] private float movementSpeed = 1.0f;
     [SerializeField] private float jiggleTime = 1.0f;
     [SerializeField] private float jiggleAmount = .3f;
     [SerializeField] private float jiggleFreq = 30f;
@@ -20,12 +20,12 @@ public class EnemyBehaviour : NetworkBehaviour
 
     private bool slowed = false;
 
-
+    public GameObject deathFX;
     public SpriteRenderer renderer;
     private float initialMovementSpeed;
 
 
-    public NetworkVariable<float> movementSpeed = new NetworkVariable<float>(0);
+    //public NetworkVariable<float> movementSpeed = new NetworkVariable<float>(0);
     public NetworkVariable<int> health = new NetworkVariable<int> (5);
     private NetworkVariable<int> currentWaypointIndex = new NetworkVariable<int>(0);
     private Vector2 targetPosition
@@ -44,7 +44,7 @@ public class EnemyBehaviour : NetworkBehaviour
         }
 
             Vector3 currentPos = transform.position;
-        float move = movementSpeed.Value * Time.deltaTime;
+        float move = movementSpeed * Time.deltaTime;
         if (Vector2.Distance(transform.position, targetPosition) >= 0.05f)
             transform.position = Vector3.MoveTowards(currentPos, targetPosition, move);
         else
@@ -87,8 +87,8 @@ public class EnemyBehaviour : NetworkBehaviour
     [Rpc(SendTo.Server)]
     public void SlowDownRPC(float slowAmount, float duration)
     {
-        initialMovementSpeed = movementSpeed.Value;
-        movementSpeed.Value = movementSpeed.Value * slowAmount;
+        initialMovementSpeed = movementSpeed;
+        movementSpeed = movementSpeed * slowAmount;
         StartCoroutine(SlowDownRoutine(duration));
     }
 
@@ -97,7 +97,7 @@ public class EnemyBehaviour : NetworkBehaviour
         slowed = true;
         yield return new WaitForSeconds(duration);
         slowed = false;
-        movementSpeed.Value = initialMovementSpeed;
+        movementSpeed = initialMovementSpeed;
     }
 
     [Rpc(SendTo.Server)]
@@ -110,6 +110,7 @@ public class EnemyBehaviour : NetworkBehaviour
         }
         else
         {
+            GameObject.Instantiate(deathFX, this.transform.position, this.transform.rotation);
             Destroy(gameObject);
         }
         if (!ObjectivesManager.Instance.gameEnded.Value) ObjectivesManager.Instance.CaptureBooks(pages);
