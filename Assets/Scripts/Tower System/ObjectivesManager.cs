@@ -21,7 +21,9 @@ public class ObjectivesManager : NetworkBehaviour
     public NetworkVariable<int> difficulty = new NetworkVariable<int>(0);
     public NetworkVariable<int> timerValue = new NetworkVariable<int>(0);
 
+    private AudioSource endGameAudio;
     public static ObjectivesManager Instance;
+    private bool gameEndedAudioPlayed = false;
 
     public void Awake()
     {
@@ -33,6 +35,7 @@ public class ObjectivesManager : NetworkBehaviour
         {
             Destroy(this.gameObject);
         }
+        endGameAudio = GetComponent<AudioSource>();
     }
 
     public override void OnNetworkSpawn()
@@ -165,13 +168,15 @@ public class ObjectivesManager : NetworkBehaviour
     public void CaptureBooks(int value)
     {
         if (!IsServer) return;
-        booksCaptured.Value += value ;
+        booksCaptured.Value += value;
+        TowerManager.Instance.PlayDeathAudio();
     }
 
     public void EscapeBooks()
     {
         if (!IsServer) return;
         booksEscaped.Value++;
+        TowerManager.Instance.PlayEscapeAudio();
     }
 
     private void OnBooksCapturedChanged(int oldValue, int newValue)
@@ -203,7 +208,15 @@ public class ObjectivesManager : NetworkBehaviour
         }
         else
         {
-            if (ObjectiveUIController.Instance.rewardScreen != null) ObjectiveUIController.Instance.rewardScreen.SetActive(false);
+            if (ObjectiveUIController.Instance.rewardScreen != null)
+            {
+                ObjectiveUIController.Instance.rewardScreen.SetActive(false);
+                if (!gameEndedAudioPlayed)
+                {
+                    gameEndedAudioPlayed = true;
+                    endGameAudio.Play();
+                }
+            }
         }
     }
 

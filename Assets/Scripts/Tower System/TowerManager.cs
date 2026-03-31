@@ -23,6 +23,9 @@ public class TowerManager : NetworkBehaviour
         }
     }
 
+    [SerializeField] private AudioSource enemyDeath;
+    [SerializeField] private AudioSource enemyEscape;
+
     public static TowerManager Instance { get; private set; }
 
     private void Awake()
@@ -71,8 +74,8 @@ public class TowerManager : NetworkBehaviour
                                 distanceToBeat = distance;
                                 tower.target = enemy;
                             }
-
                             break;
+                        
                         case Tower.targetStyle.Furthest:
 
                             if (distance > distanceToBeat) // Get furthest enemy
@@ -80,28 +83,15 @@ public class TowerManager : NetworkBehaviour
                                 distanceToBeat = distance;
                                 tower.target = enemy;
                             }
-
                             break;
-
                     }
 
                 }
             }
         }
     }
-    // private void TowerAttackHandler()
-    // {
-    //     foreach (Tower tower in towerList)
-    //     {
-    //         if (tower.target != null && tower.canAttack)
-    //         {
-    //             tower.Attack();
-    //         }
-    //     }
-    // }
     public void AddTower(Tower tower) => towerList.Add(tower);
     public void RemoveTower(Tower tower) => towerList.Remove(tower);
-
     public void HideRangeOfTowers()
     {
         foreach(Tower t in towerList)
@@ -109,4 +99,7 @@ public class TowerManager : NetworkBehaviour
             t.HideRange();
         }
     }
+
+    public void PlayDeathAudio() => enemyDeath.Play();
+    public void PlayEscapeAudio() => enemyEscape.Play();
 }

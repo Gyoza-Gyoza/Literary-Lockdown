@@ -15,7 +15,7 @@ public class Tower : NetworkBehaviour
     public NetworkVariable<float> damage;
     public NetworkObject projectilePrefab;
     public bool canAttack = false;
-    [SerializeField] private float attackSpeed = 0.2f;
+    [SerializeField] protected float attackSpeed = 0.2f;
     public NetworkObject target;
 
     public targetStyle towerTargetStyle = targetStyle.Closest;
@@ -27,8 +27,8 @@ public class Tower : NetworkBehaviour
     private string towerType;
     private Stats baseStats;
     private List<Stats> bonusStats = new();
-    private float timer = 0f;
-    private float initialXScale;
+    protected float timer = 0f;
+    protected float initialXScale;
 
     [Header("Synced Variables")]
     private NetworkVariable<FixedString512Bytes> m_GameObjectName = new NetworkVariable<FixedString512Bytes>("Default Tower Name", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -40,7 +40,7 @@ public class Tower : NetworkBehaviour
 
     [Header("Components")]
     //protected SpriteRenderer m_Renderer;
-    private Animator animator;
+    protected Animator animator;
     [SerializeField] protected GameObject rangeIndicator;
 
 
@@ -60,7 +60,7 @@ public class Tower : NetworkBehaviour
         initialXScale = transform.localScale.x;
     }
 
-    private void AttackCooldown()
+    protected virtual void AttackCooldown()
     {
         //Debug.Log("Cooling down");
         if (!IsServer) return;
@@ -129,6 +129,9 @@ public class Tower : NetworkBehaviour
                 break;
             case "Rapu":
                 AudioManager.PlayRapAttackSFX();
+                break;
+            case "Frog": 
+                AudioManager.PlayFrogAttackSFX();
                 break;
             default:
                 break;

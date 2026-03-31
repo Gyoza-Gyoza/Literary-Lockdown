@@ -11,6 +11,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip[] audioList;
     [SerializeField] private AudioClip[] wolfAttackAudio;
     [SerializeField] private AudioClip[] rapAttackAudio;
+    [SerializeField] private AudioClip[] frogAttackAudio;
     private static AudioManager instance;
     public AudioSource SFXSource;
     public AudioSource BGMSource;
@@ -46,7 +47,6 @@ public class AudioManager : MonoBehaviour
         float randomPitch = UnityEngine.Random.Range(instance.LowPitchRange, instance.HighPitchRange);
         instance.SFXSource.pitch = randomPitch;
 
-        
         instance.SFXSource.PlayOneShot(clip);
     }
     public static void PlayRapAttackSFX()
@@ -57,6 +57,15 @@ public class AudioManager : MonoBehaviour
         float randomPitch = UnityEngine.Random.Range(instance.LowPitchRange, instance.HighPitchRange);
         instance.SFXSource.pitch = randomPitch;
 
+        instance.SFXSource.PlayOneShot(clip);
+    }
+    public static void PlayFrogAttackSFX()
+    {
+        int randomIndex = UnityEngine.Random.Range(0, instance.frogAttackAudio.Length);
+        AudioClip clip = instance.frogAttackAudio[randomIndex];
+
+        float randomPitch = UnityEngine.Random.Range(instance.LowPitchRange, instance.HighPitchRange);
+        instance.SFXSource.pitch = randomPitch;
 
         instance.SFXSource.PlayOneShot(clip);
     }

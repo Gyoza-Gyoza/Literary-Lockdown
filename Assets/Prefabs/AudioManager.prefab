@@ -310,6 +310,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 96fe8f9e1e7902c4fa5adfd47ed868b8, type: 3}
   - {fileID: 8300000, guid: 583ac65353d041a49b0a0e085b035e75, type: 3}
   - {fileID: 8300000, guid: c3c31640e41f87b4eb4ffa4797ca9b31, type: 3}
+  frogAttackAudio:
+  - {fileID: 8300000, guid: bddea9cf642af5a4fa6b9560071fa2f5, type: 3}
   SFXSource: {fileID: 5729740033774791311}
   BGMSource: {fileID: 7640169672862091391}
   BGMlowPassFilter: {fileID: 7987610836991102675}
