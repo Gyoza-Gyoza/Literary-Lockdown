@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/LoadIn.unity
+    guid: 5df615fe2f79a354c91bee09ffa6cb3d
+  - enabled: 1
     path: Assets/Scenes/New UI/Raid Menu.unity
     guid: e359e8d37bc7b5340ad58e2fce806559
   - enabled: 1
