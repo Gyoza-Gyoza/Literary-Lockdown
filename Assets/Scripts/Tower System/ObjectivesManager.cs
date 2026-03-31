@@ -12,6 +12,8 @@ public class ObjectivesManager : NetworkBehaviour
     public NetworkVariable<bool> gameEnded = new NetworkVariable<bool>(false);
     //private int pageAmount; 
 
+    public NetworkVariable<int> pagesEarned = new NetworkVariable<int>(0);
+
     public NetworkVariable<int> booksCaptured = new NetworkVariable<int>(0);
     public NetworkVariable<int> booksEscaped = new NetworkVariable<int>(0);
 
@@ -168,7 +170,8 @@ public class ObjectivesManager : NetworkBehaviour
     public void CaptureBooks(int value)
     {
         if (!IsServer) return;
-        booksCaptured.Value += value;
+        booksCaptured.Value ++;
+        pagesEarned.Value += value;
         TowerManager.Instance.PlayDeathAudio();
     }
 

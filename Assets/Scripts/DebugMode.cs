@@ -72,6 +72,10 @@ public class DebugMode : MonoBehaviour
                 if (ads == null) ads = GameObject.FindGameObjectsWithTag("Ads");
                 foreach (GameObject ad in ads) ad.SetActive(!ad.activeSelf);
             }
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                ObjectivesManager.Instance.PrematureEndGame();
+            }
         }
     }
 

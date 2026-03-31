@@ -49,7 +49,7 @@ public class ObjectiveUIController : MonoBehaviour
         ObjectivesManager.Instance.gameEnded.Value = true;
         rewardScreen.SetActive(true);
         booksRewardsText.text = $"{ObjectivesManager.Instance.booksCaptured.Value}";
-        pageAmount = (int)(ObjectivesManager.Instance.booksCaptured.Value * /*Random.Range(1.5f, */2.3f/*)*/);
+        pageAmount = (int)(ObjectivesManager.Instance.pagesEarned.Value /*Random.Range(1.5f, *//*)*/);
         pagesRewardsText.text = $"{pageAmount}";
         SaveLoadManager.PlayerData.pagesHeld += pageAmount;
         SaveLoadManager.SaveData();
