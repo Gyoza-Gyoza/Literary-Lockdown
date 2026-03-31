@@ -103,6 +103,10 @@ public class EnemyBehaviour : NetworkBehaviour
     [Rpc(SendTo.Server)]
     public void DestroyEnemyRpc()
     {
+        GameObject deaphEffect = Instantiate(deathFX);
+
+        deaphEffect.transform.position = this.gameObject.transform.position;
+
         NetworkObject networkObject = GetComponent<NetworkObject>();
         if (networkObject != null && networkObject.IsSpawned)
         {
@@ -110,9 +114,7 @@ public class EnemyBehaviour : NetworkBehaviour
         }
         else
         {
-            //GameObject GO = Instantiate(deathFX);
 
-            //GO.transform.position = this.gameObject.transform.position;
 
             Destroy(gameObject);
         }
