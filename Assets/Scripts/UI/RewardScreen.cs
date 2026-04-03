@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class RewardScreen : MonoBehaviour
 {
     public TextMeshProUGUI booksKilledText;
+    public TextMeshProUGUI booksEscapedText;
     public TextMeshProUGUI pagesEarnedText;
     public CanvasGroup canvasGroup;
     public float fadeInTiming = 1f;
@@ -21,6 +22,10 @@ public class RewardScreen : MonoBehaviour
         pagesEarnedText.text = input.ToString();
     }
 
+    public void SetBooksEscaped(int input)
+    {
+        booksEscapedText.text = input.ToString();
+    }
 
     public void ExitToMain()
     {

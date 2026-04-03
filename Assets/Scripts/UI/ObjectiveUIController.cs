@@ -3,8 +3,8 @@ using TMPro;
 
 public class ObjectiveUIController : MonoBehaviour
 {
-    [SerializeField] public GameObject rewardScreen, raidingProgressScreen;
-    [SerializeField] private TextMeshProUGUI booksRewardsText, pagesRewardsText, currntPlayers, totalPlayers;
+    [SerializeField] public GameObject rewardScreen, raidingProgressScreen, confirmConcelScreen;
+    [SerializeField] private TextMeshProUGUI booksRewardsText, pagesRewardsText, booksEscapedRewardsText, currntPlayers, totalPlayers;
     //[SerializeField] public TMP_Dropdown difficultyDropdown;
     //[SerializeField] public TMP_Dropdown timerDropdown;
     private int pageAmount;
@@ -49,9 +49,25 @@ public class ObjectiveUIController : MonoBehaviour
         ObjectivesManager.Instance.gameEnded.Value = true;
         rewardScreen.SetActive(true);
         booksRewardsText.text = $"{ObjectivesManager.Instance.booksCaptured.Value}";
-        pageAmount = (int)(ObjectivesManager.Instance.pagesEarned.Value /*Random.Range(1.5f, *//*)*/);
-        pagesRewardsText.text = $"{pageAmount}";
+        pagesRewardsText.text = ObjectivesManager.Instance.pagesEarned.Value.ToString();
+        booksEscapedRewardsText.text = ObjectivesManager.Instance.booksEscaped.Value.ToString();
         SaveLoadManager.PlayerData.pagesHeld += pageAmount;
         SaveLoadManager.SaveData();
+    }
+
+    public void PreMatureEndGame()
+    {
+        confirmConcelScreen.SetActive(false);
+        ObjectivesManager.Instance.gameEnded.Value = true;
+        rewardScreen.SetActive(true);
+
+        booksRewardsText.text = ObjectivesManager.Instance.booksCaptured.Value.ToString();
+        booksEscapedRewardsText.text = ObjectivesManager.Instance.booksEscaped.Value.ToString();
+        pagesRewardsText.text = "0";
+    }
+
+    public void MightEndGame(bool input)
+    {
+        confirmConcelScreen.SetActive(input);
     }
 }

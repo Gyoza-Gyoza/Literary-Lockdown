@@ -100,7 +100,7 @@ public class ObjectivesManager : NetworkBehaviour
             {
                 remainingTime.Value -= Time.deltaTime;
 
-                if (remainingTime.Value <= 0 || Input.GetKeyDown(KeyCode.P))
+                if (remainingTime.Value <= 0)
                 {
                     remainingTime.Value = 0;
                     startGame.Value = false;
@@ -152,7 +152,7 @@ public class ObjectivesManager : NetworkBehaviour
         UIManager.Instance.seletedTower = null;
     }
 
-    public void PrematureEndGame()
+    public void DebugEndGame()
     {
         if (IsServer)
         {

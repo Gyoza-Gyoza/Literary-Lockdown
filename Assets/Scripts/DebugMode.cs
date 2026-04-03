@@ -74,7 +74,7 @@ public class DebugMode : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.O))
             {
-                ObjectivesManager.Instance.PrematureEndGame();
+                ObjectivesManager.Instance.DebugEndGame();
             }
         }
     }

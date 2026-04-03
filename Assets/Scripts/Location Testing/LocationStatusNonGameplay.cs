@@ -35,7 +35,7 @@ public class LocationStatusNonGameplay : MonoBehaviour
             }
             else
             {
-                locText.text = $"Please Proceed to {LocationManager.Instance.Closest.Name}";
+                locText.text = $"OUT OF RANGE\nPlease Proceed to {LocationManager.Instance.Closest.Name}";
                 validMarker.sprite = invalidSprite;
             }
         }
