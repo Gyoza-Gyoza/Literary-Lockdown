@@ -12,10 +12,13 @@ public class Fade : MonoBehaviour
 
     private void Awake()
     {
-        if (instance == null) instance = this;
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(this);
+        }
         else Destroy(gameObject);
 
-        DontDestroyOnLoad(this);
         canvasGroup = GetComponent<CanvasGroup>();
     }
 
@@ -35,14 +38,15 @@ public class Fade : MonoBehaviour
             canvasGroup.alpha = count / fadeIn;
             yield return new WaitForSeconds(Time.deltaTime);
         }
+        canvasGroup.alpha = 0;
 
         yield break;
     }
 
 
-    public void StartFadeOut() { StartCoroutine(FadeOut()); }
+    public void StartFadeOut(string scenename, bool isAsync) { StartCoroutine(FadeOut(scenename, isAsync)); }
 
-    IEnumerator FadeOut()
+    IEnumerator FadeOut(string scenename, bool isAsync)
     {
         float count = 0;
 
@@ -51,6 +55,17 @@ public class Fade : MonoBehaviour
             count += Time.deltaTime;
             canvasGroup.alpha = count / fadeOut;
             yield return new WaitForSeconds(Time.deltaTime);
+        }
+
+        canvasGroup.alpha = 1;
+
+        if (isAsync)
+        {
+            SceneManager.LoadSceneAsync(scenename);
+        }
+        else
+        {
+            SceneManager.LoadScene(scenename);
         }
 
         yield break;
